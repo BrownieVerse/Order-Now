@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrownieVerse — Gourmet Brownie Artisans | Salé, Morocco</title>
+  <meta name="description" content="Premium handcrafted brownie bites inspired by Moroccan flavors and international fusion. Order online or join our exclusive Pirates BrownieVerse community." />
+  <meta name="keywords" content="brownie bites, gourmet brownies, moroccan brownies, premium desserts, Salé, kunaffa brownie, oreo brownie" />
+  <meta property="og:title" content="BrownieVerse — Gourmet Brownie Bites" />
+  <meta property="og:description" content="Premium handcrafted brownie bites. Order now or join the pirate community." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "name": "BrownieVerse",
+    "description": "Premium gourmet brownie bites artisans in Salé, Morocco",
+    "servesCuisine": "Desserts, Brownies",
+    "address": {"@type": "PostalAddress", "addressLocality": "Salé", "addressCountry": "MA"}
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ======================== PAGE LOADER ======================== -->
+  <div id="page-loader">
+    <div class="loader-logo">Brownie<span>Verse</span></div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  </div>
+
+  <!-- ======================== MOBILE NAV ======================== -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <a href="#hero" class="mobile-nav-link">Home</a>
+    <a href="#products" class="mobile-nav-link">Our Flavors</a>
+    <a href="#packs" class="mobile-nav-link">Our Menu</a>
+    <a href="#about" class="mobile-nav-link">Our Story</a>
+    <a href="#order" class="mobile-nav-link">Order Now</a>
+    <a href="#community" class="mobile-nav-link">Join Pirates</a>
+  </nav>
+
+  <!-- ======================== NAVBAR ======================== -->
+  <header id="navbar" role="banner">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-logo" aria-label="BrownieVerse home">
+          BrownieVerse
+          <span>Gourmet · Artisan · Salé</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#products" class="nav-link">Our Flavors</a>
+          <a href="#packs" class="nav-link">Our Menu</a>
+          <a href="#about" class="nav-link">Our Story</a>
+          <a href="#order" class="nav-link">Order</a>
+          <a href="#community" class="nav-link">Join Pirates</a>
+        </nav>
+
+        <div class="nav-right">
+          <button class="cart-btn" id="cartToggle" aria-label="Open cart">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          <a href="#order" class="btn btn-gold" style="display:none" id="navOrderBtn">Order Now</a>
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================== HERO ======================== -->
+  <section id="hero" aria-label="Hero section">
+    <div class="hero-bg"></div>
+    <div class="hero-texture"></div>
+    <div class="hero-floating-circles" aria-hidden="true">
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual-inner">
+        <div class="hero-brownie-showcase">
+          <div class="brownie-circle bc-main">
+            <img src="c.jpg" alt="Classic Brownie Bites" loading="eager" />
+          </div>
+          <div class="brownie-circle bc-top">
+            <img src="o.jpg" alt="Oreo Brownie Bites" loading="eager" />
+          </div>
+          <div class="brownie-circle bc-bot">
+            <img src="k.jpg" alt="Kunaffa Brownie Bites" loading="eager" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">✦ Handcrafted in Salé, Morocco</div>
+
+        <h1 class="hero-title">
+          Every Bite is a<br />
+          <span class="highlight">Universe</span><br />
+          of Flavor
+        </h1>
+
+        <p class="hero-sub">
+          Premium artisan brownie bites where Moroccan heritage meets global flavors.
+          Made in small batches, packed with intention, delivered with love.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#products" class="btn btn-gold btn-lg">
+            <i class="fas fa-cookie-bite"></i>
+            Explore Flavors
+          </a>
+          <a href="#packs" class="btn btn-outline btn-lg">
+            <i class="fas fa-box-open"></i>
+            View Our Menu
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num">500+</span>
+            <span class="stat-label">Happy Customers</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">4</span>
+            <span class="stat-label">Unique Flavors</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Handcrafted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ======================== MARQUEE ======================== -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="marquee-item">Classic Brownie Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kaab Ghezal Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Oreo Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kunaffa Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Handcrafted in Salé <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Classic Brownie Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kaab Ghezal Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Oreo Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kunaffa Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Handcrafted in Salé <span class="marquee-dot"></span></div>
+    </div>
+  </div>
+
+  <!-- ======================== PRODUCTS / FLAVORS ======================== -->
+  <section id="products" class="section" aria-labelledby="products-title">
+    <div class="container">
+      <div class="products-header">
+        <div>
+          <span class="eyebrow reveal">Our Brownie Bites</span>
+          <h2 class="section-title reveal reveal-delay-1" id="products-title">
+            Crafted for Connoisseurs
+          </h2>
+          <p class="section-sub reveal reveal-delay-2">
+            Each brownie bite is a small masterpiece — dense, fudgy, and packed with layers of flavor you won't find anywhere else.
+          </p>
+        </div>
+      </div>
+
+      <div class="products-grid" id="productsGrid" aria-label="Flavor catalog">
+        <!-- Products rendered by JS -->
+      </div>
+
+      <div style="text-align:center; margin-top:3rem;" class="reveal">
+        <a href="#packs" class="btn btn-dark btn-lg">
+          <i class="fas fa-box-open"></i>
+          See Our Packs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== PACKS / MENU ======================== -->
+  <section id="packs" class="section packs-section" aria-labelledby="packs-title">
+    <div class="packs-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div style="text-align:center; margin-bottom:1rem;">
+        <span class="eyebrow reveal">Brownie Bites</span>
+        <h2 class="section-title reveal reveal-delay-1" id="packs-title">Our Menu</h2>
+        <p class="section-sub reveal reveal-delay-2" style="margin:0 auto 3rem;">
+          Choose your pack and indulge in the perfect combination of flavors.
+        </p>
+      </div>
+
+      <div class="packs-grid" id="packsGrid" aria-label="Pack options">
+        <!-- Packs rendered by JS -->
+      </div>
+
+      <div style="text-align:center; margin-top:3rem;" class="reveal">
+        <a href="#order" class="btn btn-gold btn-lg">
+          <i class="fas fa-clipboard-list"></i>
+          Order Your Pack
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FLAVOR STRIP ======================== -->
+  <div class="flavor-strip" aria-hidden="true">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:2rem;">
+        <span class="eyebrow">Our Signature Flavors</span>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.3rem;">4 unique creations crafted with love →</p>
+      </div>
+      <div class="flavor-strip-inner" id="flavorStrip">
+        <div class="flavor-pill"><span class="fp-emoji">🍫</span><span class="fp-name">Classic Brownie Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🌙</span><span class="fp-name">Kaab Ghezal Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🍪</span><span class="fp-name">Oreo Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🌿</span><span class="fp-name">Kunaffa Bites</span></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ======================== SCHEDULE / DELIVERY ======================== -->
+<section id="schedule" class="section schedule-section" aria-labelledby="schedule-title">
+  <div class="container">
+    <div class="schedule-header">
+      <span class="eyebrow reveal">🗓️ Ordering Schedule</span>
+      <h2 class="section-title reveal reveal-delay-1" id="schedule-title">
+        Fresh Bites, <span class="highlight">Perfect Timing</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        We bake in small batches to ensure maximum freshness. Here's when to order and when to expect your delicious delivery.
+      </p>
+    </div>
+
+    <div class="schedule-grid">
+      <!-- Order Window Card -->
+      <div class="schedule-card reveal reveal-delay-1">
+        <div class="schedule-icon">🛒</div>
+        <h3>Place Your Order</h3>
+        <div class="schedule-days">
+          <span class="day active">Tue</span>
+          <span class="day active">Wed</span>
+          <span class="day active">Thu</span>
+          <span class="day active">Fri</span>
+          <span class="day inactive">Sat</span>
+          <span class="day inactive">Sun</span>
+          <span class="day inactive">Mon</span>
+        </div>
+        <p class="schedule-desc">
+          Orders open Tuesday morning and close Friday at 6 PM. Weekend cravings? Order early Friday for next-week delivery! 🍫
+        </p>
+        <a href="#order" class="btn btn-gold btn-sm">
+          <i class="fas fa-cookie-bite"></i> Order Now
+        </a>
+      </div>
+
+      <!-- Delivery Day Card -->
+      <div class="schedule-card reveal reveal-delay-2">
+        <div class="schedule-icon">🚚</div>
+        <h3>Delivery Day</h3>
+        <div class="delivery-highlight">
+          <span class="delivery-day">MONDAY</span>
+          <span class="delivery-time">9 AM – 9 PM</span>
+        </div>
+        <p class="schedule-desc">
+          All orders placed Tue–Fri are freshly baked and delivered on Monday. Can't wait? <strong>WhatsApp us</strong> for urgent requests. 📱
+        </p>
+        <a href="https://wa.me/212703920799" class="btn btn-outline btn-sm" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp"></i> Quick Question?
+        </a>
+      </div>
+    </div>
+
+    <!-- Pro Tips -->
+    <div class="schedule-tips reveal reveal-delay-3">
+      <div class="tip-item">
+        <span class="tip-icon">✨</span>
+        <span><strong>Pro Tip:</strong> Order by Thursday for guaranteed Monday delivery in Salé.</span>
+      </div>
+      <div class="tip-item">
+        <span class="tip-icon">🎁</span>
+        <span><strong>Gift Orders?</strong> Add a note and we'll include a handwritten card!</span>
+      </div>
+      <div class="tip-item">
+        <span class="tip-icon">📍</span>
+        <span><strong>Delivery Area:</strong> Salé + surrounding neighborhoods (Rabat on request).</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ======================== ABOUT ======================== -->
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="about-bg-pattern" aria-hidden="true"></div>
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual reveal">
+          <div class="about-accent" aria-hidden="true"></div>
+          <div class="about-img-main">
+            <img src="bl.png"
+                 alt="BrownieVerse artisan baking" loading="lazy" />
+          </div>
+          <div class="about-img-float">
+            <img src="kz.jpg"
+                 alt="Kaab Ghezal Brownie Bites" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="about-content">
+          <span class="eyebrow reveal">Our Story</span>
+          <h2 class="reveal reveal-delay-1" id="about-title">
+            Born from Passion,<br />Built for Flavor Seekers
+          </h2>
+          <div class="divider reveal reveal-delay-2"></div>
+
+          <p class="reveal reveal-delay-2">
+            BrownieVerse bdat f cuisine sghira f Salé, fin l7ob dyal chocolat wl2ibda3 tlaqaa m3a ttorat lmaghribi lghani Dyalna. Kna kan2amno bli brownies classic likan3rfou  y9der ywli chi 7aja li extraordinary.
+          </p>
+          <p class="reveal reveal-delay-3">
+            Kol recette kandiroha katjma3 bin chocolat riche  w flavors maghribiya w international — men lbenna dial Kaab Ghezl, 7tta lcrunch dial kunaffa. Resultat? brownie bite with fusions li ma3mrk de9ty f7alha.
+          </p>
+          <p class="reveal reveal-delay-3">
+            7na machi ghi brownie brand. 7na universe, community dyal nas li passionate about experimenting & creating new Mind-Blowing Experiences.
+Jereb(i) w rred(i) 3lia ;")
+          </p>
+
+          <div class="about-values reveal reveal-delay-4">
+            <div class="about-value">
+              <div class="about-value-icon">🍫</div>
+              <h4>Premium Ingredients</h4>
+              <p>Belgian couverture chocolate & handpicked local produce</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🤲</div>
+              <h4>Handcrafted Always</h4>
+              <p>Every bite made by hand, in small batches</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🌍</div>
+              <h4>Fusion Heritage</h4>
+              <p>Where Morocco meets the world, in every bite</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🚀</div>
+              <h4>Always Innovating</h4>
+              <p>New flavors, limited drops, and seasonal specials</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== ORDER ======================== -->
+  <section id="order" class="section" aria-labelledby="order-title">
+    <div class="order-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="order-container">
+        <div class="order-left">
+          <span class="eyebrow reveal">Order Online</span>
+          <h2 class="reveal reveal-delay-1" id="order-title">
+            Your Brownie Bites,<br />Delivered Fresh
+          </h2>
+          <div class="divider reveal reveal-delay-2"></div>
+          <p class="reveal reveal-delay-2">
+            Skip the wait. Order your custom brownie bites selection and we'll have them
+            freshly made and delivered to you in Salé and surrounding areas.
+          </p>
+
+          <div class="order-perks reveal reveal-delay-3">
+            <div class="order-perk">
+              <div class="perk-icon">🧁</div>
+              <div class="perk-text">
+                <h4>Made to Order</h4>
+                <p>Every box crafted fresh after your order is confirmed</p>
+              </div>
+            </div>
+            <div class="order-perk">
+              <div class="perk-icon">🚴</div>
+              <div class="perk-text">
+                <h4>Monday Delivery</h4>
+                <p>Orders before noon delivered the same day in Salé</p>
+              </div>
+            </div>
+            <div class="order-perk">
+              <div class="perk-icon">🎁</div>
+              <div class="perk-text">
+                <h4>Gift-Ready Packaging</h4>
+                <p>Every order comes in our premium branded box</p>
+              </div>
+            </div>
+            <div class="order-perk">
+              <div class="perk-icon">💬</div>
+              <div class="perk-text">
+                <h4>WhatsApp Confirmation</h4>
+                <p>We'll confirm your order via WhatsApp within 30min</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Form -->
+        <div class="order-form-card reveal reveal-delay-2">
+          <h3>Place Your Order</h3>
+          <p>Fill in your details and we'll get back to you shortly.</p>
+
+          <form id="orderForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="orderName">Full Name *</label>
+                <input class="form-input" type="text" id="orderName" name="full_name"
+                       placeholder="Your full name" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="orderPhone">Phone Number *</label>
+                <input class="form-input" type="tel" id="orderPhone" name="phone"
+                       placeholder="+212 6XX XXX XXX" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="orderAddress">Delivery Address *</label>
+              <input class="form-input" type="text" id="orderAddress" name="address"
+                     placeholder="Street, neighborhood, city" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Select Your Pack *</label>
+              <div class="product-selector" id="orderProductSelector">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <div class="order-summary-box" id="orderSummary">
+              <div class="os-row">
+                <span>No pack selected</span>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="orderNotes">Special Instructions</label>
+              <textarea class="form-textarea" id="orderNotes" name="notes"
+                        placeholder="Allergies, special requests, gift message..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-gold form-submit" id="orderSubmitBtn">
+              <i class="fas fa-paper-plane"></i>
+              Send Order
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== COMMUNITY ======================== -->
+  <section id="community" class="section" aria-labelledby="community-title">
+    <div class="community-deco" aria-hidden="true"></div>
+    <div class="community-deco-2" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="community-inner">
+        <div class="community-content">
+          <span class="eyebrow reveal">Private Community</span>
+          <h2 class="reveal reveal-delay-1" id="community-title">
+            Join the<br />
+            <em style="color:var(--gold)">Pirates</em><br />
+            BrownieVerse de Salé
+          </h2>
+          <div class="divider reveal reveal-delay-2"></div>
+
+          <p class="reveal reveal-delay-2">
+            This isn't just a fanbase. It's a crew of dessert adventurers who get
+            exclusive access to secret drops, limited-edition flavors, pirate events,
+            and insider news before anyone else.
+          </p>
+
+          <div class="community-perks reveal reveal-delay-3">
+            <div class="community-perk">
+              <div class="cp-check">✓</div>
+              <span>First access to new and limited-edition flavors</span>
+            </div>
+            <div class="community-perk">
+              <div class="cp-check">✓</div>
+              <span>Exclusive Pirates-only promotions & offers</span>
+            </div>
+            <div class="community-perk">
+              <div class="cp-check">✓</div>
+              <span>Behind-the-scenes kitchen content</span>
+            </div>
+            <div class="community-perk">
+              <div class="cp-check">✓</div>
+              <span>Private community events in Salé</span>
+            </div>
+            <div class="community-perk">
+              <div class="cp-check">✓</div>
+              <span>Direct line to the BrownieVerse team</span>
+            </div>
+          </div>
+
+          <div style="margin-top:2rem;" class="reveal reveal-delay-4">
+            <div class="community-count">
+              <i class="fas fa-skull-crossbones"></i>
+              <span id="pirateCount">Join 200+ Pirates already aboard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Community Form -->
+        <div class="community-form-card reveal reveal-delay-2">
+          <h3>Join the Waitlist</h3>
+          <p>Secure your spot in the Pirates BrownieVerse crew. We'll reach out when doors open.</p>
+
+          <form id="communityForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="communityName">Your Name *</label>
+              <input class="form-input" type="text" id="communityName" name="name"
+                     placeholder="Captain..." required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="communityEmail">Email Address *</label>
+              <input class="form-input" type="email" id="communityEmail" name="email"
+                     placeholder="captain@email.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="communityPhone">Phone Number <span style="opacity:0.5">(optional)</span></label>
+              <input class="form-input" type="tel" id="communityPhone" name="phone"
+                     placeholder="+212 6XX XXX XXX" />
+            </div>
+
+            <button type="submit" class="btn btn-dark form-submit" id="communitySubmitBtn">
+              <i class="fas fa-skull-crossbones"></i>
+              Join the Pirates
+            </button>
+
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
+              No spam. No corporate vibes. Only brownie goodness.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#hero" class="nav-logo">
+            BrownieVerse
+            <span>Gourmet · Artisan · Salé</span>
+          </a>
+          <p>Premium handcrafted brownie bites born in Salé, Morocco. Where Moroccan heritage meets world-class flavors.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#products">Our Flavors</a></li>
+            <li><a href="#packs">Our Menu</a></li>
+            <li><a href="#about">Our Story</a></li>
+            <li><a href="#community">Join Pirates</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Order</h4>
+          <ul>
+            <li><a href="#order">Order Online</a></li>
+            <li><a href="#packs">Gift Packs</a></li>
+            <li><a href="#order">Custom Orders</a></li>
+            <li><a href="#order">Corporate Gifts</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col footer-contact">
+          <h4>Contact</h4>
+          <p><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> Salé, Morocco</p>
+          <p><i class="fab fa-whatsapp" style="color:var(--gold)"></i> WhatsApp us to order</p>
+          <p><i class="fas fa-envelope" style="color:var(--gold)"></i> hello@brownieverse.ma</p>
+          <p style="margin-top:1rem;font-size:0.75rem;opacity:0.4;">Tue – Sun: 9am – 8pm</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 BrownieVerse. Made with ♥ in Salé, Morocco.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">FAQ</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================== CART DRAWER ======================== -->
+  <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
+    <div class="cart-header">
+      <h3>Your Selection</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Your cart is empty.<br />Add some brownie bites!</p>
+      </div>
+    </div>
+
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span class="cart-total-price" id="cartTotalDisplay">0 DH</span>
+      </div>
+      <a href="#order" class="btn btn-gold cart-checkout-btn" id="cartCheckout">
+        <i class="fas fa-clipboard-list"></i>
+        Complete Order Form
+      </a>
+      <button class="cart-continue-btn" id="cartContinue">
+        Continue Browsing
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======================== SUCCESS OVERLAYS ======================== -->
+  <div class="success-overlay" id="orderSuccess" role="dialog" aria-modal="true">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h3>Order Received!</h3>
+      <p>Your brownie bites order has been placed successfully. We'll confirm via WhatsApp within 30 minutes. Get ready for some serious deliciousness! 🍫</p>
+      <button class="btn btn-gold" onclick="closeSuccess('orderSuccess')">
+        <i class="fas fa-check"></i> Awesome!
+      </button>
+    </div>
+  </div>
+
+  <div class="success-overlay" id="communitySuccess" role="dialog" aria-modal="true">
+    <div class="success-card">
+      <div class="success-icon">🏴‍☠️</div>
+      <h3>Welcome, Pirate!</h3>
+      <p>You've secured your spot in the Pirates BrownieVerse de Salé. We'll reach out very soon with your exclusive access. The adventure begins… 🍫</p>
+      <button class="btn btn-dark" onclick="closeSuccess('communitySuccess')">
+        <i class="fas fa-skull-crossbones"></i> Arrr, Let's Go!
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================== TOAST CONTAINER ======================== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ======================== MAIN JS ======================== -->
+  <script src="main.js"></script>
+</body>
+</html>
