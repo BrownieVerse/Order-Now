@@ -71,7 +71,7 @@ const PACKS = [
     badge: '🆕 New Crew Member?',      // ← Optional: Add a badge
     popular: false,
     emoji: '🦜',                        // ← UPDATED EMOJI
-    image: 'pack-1.jpg',
+    image: 'pack1.png',
   },
   {
     id: 'pack-2',
@@ -82,7 +82,7 @@ const PACKS = [
     badge: null,
     popular: false,
     emoji: '🎀',
-    image: 'pack-2.jpg',
+    image: 'pack2.png',
   },
   {
     id: 'pack-3',
@@ -93,7 +93,7 @@ const PACKS = [
     badge: '⭐ Most Popular',
     popular: true,
     emoji: '🎁',
-    image: 'pack-3.jpg',
+    image: 'pack3.png',
   },
   {
     id: 'pack-4',
@@ -104,7 +104,7 @@ const PACKS = [
     badge: '🏆 Best Value',
     popular: false,
     emoji: '👑',
-    image: 'pack-4.jpg',
+    image: 'pack4.png',
   },
 ];
 
