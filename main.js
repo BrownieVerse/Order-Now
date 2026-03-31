@@ -507,18 +507,38 @@ function renderPacks() {
     <div class="pack-card${pack.popular ? ' popular' : ''} reveal reveal-delay-${idx + 1}">
       ${pack.popular ? '<div class="pack-popular-ribbon">Most Popular</div>' : ''}
       ${pack.badge ? `<div class="pack-badge">${pack.badge}</div>` : ''}
+      
+      <!-- Pack Image -->
+      <div class="pack-img">
+        <img src="${pack.image}" alt="${pack.name}" loading="lazy" 
+             onerror="this.src='images/placeholder-pack.jpg'; this.onerror=null;" />
+      </div>
+      
       <div class="pack-name">${pack.name}</div>
       <div class="pack-subtitle">${pack.subtitle}</div>
       <div class="pack-divider"></div>
+      
       <div class="pack-contents">
-        ${pack.contents.map(item => `<div class="pack-item"><div class="pack-item-dot"></div><span>${item}</span></div>`).join('')}
+        ${pack.contents.map(item => `
+          <div class="pack-item">
+            <div class="pack-item-dot"></div>
+            <span>${item}</span>
+          </div>
+        `).join('')}
       </div>
+      
       <div class="pack-price">
-        <span class="pack-price-num">${pack.price}</span><span class="pack-price-currency">DH</span>
+        <span class="pack-price-num">${pack.price}</span>
+        <span class="pack-price-currency">DH</span>
       </div>
-      <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')"><i class="fas fa-shopping-bag"></i> Order This Pack</a>
+      
+      <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')">
+        <i class="fas fa-shopping-bag"></i>
+        Order This Pack
+      </a>
     </div>
   `).join('');
+
   observeReveal();
 }
 
