@@ -606,35 +606,34 @@ Jereb(i) w rred(i) 3lia ;")
           <h3>Join the Waitlist</h3>
           <p>Secure your spot on the Pirates BrownieVerse crew. We'll send a carrier pigeon when doors open! 📜</p>
 
-          <form id="communityForm" novalidate>
-            <div class="form-group">
-              <label class="form-label" for="communityName">🏴️ Captain's Name *</label>
-              <input class="form-input" type="text" id="communityName" name="name"
-                     placeholder="Captain Jack Sparrow..." required />
-            </div>
+<!-- Replace the entire <form id="communityForm">...</form> block with: -->
 
-            <div class="form-group">
-              <label class="form-label" for="communityEmail">📜 Scroll Address (Email) *</label>
-              <input class="form-input" type="email" id="communityEmail" name="email"
-                     placeholder="captain@pirateship.com" required />
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="communityPhone">🦜 Carrier Pigeon (Phone) <span style="opacity:0.5">(optional)</span></label>
-              <input class="form-input" type="tel" id="communityPhone" name="phone"
-                     placeholder="+212 6XX XXX XXX" />
-            </div>
-
-            <button type="submit" class="btn btn-dark form-submit" id="communitySubmitBtn">
-              <i class="fas fa-skull-crossbones"></i>
-              <span class="slash-effect"></span>
-              Join the Pirates
-            </button>
-
-            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
-              🤝 No spam. No corporate vibes. Only brownie treasure & pirate adventures.
-            </p>
-          </form>
+<div class="community-form-card reveal reveal-delay-2" style="text-align:center;">
+  <h3>Join the Waitlist</h3>
+  <p>Secure your spot on the Pirates BrownieVerse crew. Click below to join via our secure Google Form! 📜</p>
+  
+  <!-- Google Form Link Button -->
+  <a href="https://docs.google.com/forms/d/1zkrnZ6anQUfA4imLO5Pg8FYqvEOEHevL8CMF03F5cJM/viewform?pli=1&edit_requested=true" 
+     target="_blank" 
+     rel="noopener noreferrer"
+     class="btn btn-dark form-submit" 
+     style="width:100%; max-width:300px; margin:0 auto; display:inline-flex; justify-content:center;">
+    <i class="fas fa-skull-crossbones"></i>
+    Join the Pirates
+  </a>
+  
+  <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
+    🤝 No spam. No corporate vibes. Only brownie treasure & pirate adventures.
+  </p>
+  
+  <!-- Optional: Add Google Forms badge for trust -->
+  <div style="margin-top:1.5rem; opacity:0.6;">
+    <img src="https://www.gstatic.com/images/branding/product/1x/forms_2020q4_48dp.png" 
+         alt="Google Forms" 
+         style="height:24px; vertical-align:middle; margin-right:0.5rem;">
+    <span style="font-size:0.7rem; vertical-align:middle;">Secured by Google Forms</span>
+  </div>
+</div>
           
           <!-- Bottom scroll seal -->
           <div class="scroll-seal scroll-seal-bottom" aria-hidden="true">⚓</div>
@@ -642,10 +641,6 @@ Jereb(i) w rred(i) 3lia ;")
       </div>
     </div>
   </section>
-
-  <!-- 🦜 PARROT MASCOT (fixed element) -->
-  <div class="parrot-mascot" id="parrotMascot" aria-hidden="true"></div>
-  <div class="parrot-speech" id="parrotSpeech" aria-hidden="true"></div>
 
   <!-- ======================== FOOTER ======================== -->
   <footer role="contentinfo">
