@@ -3273,3 +3273,7 @@ footer {
   .delivery-day { font-size: 1.5rem; }
   .schedule-tips { grid-template-columns: 1fr; }
 }
+/* Fix for missing favicon */
+link[rel="icon"] {
+  display: none;
+}
