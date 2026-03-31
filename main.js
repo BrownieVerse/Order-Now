@@ -1,12 +1,12 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION (Google Form) - SOUND FIXED
+   PIRATE EDITION - ALL SOUNDS WORKING
    ============================================= */
 
 'use strict';
 
 // =============================================
-// FLAVOR DATA (4 Brownie Bites)
+// FLAVOR DATA
 // =============================================
 const PRODUCTS = [
   {
@@ -14,7 +14,7 @@ const PRODUCTS = [
     name: 'Classic Brownie Bites',
     category: 'bites',
     description: 'Our signature fudgy dark chocolate brownie bites. Dense, gooey, and irresistibly rich — the bite that started it all.',
-    image: 'c.jpg',  // ← Changed from genspark URL to local file
+    image: 'c.jpg',
     badge: 'Classical',
     rating: 4.8,
     reviews: 128,
@@ -25,7 +25,7 @@ const PRODUCTS = [
     name: 'Kaab Ghezal Bites',
     category: 'bites',
     description: 'A fusion Moroccan masterpiece — classic fudgy brownie bites crowned with a luxurious marble Kaab Ghezal swirl and Topped with Magical Sugary Dust. Moroccan-inspired elegance.',
-    image: 'kz.jpg',  // ← Using your local Kaab Ghezal image
+    image: 'kz.jpg',
     badge: 'Speciality & Best Seller',
     rating: 5.0,
     reviews: 95,
@@ -36,7 +36,7 @@ const PRODUCTS = [
     name: 'Oreo Bites',
     category: 'bites',
     description: 'Indulgent fudgy brownie bites crowned with Oreo cookies & cream frosting and a real Oreo cookie perched on top. Pure, unapologetic indulgence.',
-    image: 'o.jpg',  // ← Using your local Oreo image
+    image: 'o.jpg',
     badge: 'Fan Favourite',
     rating: 4.9,
     reviews: 72,
@@ -47,7 +47,7 @@ const PRODUCTS = [
     name: 'Choco-Dubai Bites',
     category: 'bites',
     description: 'A Middle Eastern-inspired marvel — fudgy brownie base layered with pistachio cream filling and topped with golden, crispy kunaffa strands. Extraordinary.',
-    image: 'k.jpg',  // ← Using your local Kunaffa image
+    image: 'k.jpg',
     badge: 'Most Famous',
     rating: 4.9,
     reviews: 37,
@@ -56,61 +56,30 @@ const PRODUCTS = [
 ];
 
 // =============================================
-// PACKS DATA (4 Pack Types)
+// PACKS DATA
 // =============================================
 const PACKS = [
-  {
-    id: 'pack-1',
-    name: '1 Pack',
-    subtitle: 'Classic Bites',
-    price: 99,
-    contents: ['Classic Brownie Bites'],
-    badge: null,
-    popular: false,
-    emoji: '📦',
-  },
-  {
-    id: 'pack-2',
-    name: '2 Pack',
-    subtitle: 'Classic & Kaab Ghezal',
-    price: 175,
-    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'],
-    badge: null,
-    popular: false,
-    emoji: '🎀',
-  },
-  {
-    id: 'pack-3',
-    name: 'Pack Moyen',
-    subtitle: 'Classic, Kaab Ghezal & Oreo',
-    price: 199,
-    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites'],
-    badge: '⭐ Most Popular',
-    popular: true,
-    emoji: '🎁',
-  },
-  {
-    id: 'pack-4',
-    name: 'Grand Pack',
-    subtitle: 'All Flavors',
-    price: 350,
-    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites', 'Kunaffa Bites'],
-    badge: '🏆 Best Value',
-    popular: false,
-    emoji: '👑',
-  },
+  { id: 'pack-1', name: '1 Pack', subtitle: 'Classic Bites', price: 99, contents: ['Classic Brownie Bites'], badge: null, popular: false, emoji: '📦' },
+  { id: 'pack-2', name: '2 Pack', subtitle: 'Classic & Kaab Ghezal', price: 175, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'], badge: null, popular: false, emoji: '🎀' },
+  { id: 'pack-3', name: 'Pack Moyen', subtitle: 'Classic, Kaab Ghezal & Oreo', price: 199, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites'], badge: '⭐ Most Popular', popular: true, emoji: '🎁' },
+  { id: 'pack-4', name: 'Grand Pack', subtitle: 'All Flavors', price: 350, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites', 'Kunaffa Bites'], badge: '🏆 Best Value', popular: false, emoji: '👑' },
 ];
 
 // =============================================
-// BUSINESS WHATSAPP CONFIG
+// CONFIG
 // =============================================
-const WHATSAPP_NUMBER = '212703920799'; // ← REPLACE with your business number
+const WHATSAPP_NUMBER = '212703920799';
 
 // =============================================
-// CART STATE
+// STATE
 // =============================================
 let cart = [];
 let orderSelections = {};
+let soundsInitialized = false;
+let isMuted = false;
+let currentVolume = 0.5;
+let communitySectionVisible = false;
+let ominousMusicPlaying = false;
 
 // =============================================
 // DOM REFERENCES
@@ -133,6 +102,7 @@ const productsGrid = document.getElementById('productsGrid');
 const packsGrid = document.getElementById('packsGrid');
 const orderForm = document.getElementById('orderForm');
 const orderProductSelector = document.getElementById('orderProductSelector');
+const communitySection = document.getElementById('community');
 
 // =============================================
 // PIRATE SOUND SYSTEM
@@ -144,57 +114,68 @@ const PIRATE_SOUNDS = {
   laugh: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
   thunder: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3',
   chest: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
+  ominous: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3', // Using thunder as placeholder for ominous
 };
 
 const audioElements = {};
-let isMuted = false;
-let currentVolume = 0.5;
-let soundsInitialized = false;
 
 function initPirateSounds() {
   if (soundsInitialized) return;
   
+  console.log('🔊 Initializing pirate sounds...');
+  
   Object.keys(PIRATE_SOUNDS).forEach(key => {
     audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
-    audioElements[key].loop = key === 'ocean';
+    audioElements[key].loop = (key === 'ocean' || key === 'ominous');
     audioElements[key].volume = currentVolume;
-    // Preload audio
+    audioElements[key].preload = 'auto';
     audioElements[key].load();
+    console.log(`🔊 Loaded sound: ${key}`);
   });
   
+  // Start ocean waves quietly in background
   if (audioElements.ocean) {
-    audioElements.ocean.volume = 0.2;
-    audioElements.ocean.play().catch(() => {
-      console.log('🔊 Ocean autoplay blocked - will play on user interaction');
+    audioElements.ocean.volume = 0.15;
+    audioElements.ocean.play().catch(err => {
+      console.log('🔊 Ocean autoplay blocked (browser policy) - will play on first user interaction');
     });
   }
   
   soundsInitialized = true;
-  console.log('🔊 Pirate sounds initialized');
+  console.log('✅ Pirate sounds initialized');
 }
 
-function playPirateSound(soundName, volume = 1) {
+function playPirateSound(soundName, volume = 1, loop = false) {
   if (!soundsInitialized) {
     console.warn('⚠️ Sounds not initialized yet');
     return;
   }
   
   if (isMuted || !audioElements[soundName]) {
-    console.log('🔇 Sound muted or not found:', soundName);
     return;
   }
   
   const audio = audioElements[soundName];
   audio.currentTime = 0;
   audio.volume = currentVolume * volume;
+  audio.loop = loop;
   
   audio.play().catch(err => {
-    console.log('🔊 Sound play error:', err);
+    console.log(`🔊 Sound play error for ${soundName}:`, err);
   });
   
-  console.log('🔊 Playing sound:', soundName);
+  console.log(`🔊 Playing: ${soundName} (vol: ${volume}, loop: ${loop})`);
 }
 
+function stopPirateSound(soundName) {
+  if (audioElements[soundName]) {
+    audioElements[soundName].pause();
+    audioElements[soundName].currentTime = 0;
+    console.log(`🔇 Stopped: ${soundName}`);
+  }
+}
+
+// Create sound toggle button
 function createSoundToggle() {
   const toggle = document.createElement('button');
   toggle.className = 'sound-toggle';
@@ -206,11 +187,14 @@ function createSoundToggle() {
     isMuted = !isMuted;
     toggle.classList.toggle('muted', isMuted);
     
-    Object.values(audioElements).forEach(audio => {
-      if (isMuted) {
-        audio.pause();
-      } else if (audio.loop) {
-        audio.play().catch(() => {});
+    // Pause/resume looping sounds
+    Object.keys(audioElements).forEach(key => {
+      if (audioElements[key].loop) {
+        if (isMuted) {
+          audioElements[key].pause();
+        } else {
+          audioElements[key].play().catch(() => {});
+        }
       }
     });
     
@@ -241,51 +225,105 @@ function showVolumeIndicator(text) {
   }, 2000);
 }
 
-// Setup sound triggers for dynamic elements (called AFTER elements exist)
-function setupPirateSoundTriggers() {
-  console.log('🔊 Setting up sound triggers...');
+// Setup sound triggers for ALL interactive elements
+function setupAllSoundTriggers() {
+  console.log('🔊 Setting up ALL sound triggers...');
   
-  // Gold coins hover
+  // 1. Gold coins hover - play coin sound
   document.querySelectorAll('.gold-coin').forEach(coin => {
     coin.addEventListener('mouseenter', () => {
-      console.log('🪙 Coin hover detected');
-      playPirateSound('coin', 0.3);
+      if (!isMuted) playPirateSound('coin', 0.3);
     });
   });
   
-  // Treasure markers click
+  // 2. Treasure gems hover - play coin sound
+  document.querySelectorAll('.treasure-gem').forEach(gem => {
+    gem.addEventListener('mouseenter', () => {
+      if (!isMuted) playPirateSound('coin', 0.3);
+    });
+  });
+  
+  // 3. Ancient keys hover - play coin sound
+  document.querySelectorAll('.ancient-key').forEach(key => {
+    key.addEventListener('mouseenter', () => {
+      if (!isMuted) playPirateSound('coin', 0.3);
+    });
+  });
+  
+  // 4. Treasure markers click - play coin sound
   document.querySelectorAll('.treasure-marker').forEach(marker => {
     marker.addEventListener('click', () => {
-      console.log('💎 Treasure marker clicked');
-      playPirateSound('coin', 0.5);
+      if (!isMuted) playPirateSound('coin', 0.5);
     });
   });
   
-  // Order form submit
-  if (orderForm) {
-    orderForm.addEventListener('submit', () => {
-      playPirateSound('chest', 0.6);
-      setTimeout(() => playPirateSound('laugh', 0.4), 500);
-    });
-  }
-  
-  // Google Form button click
-  const googleFormBtn = document.querySelector('.community-form-card .form-submit[href*="google.com"]');
+  // 5. Google Form button click - play coin sound
+  const googleFormBtn = document.getElementById('googleFormBtn');
   if (googleFormBtn) {
     googleFormBtn.addEventListener('click', () => {
       console.log('🏴‍️ Google Form button clicked');
-      playPirateSound('coin', 0.4);
+      if (!isMuted) playPirateSound('coin', 0.4);
+      showToast('🏴‍️ Opening Google Form… Welcome aboard, Pirate!', 'success');
     });
   }
   
-  console.log('🔊 Sound triggers setup complete');
+  // 6. Order form submit - play chest open + pirate laugh
+  if (orderForm) {
+    orderForm.addEventListener('submit', () => {
+      if (!isMuted) {
+        playPirateSound('chest', 0.6);
+        setTimeout(() => playPirateSound('laugh', 0.4), 500);
+      }
+    });
+  }
+  
+  console.log('✅ All sound triggers setup complete');
+}
+
+// =============================================
+// COMMUNITY SECTION SOUND MANAGER
+// =============================================
+function initCommunitySectionSounds() {
+  if (!communitySection) return;
+  
+  console.log('🏴‍️ Initializing community section sounds...');
+  
+  // Use IntersectionObserver to detect when community section is visible
+  const communityObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !communitySectionVisible) {
+        // Section entered viewport - play ominous music + pirate laugh
+        communitySectionVisible = true;
+        console.log('🏴‍️ Community section entered viewport');
+        
+        if (!isMuted) {
+          // Play ominous background music (looping)
+          playPirateSound('ominous', 0.2, true);
+          
+          // Play pirate laugh after short delay
+          setTimeout(() => {
+            if (!isMuted) playPirateSound('laugh', 0.5);
+          }, 1500);
+        }
+      } else if (!entry.isIntersecting && communitySectionVisible) {
+        // Section left viewport - stop ominous music
+        communitySectionVisible = false;
+        console.log('🏴‍️ Community section left viewport');
+        stopPirateSound('ominous');
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  communityObserver.observe(communitySection);
+  
+  // Also setup direct event listeners as backup
+  setupAllSoundTriggers();
 }
 
 // =============================================
 // DAY/NIGHT MODE TOGGLE
 // =============================================
 function initDayNightMode() {
-  const communitySection = document.getElementById('community');
   if (!communitySection) {
     console.warn('⚠️ Community section not found');
     return;
@@ -302,12 +340,17 @@ function initDayNightMode() {
     toggle.classList.toggle('sun-mode', !isNight);
     toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
     
-    // Play thunder sound on toggle
     console.log('🌙 Night mode toggled:', isNight);
-    playPirateSound('thunder', 0.3);
     
+    // Play thunder sound on toggle (this is the key fix!)
+    if (!isMuted) {
+      playPirateSound('thunder', 0.4);
+    }
+    
+    // Save preference
     localStorage.setItem('brownieverse-night-mode', isNight);
     
+    // Create night elements if switching to night
     if (isNight) {
       createStars();
       createMoon();
@@ -315,6 +358,7 @@ function initDayNightMode() {
     }
   });
   
+  // Insert toggle at top of community section
   communitySection.insertBefore(toggle, communitySection.firstChild);
   
   // Check saved preference
@@ -332,11 +376,9 @@ function initDayNightMode() {
 }
 
 function createStars() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelectorAll('.star').length > 0) return;
-  
+  if (!communitySection) return;
   const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
+  if (!skyElements || skyElements.querySelectorAll('.star').length > 0) return;
   
   for (let i = 0; i < 20; i++) {
     const star = document.createElement('div');
@@ -351,11 +393,9 @@ function createStars() {
 }
 
 function createMoon() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelector('.moon')) return;
-  
+  if (!communitySection) return;
   const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
+  if (!skyElements || skyElements.querySelector('.moon')) return;
   
   const moon = document.createElement('div');
   moon.className = 'moon';
@@ -363,11 +403,9 @@ function createMoon() {
 }
 
 function createNightClouds() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelectorAll('.night-cloud').length > 0) return;
-  
+  if (!communitySection) return;
   const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
+  if (!skyElements || skyElements.querySelectorAll('.night-cloud').length > 0) return;
   
   const cloud1 = document.createElement('div');
   cloud1.className = 'night-cloud night-cloud-1';
@@ -383,19 +421,19 @@ function createNightClouds() {
 // =============================================
 window.addEventListener('load', () => {
   setTimeout(() => {
-    document.getElementById('page-loader').classList.add('hidden');
+    document.getElementById('page-loader')?.classList.add('hidden');
   }, 1400);
 });
 
 // =============================================
-// NAVBAR SCROLL BEHAVIOR
+// NAVBAR SCROLL
 // =============================================
 const navScrollHandler = () => {
   if (window.scrollY > 60) {
-    navbar.classList.add('scrolled');
+    navbar?.classList.add('scrolled');
     document.getElementById('navOrderBtn').style.display = 'inline-flex';
   } else {
-    navbar.classList.remove('scrolled');
+    navbar?.classList.remove('scrolled');
     document.getElementById('navOrderBtn').style.display = 'none';
   }
 };
@@ -423,18 +461,18 @@ sections.forEach(id => {
 // =============================================
 // MOBILE NAV
 // =============================================
-hamburger.addEventListener('click', () => {
-  const isOpen = mobileNav.classList.toggle('open');
-  hamburger.classList.toggle('open', isOpen);
-  hamburger.setAttribute('aria-expanded', isOpen);
+hamburger?.addEventListener('click', () => {
+  const isOpen = mobileNav?.classList.toggle('open');
+  hamburger?.classList.toggle('open', isOpen);
+  hamburger?.setAttribute('aria-expanded', isOpen);
   document.body.style.overflow = isOpen ? 'hidden' : '';
 });
 
 document.querySelectorAll('.mobile-nav-link').forEach(link => {
   link.addEventListener('click', () => {
-    mobileNav.classList.remove('open');
-    hamburger.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
+    mobileNav?.classList.remove('open');
+    hamburger?.classList.remove('open');
+    hamburger?.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   });
 });
@@ -501,12 +539,9 @@ function renderPacks() {
     <div class="pack-card${pack.popular ? ' popular' : ''} reveal reveal-delay-${idx + 1}">
       ${pack.popular ? '<div class="pack-popular-ribbon">Most Popular</div>' : ''}
       ${pack.badge ? `<div class="pack-badge">${pack.badge}</div>` : ''}
-
       <div class="pack-name">${pack.name}</div>
       <div class="pack-subtitle">${pack.subtitle}</div>
-
       <div class="pack-divider"></div>
-
       <div class="pack-contents">
         ${pack.contents.map(item => `
           <div class="pack-item">
@@ -515,12 +550,10 @@ function renderPacks() {
           </div>
         `).join('')}
       </div>
-
       <div class="pack-price">
         <span class="pack-price-num">${pack.price}</span>
         <span class="pack-price-currency">DH</span>
       </div>
-
       <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')">
         <i class="fas fa-shopping-bag"></i>
         Order This Pack
@@ -532,7 +565,7 @@ function renderPacks() {
 }
 
 // =============================================
-// ORDER FORM — PACK SELECTOR
+// ORDER FORM PACK SELECTOR
 // =============================================
 function renderOrderProductSelector() {
   if (!orderProductSelector) return;
@@ -580,7 +613,6 @@ function updateOrderSummary() {
   if (!summaryBox) return;
   
   const selected = Object.entries(orderSelections);
-
   if (selected.length === 0) {
     summaryBox.innerHTML = `<div class="os-row"><span>No pack selected</span><span></span></div>`;
     return;
@@ -596,10 +628,7 @@ function updateOrderSummary() {
     rows += `<div class="os-row"><span>${p.name} ×${qty}</span><span>${lineTotal} DH</span></div>`;
   });
 
-  summaryBox.innerHTML = `
-    ${rows}
-    <div class="os-row os-total"><span>Total</span><span>${total} DH</span></div>
-  `;
+  summaryBox.innerHTML = `${rows}<div class="os-row os-total"><span>Total</span><span>${total} DH</span></div>`;
 }
 
 window.preSelectPack = function(packId) {
@@ -632,7 +661,6 @@ window.addPackToCart = function(packId, event) {
     cart.push({ ...pack, qty: 1 });
     showToast(`${pack.emoji} ${pack.name} added to cart!`, 'success');
   }
-
   updateCartUI();
   syncCartToOrderForm();
 };
@@ -669,28 +697,20 @@ function updateCartUI() {
   cartTotalDisplay.textContent = `${total} DH`;
 
   if (cart.length === 0) {
-    cartItems.innerHTML = `
-      <div class="cart-empty">
-        <div class="cart-empty-icon">🛒</div>
-        <p>Your cart is empty.<br />Add some brownie bites!</p>
-      </div>`;
+    cartItems.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Your cart is empty.<br />Add some brownie bites!</p></div>`;
     cartFooter.style.display = 'none';
   } else {
     cartItems.innerHTML = cart.map(item => `
       <div class="cart-item">
-        <div class="cart-item-img" style="background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:2rem;">
-          ${item.emoji}
-        </div>
+        <div class="cart-item-img" style="background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:2rem;">${item.emoji}</div>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">${item.price} DH</div>
           <div class="cart-item-controls">
-            <button class="ci-qty-btn" onclick="changeQty('${item.id}', -1)" aria-label="Decrease quantity">−</button>
+            <button class="ci-qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
             <span class="ci-qty">${item.qty}</span>
-            <button class="ci-qty-btn" onclick="changeQty('${item.id}', 1)" aria-label="Increase quantity">+</button>
-            <button class="ci-remove" onclick="removeFromCart('${item.id}')" aria-label="Remove ${item.name}">
-              <i class="fas fa-trash"></i> Remove
-            </button>
+            <button class="ci-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+            <button class="ci-remove" onclick="removeFromCart('${item.id}')"><i class="fas fa-trash"></i> Remove</button>
           </div>
         </div>
         <div class="cart-item-total">${item.price * item.qty} DH</div>
@@ -701,29 +721,25 @@ function updateCartUI() {
 }
 
 function openCart() {
-  cartDrawer.classList.add('open');
-  cartOverlay.classList.add('open');
-  cartDrawer.setAttribute('aria-hidden', 'false');
-  cartOverlay.setAttribute('aria-hidden', 'false');
+  cartDrawer?.classList.add('open');
+  cartOverlay?.classList.add('open');
+  cartDrawer?.setAttribute('aria-hidden', 'false');
+  cartOverlay?.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 
 function closeCart() {
-  cartDrawer.classList.remove('open');
-  cartOverlay.classList.remove('open');
-  cartDrawer.setAttribute('aria-hidden', 'true');
+  cartDrawer?.classList.remove('open');
+  cartOverlay?.classList.remove('open');
+  cartDrawer?.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 }
 
-cartToggle.addEventListener('click', openCart);
-cartClose.addEventListener('click', closeCart);
-cartContinue.addEventListener('click', closeCart);
-cartOverlay.addEventListener('click', closeCart);
-
-cartCheckout.addEventListener('click', () => {
-  closeCart();
-  document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
-});
+cartToggle?.addEventListener('click', openCart);
+cartClose?.addEventListener('click', closeCart);
+cartContinue?.addEventListener('click', closeCart);
+cartOverlay?.addEventListener('click', closeCart);
+cartCheckout?.addEventListener('click', () => { closeCart(); document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' }); });
 
 function syncCartToOrderForm() {
   PACKS.forEach(p => {
@@ -746,17 +762,16 @@ function syncCartToOrderForm() {
 }
 
 // =============================================
-// ORDER FORM SUBMISSION → WHATSAPP
+// ORDER FORM → WHATSAPP
 // =============================================
-orderForm.addEventListener('submit', (e) => {
+orderForm?.addEventListener('submit', (e) => {
   e.preventDefault();
-
   if (!validateOrderForm()) return;
 
-  const name = document.getElementById('orderName').value.trim();
-  const phone = document.getElementById('orderPhone').value.trim();
-  const address = document.getElementById('orderAddress').value.trim();
-  const notes = document.getElementById('orderNotes').value.trim();
+  const name = document.getElementById('orderName')?.value.trim();
+  const phone = document.getElementById('orderPhone')?.value.trim();
+  const address = document.getElementById('orderAddress')?.value.trim();
+  const notes = document.getElementById('orderNotes')?.value.trim();
   
   const orderItems = Object.entries(orderSelections).map(([pid, qty]) => {
     const pack = PACKS.find(p => p.id === pid);
@@ -770,26 +785,14 @@ orderForm.addEventListener('submit', (e) => {
 
   const message = `
 🍫 *NEW ORDER — BrownieVerse* 🍫
-
 👤 *Customer*: ${name}
 📱 *Phone*: ${phone}
 📍 *Address*: ${address}
-
 📦 *Order Details*:
 ${orderItems}
-
 💰 *Total*: ${total} DH
-
 📝 *Notes*: ${notes || 'None'}
-
-⏰ *Order Time*: ${new Date().toLocaleString('en-MA', { 
-    timeZone: 'Africa/Casablanca',
-    hour: '2-digit', 
-    minute: '2-digit',
-    day: '2-digit',
-    month: 'short'
-  })}
-
+⏰ *Order Time*: ${new Date().toLocaleString('en-MA', { timeZone: 'Africa/Casablanca', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
 ──────────────
 Sent from BrownieVerse.ma
   `.trim();
@@ -808,7 +811,7 @@ Sent from BrownieVerse.ma
     showToast('📱 Opening WhatsApp… Please send the message to confirm your order!', 'success');
     
     setTimeout(() => {
-      orderForm.reset();
+      orderForm?.reset();
       orderSelections = {};
       renderOrderProductSelector();
       updateOrderSummary();
@@ -819,14 +822,14 @@ Sent from BrownieVerse.ma
 });
 
 function validateOrderForm() {
-  const name  = document.getElementById('orderName').value.trim();
-  const phone = document.getElementById('orderPhone').value.trim();
-  const addr  = document.getElementById('orderAddress').value.trim();
+  const name = document.getElementById('orderName')?.value.trim();
+  const phone = document.getElementById('orderPhone')?.value.trim();
+  const addr = document.getElementById('orderAddress')?.value.trim();
   const hasProducts = Object.keys(orderSelections).length > 0;
 
-  if (!name)  { showToast('Please enter your full name.', 'error'); document.getElementById('orderName').focus(); return false; }
-  if (!phone) { showToast('Please enter your phone number.', 'error'); document.getElementById('orderPhone').focus(); return false; }
-  if (!addr)  { showToast('Please enter your delivery address.', 'error'); document.getElementById('orderAddress').focus(); return false; }
+  if (!name) { showToast('Please enter your full name.', 'error'); document.getElementById('orderName')?.focus(); return false; }
+  if (!phone) { showToast('Please enter your phone number.', 'error'); document.getElementById('orderPhone')?.focus(); return false; }
+  if (!addr) { showToast('Please enter your delivery address.', 'error'); document.getElementById('orderAddress')?.focus(); return false; }
   if (!hasProducts) { showToast('Please select at least one pack.', 'error'); return false; }
   return true;
 }
@@ -839,7 +842,7 @@ function showToast(message, type = '') {
   toast.className = `toast ${type}`;
   const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
   toast.innerHTML = `<span>${icon}</span> ${message}`;
-  toastContainer.appendChild(toast);
+  toastContainer?.appendChild(toast);
 
   setTimeout(() => {
     toast.style.animation = 'toast-out 0.4s var(--ease-in) forwards';
@@ -873,7 +876,7 @@ document.querySelectorAll('.success-overlay').forEach(overlay => {
 });
 
 // =============================================
-// KEYBOARD ACCESSIBILITY
+// KEYBOARD & SCROLL
 // =============================================
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
@@ -883,9 +886,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// =============================================
-// SMOOTH SCROLL
-// =============================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     const targetId = this.getAttribute('href').slice(1);
@@ -898,17 +898,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// =============================================
-// FLAVOR STRIP CLICK
-// =============================================
 document.querySelectorAll('.flavor-pill').forEach(pill => {
   pill.addEventListener('click', () => {
-    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   });
 });
 
 // =============================================
-// ANIMATE NUMBERS (stats)
+// ANIMATE NUMBERS & PARALLAX
 // =============================================
 function animateNumber(el, target, suffix = '') {
   let current = 0;
@@ -935,9 +932,6 @@ const statsObserver = new IntersectionObserver((entries) => {
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) statsObserver.observe(heroStats);
 
-// =============================================
-// PARALLAX HERO
-// =============================================
 window.addEventListener('scroll', () => {
   const heroVisual = document.querySelector('.hero-visual');
   if (heroVisual && window.innerWidth > 900) {
@@ -947,11 +941,10 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // =============================================
-// SCHEDULE: HIGHLIGHT TODAY
+// SCHEDULE HIGHLIGHT
 // =============================================
 function highlightScheduleDays() {
   if (!document.getElementById('schedule')) return;
-  
   const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const today = days[new Date().getDay()];
   
@@ -966,10 +959,9 @@ function highlightScheduleDays() {
 }
 
 // =============================================
-// INTERACTIVE TREASURE MAP
+// TREASURE MAP
 // =============================================
 function initTreasureMap() {
-  const communitySection = document.getElementById('community');
   if (!communitySection) return;
   
   const mapContainer = document.createElement('div');
@@ -980,102 +972,57 @@ function initTreasureMap() {
       <h3>🗺️ Treasure Map of Perks</h3>
       <p>Click the X marks to discover hidden pirate treasures!</p>
     </div>
-    
     <div class="treasure-map" id="treasureMap">
       <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;">
         <path class="map-path" d="M 120 80 Q 200 120 280 100 T 400 180" />
         <path class="map-path" d="M 120 80 Q 100 180 150 280" style="animation-delay:1.5s"/>
         <path class="map-path" d="M 280 100 Q 320 200 300 250" style="animation-delay:2s"/>
       </svg>
-      
-      <div class="treasure-marker marker-1" data-perk="0" title="Click to reveal!">💰</div>
-      <div class="x-spot" style="top:17%;left:22%;">X</div>
-      
-      <div class="treasure-marker marker-2" data-perk="1" title="Click to reveal!">💎</div>
-      <div class="x-spot" style="top:27%;right:27%;">X</div>
-      
-      <div class="treasure-marker marker-3" data-perk="2" title="Click to reveal!">🎁</div>
-      <div class="x-spot" style="top:47%;left:17%;">X</div>
-      
-      <div class="treasure-marker marker-4" data-perk="3" title="Click to reveal!">🏴‍️</div>
-      <div class="x-spot" style="top:57%;right:22%;">X</div>
-      
-      <div class="treasure-marker marker-5" data-perk="4" title="Click to reveal!">⚓</div>
-      <div class="x-spot" style="top:72%;left:32%;">X</div>
-      
-      <div class="perk-popup" id="perkPopup0">
-        <div class="perk-popup-icon">💰</div>
-        <div class="perk-popup-title">Exclusive Discounts</div>
-        <div class="perk-popup-desc">Get 20% off your first order as a crew member!</div>
-      </div>
-      
-      <div class="perk-popup" id="perkPopup1">
-        <div class="perk-popup-icon">💎</div>
-        <div class="perk-popup-title">Limited Editions</div>
-        <div class="perk-popup-desc">First access to rare & seasonal flavors before anyone else!</div>
-      </div>
-      
-      <div class="perk-popup" id="perkPopup2">
-        <div class="perk-popup-icon">🎁</div>
-        <div class="perk-popup-title">Birthday Treasure</div>
-        <div class="perk-popup-desc">Free brownie bites on your birthday! Arrr, happy birthday!</div>
-      </div>
-      
-      <div class="perk-popup" id="perkPopup3">
-        <div class="perk-popup-icon">🏴‍️</div>
-        <div class="perk-popup-title">Pirate Events</div>
-        <div class="perk-popup-desc">Invite-only tastings & treasure hunt parties in Salé!</div>
-      </div>
-      
-      <div class="perk-popup" id="perkPopup4">
-        <div class="perk-popup-icon">⚓</div>
-        <div class="perk-popup-title">Captain's Direct Line</div>
-        <div class="perk-popup-desc">Priority WhatsApp support from the BrownieVerse crew!</div>
-      </div>
-      
-      <div class="map-compass-rose">🧭</div>
-      <div class="map-scale">Scale: 1 inch = 1 delicious bite</div>
+      <div class="treasure-marker marker-1" data-perk="0" title="Click to reveal!">💰</div><div class="x-spot" style="top:17%;left:22%;">X</div>
+      <div class="treasure-marker marker-2" data-perk="1" title="Click to reveal!">💎</div><div class="x-spot" style="top:27%;right:27%;">X</div>
+      <div class="treasure-marker marker-3" data-perk="2" title="Click to reveal!">🎁</div><div class="x-spot" style="top:47%;left:17%;">X</div>
+      <div class="treasure-marker marker-4" data-perk="3" title="Click to reveal!">🏴‍️</div><div class="x-spot" style="top:57%;right:22%;">X</div>
+      <div class="treasure-marker marker-5" data-perk="4" title="Click to reveal!">⚓</div><div class="x-spot" style="top:72%;left:32%;">X</div>
+      <div class="perk-popup" id="perkPopup0"><div class="perk-popup-icon">💰</div><div class="perk-popup-title">Exclusive Discounts</div><div class="perk-popup-desc">Get 20% off your first order as a crew member!</div></div>
+      <div class="perk-popup" id="perkPopup1"><div class="perk-popup-icon">💎</div><div class="perk-popup-title">Limited Editions</div><div class="perk-popup-desc">First access to rare & seasonal flavors before anyone else!</div></div>
+      <div class="perk-popup" id="perkPopup2"><div class="perk-popup-icon">🎁</div><div class="perk-popup-title">Birthday Treasure</div><div class="perk-popup-desc">Free brownie bites on your birthday! Arrr, happy birthday!</div></div>
+      <div class="perk-popup" id="perkPopup3"><div class="perk-popup-icon">🏴‍️</div><div class="perk-popup-title">Pirate Events</div><div class="perk-popup-desc">Invite-only tastings & treasure hunt parties in Salé!</div></div>
+      <div class="perk-popup" id="perkPopup4"><div class="perk-popup-icon">⚓</div><div class="perk-popup-title">Captain's Direct Line</div><div class="perk-popup-desc">Priority WhatsApp support from the BrownieVerse crew!</div></div>
+      <div class="map-compass-rose">🧭</div><div class="map-scale">Scale: 1 inch = 1 delicious bite</div>
     </div>
-    
-    <div class="map-instructions">
-      <i class="fas fa-mouse-pointer"></i> Click on the bouncing markers to reveal hidden perks!
-    </div>
+    <div class="map-instructions"><i class="fas fa-mouse-pointer"></i> Click on the bouncing markers to reveal hidden perks!</div>
   `;
   
   const formCard = communitySection.querySelector('.community-form-card');
-  if (formCard) {
-    communitySection.insertBefore(mapContainer, formCard);
-  }
+  if (formCard) communitySection.insertBefore(mapContainer, formCard);
   
-  // Setup sound triggers AFTER treasure map is created
+  // Setup treasure marker clicks AFTER map is created
   setTimeout(() => {
-    setupPirateSoundTriggers();
+    document.querySelectorAll('.treasure-marker').forEach(marker => {
+      marker.addEventListener('click', (e) => {
+        const perkIndex = marker.getAttribute('data-perk');
+        revealPerk(perkIndex, marker);
+        // Play coin sound on click
+        if (!isMuted) playPirateSound('coin', 0.5);
+      });
+    });
   }, 100);
 }
 
 function revealPerk(index, marker) {
-  document.querySelectorAll('.perk-popup').forEach(popup => {
-    popup.classList.remove('visible');
-  });
-  
+  document.querySelectorAll('.perk-popup').forEach(popup => popup.classList.remove('visible'));
   const popup = document.getElementById(`perkPopup${index}`);
   if (popup) {
     const markerRect = marker.getBoundingClientRect();
-    const mapRect = marker.closest('.treasure-map').getBoundingClientRect();
-    
-    popup.style.left = (markerRect.left - mapRect.left - 50) + 'px';
-    popup.style.top = (markerRect.top - mapRect.top - 120) + 'px';
-    
+    const mapRect = marker.closest('.treasure-map')?.getBoundingClientRect();
+    if (mapRect) {
+      popup.style.left = (markerRect.left - mapRect.left - 50) + 'px';
+      popup.style.top = (markerRect.top - mapRect.top - 120) + 'px';
+    }
     popup.classList.add('visible');
     marker.classList.add('revealed');
-    
-    playPirateSound('coin', 0.5);
-    
     createTreasureChest(marker);
-    
-    setTimeout(() => {
-      popup.classList.remove('visible');
-    }, 5000);
+    setTimeout(() => popup.classList.remove('visible'), 5000);
   }
 }
 
@@ -1085,37 +1032,31 @@ function createTreasureChest(marker) {
   chest.textContent = '📦';
   chest.style.left = marker.style.left || '50%';
   chest.style.top = marker.style.top || '50%';
-  
-  marker.parentElement.appendChild(chest);
-  
-  setTimeout(() => {
-    chest.remove();
-  }, 2000);
+  marker.parentElement?.appendChild(chest);
+  setTimeout(() => chest.remove(), 2000);
 }
 
 // =============================================
-// UPDATE PIRATE COUNT
+// PIRATE COUNT
 // =============================================
 function updatePirateCount() {
   const el = document.getElementById('pirateCount');
-  if (el && !el.dataset.static) {
-    if (!el.textContent.includes('200+')) {
-      el.textContent = 'Join 200+ Pirates already aboard';
-    }
+  if (el && !el.dataset.static && !el.textContent.includes('200+')) {
+    el.textContent = 'Join 200+ Pirates already aboard';
   }
 }
 
 // =============================================
-// INIT - MAIN ENTRY POINT
+// MAIN INITIALIZATION
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🏴‍️ BrownieVerse Initializing...');
   
-  // Initialize sounds FIRST
+  // 1. Initialize sounds FIRST (critical!)
   initPirateSounds();
   createSoundToggle();
   
-  // Render content
+  // 2. Render content
   renderProducts();
   renderPacks();
   renderOrderProductSelector();
@@ -1123,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePirateCount();
   observeReveal();
   
-  // Schedule highlight
+  // 3. Schedule highlight
   highlightScheduleDays();
   const scheduleObserver = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
@@ -1134,19 +1075,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const scheduleSection = document.getElementById('schedule');
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
-  // Initialize day/night mode
+  // 4. Initialize day/night mode (with thunder sound)
   initDayNightMode();
   
-  // Initialize treasure map (this will trigger sound setup after map is created)
+  // 5. Initialize treasure map
   initTreasureMap();
   
-  console.log('🏴‍️ BrownieVerse Initialization Complete!');
+  // 6. Initialize community section sounds (ominous music + pirate laugh on enter)
+  initCommunitySectionSounds();
+  
+  console.log('✅ BrownieVerse Initialization Complete! All sounds ready! 🍫⚓');
 });
 
-// Fallback for already loaded pages
+// Fallback for already-loaded pages
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   console.log('🏴‍️ Page already loaded, initializing...');
-  
   initPirateSounds();
   createSoundToggle();
   renderProducts();
@@ -1158,6 +1101,7 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   highlightScheduleDays();
   initDayNightMode();
   initTreasureMap();
+  initCommunitySectionSounds();
 }
 
 // Global functions for inline onclick
