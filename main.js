@@ -109,13 +109,13 @@ const communitySection = document.getElementById('community');
 // =============================================
 // Using GitHub-hosted sounds (more reliable for hotlinking)
 const PIRATE_SOUNDS = {
-  ocean: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  parrot: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  coin: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  laugh: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  thunder: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  chest: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
-  ominous: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  ocean: 'ocean.mp3',
+  parrot: 'parrot.mp3',
+  coin: 'coin.mp3',
+  laugh: 'laugh.mp3',
+  thunder: 'thunder.mp3',
+  chest: 'chest.mp3',
+  ominous: 'ominous.mp3',
 };
 
 // Alternative: Use local sounds if you have them (recommended for production)
