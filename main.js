@@ -68,7 +68,7 @@ const PACKS = [
     subtitle: 'Classic Bites',
     price: 99,
     contents: ['Classic Brownie Bites'],
-    badge: '🆕 New Crew Member?',      // ← Optional: Add a badge
+    badge: '🦜 New Crew Member?',      // ← Optional: Add a badge
     popular: false,
     emoji: '🦜',                        // ← UPDATED EMOJI
     image: 'pack1.png',
