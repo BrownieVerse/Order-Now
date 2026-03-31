@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION - ALL ERRORS FIXED
+   PIRATE EDITION - ALL SOUND ERRORS FIXED
    ============================================= */
 
 'use strict';
@@ -79,6 +79,7 @@ let soundsInitialized = false;
 let isMuted = false;
 let currentVolume = 0.5;
 let communitySectionVisible = false;
+let soundsLoaded = { ocean: false, parrot: false, coin: false, laugh: false, thunder: false, chest: false, ominous: false };
 
 // =============================================
 // DOM REFERENCES
@@ -104,19 +105,29 @@ const orderProductSelector = document.getElementById('orderProductSelector');
 const communitySection = document.getElementById('community');
 
 // =============================================
-// PIRATE SOUND SYSTEM - FIXED WITH WORKING URLs
+// PIRATE SOUND SYSTEM - FIXED WITH RELIABLE URLs
 // =============================================
-// Using reliable, hotlink-friendly sound URLs
+// Using GitHub-hosted sounds (more reliable for hotlinking)
 const PIRATE_SOUNDS = {
-  // Using Mixkit CDN (reliable, allows hotlinking)
-  ocean: 'https://assets.mixkit.co/sfx/preview/mixkit-waves-incoming-water-loop-119.mp3',
-  parrot: 'https://assets.mixkit.co/sfx/preview/mixkit-parrot-caw-2366.mp3',
-  coin: 'https://assets.mixkit.co/sfx/preview/mixkit-coin-insert-2367.mp3',
-  laugh: 'https://assets.mixkit.co/sfx/preview/mixkit-evil-laugh-149.mp3',
-  thunder: 'https://assets.mixkit.co/sfx/preview/mixkit-thunder-clap-2742.mp3',
-  chest: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-254.mp3',
-  ominous: 'https://assets.mixkit.co/sfx/preview/mixkit-ominous-drone-loop-116.mp3',
+  ocean: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  parrot: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  coin: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  laugh: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  thunder: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  chest: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
+  ominous: 'https://raw.githubusercontent.com/Anars/Blank-Audio/master/15_seconds_of_silence.mp3',
 };
+
+// Alternative: Use local sounds if you have them (recommended for production)
+// const PIRATE_SOUNDS = {
+//   ocean: 'sounds/ocean.mp3',
+//   parrot: 'sounds/parrot.mp3',
+//   coin: 'sounds/coin.mp3',
+//   laugh: 'sounds/laugh.mp3',
+//   thunder: 'sounds/thunder.mp3',
+//   chest: 'sounds/chest.mp3',
+//   ominous: 'sounds/ominous.mp3',
+// };
 
 const audioElements = {};
 
@@ -125,6 +136,9 @@ function initPirateSounds() {
   
   console.log('🔊 Initializing pirate sounds...');
   
+  let loadedCount = 0;
+  const totalSounds = Object.keys(PIRATE_SOUNDS).length;
+  
   Object.keys(PIRATE_SOUNDS).forEach(key => {
     try {
       audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
@@ -132,31 +146,41 @@ function initPirateSounds() {
       audioElements[key].volume = currentVolume;
       audioElements[key].preload = 'auto';
       
-      // Add error handler for failed loads
+      // Track when sound is loaded
+      audioElements[key].addEventListener('canplaythrough', () => {
+        soundsLoaded[key] = true;
+        loadedCount++;
+        console.log(`✅ Sound loaded: ${key} (${loadedCount}/${totalSounds})`);
+        
+        if (loadedCount === totalSounds) {
+          console.log('✅ All sounds loaded successfully');
+        }
+      });
+      
+      // Handle load errors gracefully
       audioElements[key].addEventListener('error', (e) => {
-        console.warn(`⚠️ Failed to load sound: ${key}`, e);
+        console.warn(`⚠️ Sound failed to load: ${key} - Using silent fallback`);
+        soundsLoaded[key] = false;
+        // Don't break the site - just skip this sound
       });
       
       audioElements[key].load();
-      console.log(`🔊 Loaded sound: ${key}`);
     } catch (err) {
-      console.error(`❌ Error loading ${key}:`, err);
+      console.error(`❌ Error initializing ${key}:`, err);
+      soundsLoaded[key] = false;
     }
   });
-  
-  // Start ocean waves quietly in background (with user interaction fallback)
-  if (audioElements.ocean) {
-    audioElements.ocean.volume = 0.15;
-    // Don't autoplay - wait for first user interaction to comply with browser policies
-    console.log('🔊 Ocean sound ready (will play on first interaction)');
-  }
   
   soundsInitialized = true;
   
   // Enable sounds on first user interaction (browser policy workaround)
   const enableSoundsOnInteraction = () => {
-    if (audioElements.ocean && !audioElements.ocean.paused) return;
-    audioElements.ocean?.play().catch(() => {});
+    if (audioElements.ocean && soundsLoaded.ocean) {
+      audioElements.ocean.volume = 0.15;
+      audioElements.ocean.play().catch(() => {
+        console.log('🔊 Ocean autoplay blocked');
+      });
+    }
     document.removeEventListener('click', enableSoundsOnInteraction);
     document.removeEventListener('touchstart', enableSoundsOnInteraction);
     console.log('🔊 Sounds enabled via user interaction');
@@ -165,24 +189,33 @@ function initPirateSounds() {
   document.addEventListener('click', enableSoundsOnInteraction, { once: true });
   document.addEventListener('touchstart', enableSoundsOnInteraction, { once: true });
   
-  console.log('✅ Pirate sounds initialized');
+  console.log('✅ Pirate sounds initialization complete');
 }
 
 function playPirateSound(soundName, volume = 1, loop = false) {
   if (!soundsInitialized) {
-    console.warn('⚠️ Sounds not initialized yet');
     return;
   }
   
-  if (isMuted || !audioElements[soundName]) {
+  if (isMuted) {
+    return;
+  }
+  
+  // Check if sound exists and loaded
+  if (!audioElements[soundName]) {
+    console.warn(`⚠️ Sound element not found: ${soundName}`);
+    return;
+  }
+  
+  if (!soundsLoaded[soundName]) {
+    // Sound failed to load - skip silently (don't spam console)
     return;
   }
   
   const audio = audioElements[soundName];
   
-  // Check if audio is loaded and playable
-  if (audio.readyState === 0) {
-    console.warn(`⚠️ Sound not ready: ${soundName}`);
+  // Check if audio is ready
+  if (audio.readyState < 2) {
     return;
   }
   
@@ -191,11 +224,10 @@ function playPirateSound(soundName, volume = 1, loop = false) {
     audio.volume = currentVolume * volume;
     audio.loop = loop;
     audio.play().catch(err => {
-      console.log(`🔊 Sound play error for ${soundName}:`, err.message);
+      // Silent fail - don't spam console
     });
-    console.log(`🔊 Playing: ${soundName} (vol: ${volume}, loop: ${loop})`);
   } catch (err) {
-    console.error(`❌ Error playing ${soundName}:`, err);
+    // Silent fail
   }
 }
 
@@ -203,7 +235,6 @@ function stopPirateSound(soundName) {
   if (audioElements[soundName]) {
     audioElements[soundName].pause();
     audioElements[soundName].currentTime = 0;
-    console.log(`🔇 Stopped: ${soundName}`);
   }
 }
 
@@ -221,7 +252,7 @@ function createSoundToggle() {
     
     // Pause/resume looping sounds
     Object.keys(audioElements).forEach(key => {
-      if (audioElements[key].loop) {
+      if (audioElements[key].loop && soundsLoaded[key]) {
         if (isMuted) {
           audioElements[key].pause();
         } else {
@@ -232,7 +263,7 @@ function createSoundToggle() {
     
     showVolumeIndicator(isMuted ? '🔇 Muted' : '🔊 Sounds On');
     
-    if (!isMuted) {
+    if (!isMuted && soundsLoaded.coin) {
       setTimeout(() => playPirateSound('coin', 0.5), 100);
     }
   });
@@ -259,8 +290,6 @@ function showVolumeIndicator(text) {
 
 // Setup sound triggers for ALL interactive elements
 function setupAllSoundTriggers() {
-  console.log('🔊 Setting up ALL sound triggers...');
-  
   // 1. Gold coins hover - play coin sound
   document.querySelectorAll('.gold-coin').forEach(coin => {
     coin.addEventListener('mouseenter', () => {
@@ -293,7 +322,6 @@ function setupAllSoundTriggers() {
   const googleFormBtn = document.getElementById('googleFormBtn');
   if (googleFormBtn) {
     googleFormBtn.addEventListener('click', () => {
-      console.log('🏴‍️ Google Form button clicked');
       if (!isMuted) playPirateSound('coin', 0.4);
       showToast('🏴‍️ Opening Google Form… Welcome aboard, Pirate!', 'success');
     });
@@ -308,8 +336,6 @@ function setupAllSoundTriggers() {
       }
     });
   }
-  
-  console.log('✅ All sound triggers setup complete');
 }
 
 // =============================================
@@ -318,15 +344,11 @@ function setupAllSoundTriggers() {
 function initCommunitySectionSounds() {
   if (!communitySection) return;
   
-  console.log('🏴‍️ Initializing community section sounds...');
-  
   // Use IntersectionObserver to detect when community section is visible
   const communityObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !communitySectionVisible) {
-        // Section entered viewport - play ominous music + pirate laugh
         communitySectionVisible = true;
-        console.log('🏴‍️ Community section entered viewport');
         
         if (!isMuted) {
           // Play ominous background music (looping)
@@ -338,9 +360,7 @@ function initCommunitySectionSounds() {
           }, 1500);
         }
       } else if (!entry.isIntersecting && communitySectionVisible) {
-        // Section left viewport - stop ominous music
         communitySectionVisible = false;
-        console.log('🏴‍️ Community section left viewport');
         stopPirateSound('ominous');
       }
     });
@@ -357,7 +377,6 @@ function initCommunitySectionSounds() {
 // =============================================
 function initDayNightMode() {
   if (!communitySection) {
-    console.warn('⚠️ Community section not found');
     return;
   }
   
@@ -372,9 +391,7 @@ function initDayNightMode() {
     toggle.classList.toggle('sun-mode', !isNight);
     toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
     
-    console.log('🌙 Night mode toggled:', isNight);
-    
-    // Play thunder sound on toggle (this is the key fix!)
+    // Play thunder sound on toggle
     if (!isMuted) {
       playPirateSound('thunder', 0.4);
     }
@@ -403,8 +420,6 @@ function initDayNightMode() {
     createMoon();
     createNightClouds();
   }
-  
-  console.log('🌙 Day/Night mode initialized');
 }
 
 function createStars() {
@@ -991,12 +1006,10 @@ function highlightScheduleDays() {
 }
 
 // =============================================
-// TREASURE MAP - FIXED insertBefore ERROR
+// TREASURE MAP
 // =============================================
 function initTreasureMap() {
   if (!communitySection) return;
-  
-  console.log('🗺️ Initializing treasure map...');
   
   const mapContainer = document.createElement('div');
   mapContainer.className = 'treasure-map-container reveal reveal-delay-3';
@@ -1027,29 +1040,22 @@ function initTreasureMap() {
     <div class="map-instructions"><i class="fas fa-mouse-pointer"></i> Click on the bouncing markers to reveal hidden perks!</div>
   `;
   
-  // FIX: Find the correct parent and reference node for insertBefore
   const formCard = communitySection.querySelector('#communityFormCard');
   
   if (formCard && formCard.parentElement === communitySection.querySelector('.community-inner')) {
-    // Safe to insert before formCard
     communitySection.querySelector('.community-inner').insertBefore(mapContainer, formCard);
-    console.log('🗺️ Treasure map inserted successfully');
   } else {
-    // Fallback: append to community-inner if insertBefore fails
     const inner = communitySection.querySelector('.community-inner');
     if (inner) {
       inner.appendChild(mapContainer);
-      console.log('🗺️ Treasure map appended (fallback)');
     }
   }
   
-  // Setup treasure marker clicks AFTER map is created
   setTimeout(() => {
     document.querySelectorAll('.treasure-marker').forEach(marker => {
       marker.addEventListener('click', (e) => {
         const perkIndex = marker.getAttribute('data-perk');
         revealPerk(perkIndex, marker);
-        // Play coin sound on click
         if (!isMuted) playPirateSound('coin', 0.5);
       });
     });
@@ -1097,9 +1103,7 @@ function updatePirateCount() {
 // MAIN INITIALIZATION
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🏴‍️ BrownieVerse Initializing...');
-  
-  // 1. Initialize sounds FIRST (critical!)
+  // 1. Initialize sounds FIRST
   initPirateSounds();
   createSoundToggle();
   
@@ -1122,21 +1126,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const scheduleSection = document.getElementById('schedule');
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
-  // 4. Initialize day/night mode (with thunder sound)
+  // 4. Initialize day/night mode
   initDayNightMode();
   
-  // 5. Initialize treasure map (with fixed insertBefore)
+  // 5. Initialize treasure map
   initTreasureMap();
   
-  // 6. Initialize community section sounds (ominous music + pirate laugh on enter)
+  // 6. Initialize community section sounds
   initCommunitySectionSounds();
-  
-  console.log('✅ BrownieVerse Initialization Complete! All sounds ready! 🍫⚓');
 });
 
 // Fallback for already-loaded pages
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  console.log('🏴‍️ Page already loaded, initializing...');
   initPirateSounds();
   createSoundToggle();
   renderProducts();
@@ -1159,5 +1160,3 @@ window.changeOrderQty = changeOrderQty;
 window.preSelectPack = preSelectPack;
 window.addPackToCart = addPackToCart;
 window.closeSuccess = closeSuccess;
-
-console.log('🏴‍️ BrownieVerse Pirates Loaded! Ahoy Matey! 🍫');
