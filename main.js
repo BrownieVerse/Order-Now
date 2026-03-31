@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION - ALL SOUND ERRORS FIXED
+   PIRATE EDITION - Optimized for Two-Column Layout
    ============================================= */
 
 'use strict';
@@ -105,9 +105,8 @@ const orderProductSelector = document.getElementById('orderProductSelector');
 const communitySection = document.getElementById('community');
 
 // =============================================
-// PIRATE SOUND SYSTEM - FIXED WITH RELIABLE URLs
+// PIRATE SOUND SYSTEM
 // =============================================
-// Using GitHub-hosted sounds (more reliable for hotlinking)
 const PIRATE_SOUNDS = {
   ocean: 'ocean.mp3',
   parrot: 'parrot.mp3',
@@ -118,23 +117,10 @@ const PIRATE_SOUNDS = {
   ominous: 'ominous.mp3',
 };
 
-// Alternative: Use local sounds if you have them (recommended for production)
-// const PIRATE_SOUNDS = {
-//   ocean: 'sounds/ocean.mp3',
-//   parrot: 'sounds/parrot.mp3',
-//   coin: 'sounds/coin.mp3',
-//   laugh: 'sounds/laugh.mp3',
-//   thunder: 'sounds/thunder.mp3',
-//   chest: 'sounds/chest.mp3',
-//   ominous: 'sounds/ominous.mp3',
-// };
-
 const audioElements = {};
 
 function initPirateSounds() {
   if (soundsInitialized) return;
-  
-  console.log('🔊 Initializing pirate sounds...');
   
   let loadedCount = 0;
   const totalSounds = Object.keys(PIRATE_SOUNDS).length;
@@ -146,89 +132,48 @@ function initPirateSounds() {
       audioElements[key].volume = currentVolume;
       audioElements[key].preload = 'auto';
       
-      // Track when sound is loaded
       audioElements[key].addEventListener('canplaythrough', () => {
         soundsLoaded[key] = true;
         loadedCount++;
-        console.log(`✅ Sound loaded: ${key} (${loadedCount}/${totalSounds})`);
-        
-        if (loadedCount === totalSounds) {
-          console.log('✅ All sounds loaded successfully');
-        }
       });
       
-      // Handle load errors gracefully
-      audioElements[key].addEventListener('error', (e) => {
-        console.warn(`⚠️ Sound failed to load: ${key} - Using silent fallback`);
+      audioElements[key].addEventListener('error', () => {
         soundsLoaded[key] = false;
-        // Don't break the site - just skip this sound
       });
       
       audioElements[key].load();
     } catch (err) {
-      console.error(`❌ Error initializing ${key}:`, err);
       soundsLoaded[key] = false;
     }
   });
   
   soundsInitialized = true;
   
-  // Enable sounds on first user interaction (browser policy workaround)
   const enableSoundsOnInteraction = () => {
     if (audioElements.ocean && soundsLoaded.ocean) {
       audioElements.ocean.volume = 0.15;
-      audioElements.ocean.play().catch(() => {
-        console.log('🔊 Ocean autoplay blocked');
-      });
+      audioElements.ocean.play().catch(() => {});
     }
     document.removeEventListener('click', enableSoundsOnInteraction);
     document.removeEventListener('touchstart', enableSoundsOnInteraction);
-    console.log('🔊 Sounds enabled via user interaction');
   };
   
   document.addEventListener('click', enableSoundsOnInteraction, { once: true });
   document.addEventListener('touchstart', enableSoundsOnInteraction, { once: true });
-  
-  console.log('✅ Pirate sounds initialization complete');
 }
 
 function playPirateSound(soundName, volume = 1, loop = false) {
-  if (!soundsInitialized) {
-    return;
-  }
-  
-  if (isMuted) {
-    return;
-  }
-  
-  // Check if sound exists and loaded
-  if (!audioElements[soundName]) {
-    console.warn(`⚠️ Sound element not found: ${soundName}`);
-    return;
-  }
-  
-  if (!soundsLoaded[soundName]) {
-    // Sound failed to load - skip silently (don't spam console)
-    return;
-  }
+  if (!soundsInitialized || isMuted || !audioElements[soundName] || !soundsLoaded[soundName]) return;
   
   const audio = audioElements[soundName];
-  
-  // Check if audio is ready
-  if (audio.readyState < 2) {
-    return;
-  }
+  if (audio.readyState < 2) return;
   
   try {
     audio.currentTime = 0;
     audio.volume = currentVolume * volume;
     audio.loop = loop;
-    audio.play().catch(err => {
-      // Silent fail - don't spam console
-    });
-  } catch (err) {
-    // Silent fail
-  }
+    audio.play().catch(() => {});
+  } catch (err) {}
 }
 
 function stopPirateSound(soundName) {
@@ -238,7 +183,6 @@ function stopPirateSound(soundName) {
   }
 }
 
-// Create sound toggle button
 function createSoundToggle() {
   const toggle = document.createElement('button');
   toggle.className = 'sound-toggle';
@@ -250,14 +194,9 @@ function createSoundToggle() {
     isMuted = !isMuted;
     toggle.classList.toggle('muted', isMuted);
     
-    // Pause/resume looping sounds
     Object.keys(audioElements).forEach(key => {
       if (audioElements[key].loop && soundsLoaded[key]) {
-        if (isMuted) {
-          audioElements[key].pause();
-        } else {
-          audioElements[key].play().catch(() => {});
-        }
+        isMuted ? audioElements[key].pause() : audioElements[key].play().catch(() => {});
       }
     });
     
@@ -282,43 +221,22 @@ function showVolumeIndicator(text) {
   
   indicator.textContent = text;
   indicator.classList.add('visible');
-  
-  setTimeout(() => {
-    indicator.classList.remove('visible');
-  }, 2000);
+  setTimeout(() => indicator.classList.remove('visible'), 2000);
 }
 
-// Setup sound triggers for ALL interactive elements
 function setupAllSoundTriggers() {
-  // 1. Gold coins hover - play coin sound
-  document.querySelectorAll('.gold-coin').forEach(coin => {
-    coin.addEventListener('mouseenter', () => {
+  document.querySelectorAll('.gold-coin, .treasure-gem, .ancient-key').forEach(el => {
+    el.addEventListener('mouseenter', () => {
       if (!isMuted) playPirateSound('coin', 0.3);
     });
   });
   
-  // 2. Treasure gems hover - play coin sound
-  document.querySelectorAll('.treasure-gem').forEach(gem => {
-    gem.addEventListener('mouseenter', () => {
-      if (!isMuted) playPirateSound('coin', 0.3);
-    });
-  });
-  
-  // 3. Ancient keys hover - play coin sound
-  document.querySelectorAll('.ancient-key').forEach(key => {
-    key.addEventListener('mouseenter', () => {
-      if (!isMuted) playPirateSound('coin', 0.3);
-    });
-  });
-  
-  // 4. Treasure markers click - play coin sound
   document.querySelectorAll('.treasure-marker').forEach(marker => {
     marker.addEventListener('click', () => {
       if (!isMuted) playPirateSound('coin', 0.5);
     });
   });
   
-  // 5. Google Form button click - play coin sound
   const googleFormBtn = document.getElementById('googleFormBtn');
   if (googleFormBtn) {
     googleFormBtn.addEventListener('click', () => {
@@ -327,7 +245,6 @@ function setupAllSoundTriggers() {
     });
   }
   
-  // 6. Order form submit - play chest open + pirate laugh
   if (orderForm) {
     orderForm.addEventListener('submit', () => {
       if (!isMuted) {
@@ -339,25 +256,18 @@ function setupAllSoundTriggers() {
 }
 
 // =============================================
-// COMMUNITY SECTION SOUND MANAGER
+// COMMUNITY SECTION
 // =============================================
 function initCommunitySectionSounds() {
   if (!communitySection) return;
   
-  // Use IntersectionObserver to detect when community section is visible
   const communityObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !communitySectionVisible) {
         communitySectionVisible = true;
-        
         if (!isMuted) {
-          // Play ominous background music (looping)
           playPirateSound('ominous', 0.2, true);
-          
-          // Play pirate laugh after short delay
-          setTimeout(() => {
-            if (!isMuted) playPirateSound('laugh', 0.5);
-          }, 1500);
+          setTimeout(() => { if (!isMuted) playPirateSound('laugh', 0.5); }, 1500);
         }
       } else if (!entry.isIntersecting && communitySectionVisible) {
         communitySectionVisible = false;
@@ -367,18 +277,14 @@ function initCommunitySectionSounds() {
   }, { threshold: 0.3 });
   
   communityObserver.observe(communitySection);
-  
-  // Also setup direct event listeners as backup
   setupAllSoundTriggers();
 }
 
 // =============================================
-// DAY/NIGHT MODE TOGGLE
+// DAY/NIGHT MODE
 // =============================================
 function initDayNightMode() {
-  if (!communitySection) {
-    return;
-  }
+  if (!communitySection) return;
   
   const toggle = document.createElement('button');
   toggle.className = 'day-night-toggle sun-mode';
@@ -391,15 +297,9 @@ function initDayNightMode() {
     toggle.classList.toggle('sun-mode', !isNight);
     toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
     
-    // Play thunder sound on toggle
-    if (!isMuted) {
-      playPirateSound('thunder', 0.4);
-    }
-    
-    // Save preference
+    if (!isMuted) playPirateSound('thunder', 0.4);
     localStorage.setItem('brownieverse-night-mode', isNight);
     
-    // Create night elements if switching to night
     if (isNight) {
       createStars();
       createMoon();
@@ -407,10 +307,8 @@ function initDayNightMode() {
     }
   });
   
-  // Insert toggle at top of community section
   communitySection.insertBefore(toggle, communitySection.firstChild);
   
-  // Check saved preference
   const savedMode = localStorage.getItem('brownieverse-night-mode');
   if (savedMode === 'true') {
     communitySection.classList.add('night-mode');
@@ -464,17 +362,12 @@ function createNightClouds() {
 }
 
 // =============================================
-// PAGE LOADER
+// PAGE LOADER & NAV
 // =============================================
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('page-loader')?.classList.add('hidden');
-  }, 1400);
+  setTimeout(() => document.getElementById('page-loader')?.classList.add('hidden'), 1400);
 });
 
-// =============================================
-// NAVBAR SCROLL
-// =============================================
 const navScrollHandler = () => {
   if (window.scrollY > 60) {
     navbar?.classList.add('scrolled');
@@ -486,7 +379,6 @@ const navScrollHandler = () => {
 };
 window.addEventListener('scroll', navScrollHandler, { passive: true });
 
-// Active nav link on scroll
 const sections = ['hero', 'products', 'packs', 'schedule', 'about', 'order', 'community'];
 const navLinks = document.querySelectorAll('.nav-link');
 
@@ -505,9 +397,6 @@ sections.forEach(id => {
   if (el) sectionObserver.observe(el);
 });
 
-// =============================================
-// MOBILE NAV
-// =============================================
 hamburger?.addEventListener('click', () => {
   const isOpen = mobileNav?.classList.toggle('open');
   hamburger?.classList.toggle('open', isOpen);
@@ -541,19 +430,15 @@ const observeReveal = () => {
 };
 
 // =============================================
-// RENDER PRODUCTS
+// RENDER FUNCTIONS
 // =============================================
 function renderProducts() {
   if (!productsGrid) return;
   
   productsGrid.innerHTML = PRODUCTS.map((p, idx) => `
-    <article class="product-card reveal reveal-delay-${(idx % 4) + 1}"
-             data-product-id="${p.id}"
-             role="article"
-             aria-label="${p.name}">
+    <article class="product-card reveal reveal-delay-${(idx % 4) + 1}" data-product-id="${p.id}" role="article" aria-label="${p.name}">
       <div class="product-img">
-        <img src="${p.image}" alt="${p.name}" loading="lazy" 
-             onerror="this.src='images/placeholder.jpg'; this.onerror=null;" />
+        <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='images/placeholder.jpg'; this.onerror=null;" />
         ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
       </div>
       <div class="product-info">
@@ -562,23 +447,16 @@ function renderProducts() {
         <p class="product-desc">${p.description}</p>
         <div class="product-footer">
           <div class="product-rating" aria-label="${p.rating} stars, ${p.reviews} reviews">
-            ${'★'.repeat(Math.floor(p.rating))}
-            <span>(${p.reviews})</span>
+            ${'★'.repeat(Math.floor(p.rating))}<span>(${p.reviews})</span>
           </div>
-          <a href="#packs" class="btn btn-ghost" style="padding:0.5rem 1.2rem;font-size:0.68rem;">
-            See Packs
-          </a>
+          <a href="#packs" class="btn btn-ghost" style="padding:0.5rem 1.2rem;font-size:0.68rem;">See Packs</a>
         </div>
       </div>
     </article>
   `).join('');
-
   observeReveal();
 }
 
-// =============================================
-// RENDER PACKS
-// =============================================
 function renderPacks() {
   if (!packsGrid) return;
   
@@ -590,38 +468,24 @@ function renderPacks() {
       <div class="pack-subtitle">${pack.subtitle}</div>
       <div class="pack-divider"></div>
       <div class="pack-contents">
-        ${pack.contents.map(item => `
-          <div class="pack-item">
-            <div class="pack-item-dot"></div>
-            <span>${item}</span>
-          </div>
-        `).join('')}
+        ${pack.contents.map(item => `<div class="pack-item"><div class="pack-item-dot"></div><span>${item}</span></div>`).join('')}
       </div>
       <div class="pack-price">
-        <span class="pack-price-num">${pack.price}</span>
-        <span class="pack-price-currency">DH</span>
+        <span class="pack-price-num">${pack.price}</span><span class="pack-price-currency">DH</span>
       </div>
-      <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')">
-        <i class="fas fa-shopping-bag"></i>
-        Order This Pack
-      </a>
+      <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')"><i class="fas fa-shopping-bag"></i> Order This Pack</a>
     </div>
   `).join('');
-
   observeReveal();
 }
 
-// =============================================
-// ORDER FORM PACK SELECTOR
-// =============================================
 function renderOrderProductSelector() {
   if (!orderProductSelector) return;
   
   orderProductSelector.innerHTML = PACKS.map(pack => `
     <div class="product-selector-item">
       <div class="psi-info">
-        <input type="checkbox" class="psi-check" id="psi-${pack.id}" data-pack-id="${pack.id}"
-               onchange="toggleOrderPack('${pack.id}', this.checked)" />
+        <input type="checkbox" class="psi-check" id="psi-${pack.id}" data-pack-id="${pack.id}" onchange="toggleOrderPack('${pack.id}', this.checked)" />
         <label for="psi-${pack.id}" style="cursor:pointer">
           <span class="psi-name">${pack.emoji} ${pack.name}</span>
           <span class="psi-price">&nbsp;— ${pack.price} DH</span>
@@ -693,7 +557,7 @@ window.preSelectPack = function(packId) {
 };
 
 // =============================================
-// CART FUNCTIONS
+// CART
 // =============================================
 window.addPackToCart = function(packId, event) {
   event?.stopPropagation();
@@ -882,7 +746,7 @@ function validateOrderForm() {
 }
 
 // =============================================
-// TOAST NOTIFICATIONS
+// TOAST & UTILS
 // =============================================
 function showToast(message, type = '') {
   const toast = document.createElement('div');
@@ -897,9 +761,6 @@ function showToast(message, type = '') {
   }, 3500);
 }
 
-// =============================================
-// SUCCESS OVERLAYS
-// =============================================
 function showSuccessOverlay(id) {
   const overlay = document.getElementById(id);
   if (overlay) {
@@ -922,9 +783,6 @@ document.querySelectorAll('.success-overlay').forEach(overlay => {
   });
 });
 
-// =============================================
-// KEYBOARD & SCROLL
-// =============================================
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeCart();
@@ -952,7 +810,7 @@ document.querySelectorAll('.flavor-pill').forEach(pill => {
 });
 
 // =============================================
-// ANIMATE NUMBERS & PARALLAX
+// ANIMATIONS
 // =============================================
 function animateNumber(el, target, suffix = '') {
   let current = 0;
@@ -987,9 +845,6 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
-// =============================================
-// SCHEDULE HIGHLIGHT
-// =============================================
 function highlightScheduleDays() {
   if (!document.getElementById('schedule')) return;
   const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -1006,10 +861,13 @@ function highlightScheduleDays() {
 }
 
 // =============================================
-// TREASURE MAP
+// TREASURE MAP (Mobile Only)
 // =============================================
 function initTreasureMap() {
   if (!communitySection) return;
+  
+  // Only create treasure map on mobile (CSS hides it on desktop)
+  if (window.innerWidth > 900) return;
   
   const mapContainer = document.createElement('div');
   mapContainer.className = 'treasure-map-container reveal reveal-delay-3';
@@ -1046,9 +904,7 @@ function initTreasureMap() {
     communitySection.querySelector('.community-inner').insertBefore(mapContainer, formCard);
   } else {
     const inner = communitySection.querySelector('.community-inner');
-    if (inner) {
-      inner.appendChild(mapContainer);
-    }
+    if (inner) inner.appendChild(mapContainer);
   }
   
   setTimeout(() => {
@@ -1100,14 +956,12 @@ function updatePirateCount() {
 }
 
 // =============================================
-// MAIN INITIALIZATION
+// INIT
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Initialize sounds FIRST
   initPirateSounds();
   createSoundToggle();
   
-  // 2. Render content
   renderProducts();
   renderPacks();
   renderOrderProductSelector();
@@ -1115,7 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePirateCount();
   observeReveal();
   
-  // 3. Schedule highlight
   highlightScheduleDays();
   const scheduleObserver = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
@@ -1126,13 +979,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const scheduleSection = document.getElementById('schedule');
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
-  // 4. Initialize day/night mode
   initDayNightMode();
-  
-  // 5. Initialize treasure map
   initTreasureMap();
-  
-  // 6. Initialize community section sounds
   initCommunitySectionSounds();
 });
 
@@ -1152,7 +1000,7 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   initCommunitySectionSounds();
 }
 
-// Global functions for inline onclick
+// Global functions
 window.removeFromCart = removeFromCart;
 window.changeQty = changeQty;
 window.toggleOrderPack = toggleOrderPack;
