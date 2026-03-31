@@ -70,7 +70,7 @@ const PACKS = [
     contents: ['Classic Brownie Bites'],
     badge: '🦜 New Crew Member?',      // ← Optional: Add a badge
     popular: false,
-    emoji: '🦜',                        // ← UPDATED EMOJI
+    emoji: null,                        // ← UPDATED EMOJI
     image: 'pack1.png',
   },
   {
