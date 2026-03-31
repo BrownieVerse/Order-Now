@@ -68,9 +68,9 @@ const PACKS = [
     subtitle: 'Classic Bites',
     price: 99,
     contents: ['Classic Brownie Bites'],
-    badge: '🏴‍☠️🦜Pirate Starter Pack ',
+    badge: '🏴‍☠️Pirate Starter Pack ',
     popular: false,
-    emoji: '📦',
+    emoji: '🦜',
     image: 'pack1.png', // ← ADD THIS
   },
   {
