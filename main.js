@@ -64,25 +64,25 @@ const PRODUCTS = [
 const PACKS = [
   {
     id: 'pack-1',
-    name: 'Pack 1',
+    name: '🏴‍☠️ Pirate Starter Pack',  // ← UPDATED NAME
     subtitle: 'Classic Bites',
     price: 99,
     contents: ['Classic Brownie Bites'],
-    badge: '🏴‍☠️Pirate Starter Pack ',
+    badge: '🆕 New Crew Member?',      // ← Optional: Add a badge
     popular: false,
-    emoji: '🦜',
-    image: 'pack1.png', // ← ADD THIS
+    emoji: '🦜',                        // ← UPDATED EMOJI
+    image: 'pack-1.jpg',
   },
   {
     id: 'pack-2',
-    name: 'Pack 2',
+    name: '2 Pack',
     subtitle: 'Classic & Kaab Ghezal',
     price: 175,
     contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'],
     badge: null,
     popular: false,
     emoji: '🎀',
-    image: 'pack2.png', // ← ADD THIS
+    image: 'pack-2.jpg',
   },
   {
     id: 'pack-3',
@@ -93,7 +93,7 @@ const PACKS = [
     badge: '⭐ Most Popular',
     popular: true,
     emoji: '🎁',
-    image: 'pack3.png', // ← ADD THIS
+    image: 'pack-3.jpg',
   },
   {
     id: 'pack-4',
@@ -104,7 +104,7 @@ const PACKS = [
     badge: '🏆 Best Value',
     popular: false,
     emoji: '👑',
-    image: 'pack4.png', // ← ADD THIS
+    image: 'pack-4.jpg',
   },
 ];
 
