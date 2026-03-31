@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION - ALL SOUNDS WORKING
+   PIRATE EDITION - ALL ERRORS FIXED
    ============================================= */
 
 'use strict';
@@ -79,7 +79,6 @@ let soundsInitialized = false;
 let isMuted = false;
 let currentVolume = 0.5;
 let communitySectionVisible = false;
-let ominousMusicPlaying = false;
 
 // =============================================
 // DOM REFERENCES
@@ -105,16 +104,18 @@ const orderProductSelector = document.getElementById('orderProductSelector');
 const communitySection = document.getElementById('community');
 
 // =============================================
-// PIRATE SOUND SYSTEM
+// PIRATE SOUND SYSTEM - FIXED WITH WORKING URLs
 // =============================================
+// Using reliable, hotlink-friendly sound URLs
 const PIRATE_SOUNDS = {
-  ocean: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_102f359568.mp3',
-  parrot: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a238991e.mp3',
-  coin: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
-  laugh: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-  thunder: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3',
-  chest: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
-  ominous: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3', // Using thunder as placeholder for ominous
+  // Using Mixkit CDN (reliable, allows hotlinking)
+  ocean: 'https://assets.mixkit.co/sfx/preview/mixkit-waves-incoming-water-loop-119.mp3',
+  parrot: 'https://assets.mixkit.co/sfx/preview/mixkit-parrot-caw-2366.mp3',
+  coin: 'https://assets.mixkit.co/sfx/preview/mixkit-coin-insert-2367.mp3',
+  laugh: 'https://assets.mixkit.co/sfx/preview/mixkit-evil-laugh-149.mp3',
+  thunder: 'https://assets.mixkit.co/sfx/preview/mixkit-thunder-clap-2742.mp3',
+  chest: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-254.mp3',
+  ominous: 'https://assets.mixkit.co/sfx/preview/mixkit-ominous-drone-loop-116.mp3',
 };
 
 const audioElements = {};
@@ -125,23 +126,45 @@ function initPirateSounds() {
   console.log('🔊 Initializing pirate sounds...');
   
   Object.keys(PIRATE_SOUNDS).forEach(key => {
-    audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
-    audioElements[key].loop = (key === 'ocean' || key === 'ominous');
-    audioElements[key].volume = currentVolume;
-    audioElements[key].preload = 'auto';
-    audioElements[key].load();
-    console.log(`🔊 Loaded sound: ${key}`);
+    try {
+      audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
+      audioElements[key].loop = (key === 'ocean' || key === 'ominous');
+      audioElements[key].volume = currentVolume;
+      audioElements[key].preload = 'auto';
+      
+      // Add error handler for failed loads
+      audioElements[key].addEventListener('error', (e) => {
+        console.warn(`⚠️ Failed to load sound: ${key}`, e);
+      });
+      
+      audioElements[key].load();
+      console.log(`🔊 Loaded sound: ${key}`);
+    } catch (err) {
+      console.error(`❌ Error loading ${key}:`, err);
+    }
   });
   
-  // Start ocean waves quietly in background
+  // Start ocean waves quietly in background (with user interaction fallback)
   if (audioElements.ocean) {
     audioElements.ocean.volume = 0.15;
-    audioElements.ocean.play().catch(err => {
-      console.log('🔊 Ocean autoplay blocked (browser policy) - will play on first user interaction');
-    });
+    // Don't autoplay - wait for first user interaction to comply with browser policies
+    console.log('🔊 Ocean sound ready (will play on first interaction)');
   }
   
   soundsInitialized = true;
+  
+  // Enable sounds on first user interaction (browser policy workaround)
+  const enableSoundsOnInteraction = () => {
+    if (audioElements.ocean && !audioElements.ocean.paused) return;
+    audioElements.ocean?.play().catch(() => {});
+    document.removeEventListener('click', enableSoundsOnInteraction);
+    document.removeEventListener('touchstart', enableSoundsOnInteraction);
+    console.log('🔊 Sounds enabled via user interaction');
+  };
+  
+  document.addEventListener('click', enableSoundsOnInteraction, { once: true });
+  document.addEventListener('touchstart', enableSoundsOnInteraction, { once: true });
+  
   console.log('✅ Pirate sounds initialized');
 }
 
@@ -156,15 +179,24 @@ function playPirateSound(soundName, volume = 1, loop = false) {
   }
   
   const audio = audioElements[soundName];
-  audio.currentTime = 0;
-  audio.volume = currentVolume * volume;
-  audio.loop = loop;
   
-  audio.play().catch(err => {
-    console.log(`🔊 Sound play error for ${soundName}:`, err);
-  });
+  // Check if audio is loaded and playable
+  if (audio.readyState === 0) {
+    console.warn(`⚠️ Sound not ready: ${soundName}`);
+    return;
+  }
   
-  console.log(`🔊 Playing: ${soundName} (vol: ${volume}, loop: ${loop})`);
+  try {
+    audio.currentTime = 0;
+    audio.volume = currentVolume * volume;
+    audio.loop = loop;
+    audio.play().catch(err => {
+      console.log(`🔊 Sound play error for ${soundName}:`, err.message);
+    });
+    console.log(`🔊 Playing: ${soundName} (vol: ${volume}, loop: ${loop})`);
+  } catch (err) {
+    console.error(`❌ Error playing ${soundName}:`, err);
+  }
 }
 
 function stopPirateSound(soundName) {
@@ -959,10 +991,12 @@ function highlightScheduleDays() {
 }
 
 // =============================================
-// TREASURE MAP
+// TREASURE MAP - FIXED insertBefore ERROR
 // =============================================
 function initTreasureMap() {
   if (!communitySection) return;
+  
+  console.log('🗺️ Initializing treasure map...');
   
   const mapContainer = document.createElement('div');
   mapContainer.className = 'treasure-map-container reveal reveal-delay-3';
@@ -993,8 +1027,21 @@ function initTreasureMap() {
     <div class="map-instructions"><i class="fas fa-mouse-pointer"></i> Click on the bouncing markers to reveal hidden perks!</div>
   `;
   
-  const formCard = communitySection.querySelector('.community-form-card');
-  if (formCard) communitySection.insertBefore(mapContainer, formCard);
+  // FIX: Find the correct parent and reference node for insertBefore
+  const formCard = communitySection.querySelector('#communityFormCard');
+  
+  if (formCard && formCard.parentElement === communitySection.querySelector('.community-inner')) {
+    // Safe to insert before formCard
+    communitySection.querySelector('.community-inner').insertBefore(mapContainer, formCard);
+    console.log('🗺️ Treasure map inserted successfully');
+  } else {
+    // Fallback: append to community-inner if insertBefore fails
+    const inner = communitySection.querySelector('.community-inner');
+    if (inner) {
+      inner.appendChild(mapContainer);
+      console.log('🗺️ Treasure map appended (fallback)');
+    }
+  }
   
   // Setup treasure marker clicks AFTER map is created
   setTimeout(() => {
@@ -1078,7 +1125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Initialize day/night mode (with thunder sound)
   initDayNightMode();
   
-  // 5. Initialize treasure map
+  // 5. Initialize treasure map (with fixed insertBefore)
   initTreasureMap();
   
   // 6. Initialize community section sounds (ominous music + pirate laugh on enter)
