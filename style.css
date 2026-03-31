@@ -890,36 +890,55 @@ h1, h2, h3, h4 {
   box-shadow: 0 0 0 1px rgba(201,150,42,0.3), 0 16px 50px rgba(0,0,0,0.35);
 }
 /* Pack Image Styles */
+/* Pack Image Styles - CIRCULAR FRAME */
 .pack-img {
-  aspect-ratio: 4/3;
-  border-radius: 6px;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;              /* ← Makes it circular */
   overflow: hidden;
-  margin-bottom: 1rem;
   background: var(--cream-dark);
   position: relative;
+  border: 3px solid rgba(201,150,42,0.3);
+  box-shadow: 0 4px 15px rgba(59,26,10,0.15);
 }
 
 .pack-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover;               /* ← Ensures image fills circle without distortion */
+  object-position: center;
   transition: transform 0.5s var(--ease-out);
 }
 
 .pack-card:hover .pack-img img {
-  transform: scale(1.05);
+  transform: scale(1.1);           /* ← Slightly stronger zoom for circular effect */
 }
 
-/* Adjust pack card padding to accommodate image */
-.pack-card {
-  /* Keep existing styles, just ensure padding works with image */
-  padding-top: 1.5rem;
-}
-
-/* Popular pack image border */
+/* Popular pack circular border */
 .pack-card.popular .pack-img {
-  border: 2px solid var(--gold);
-  box-shadow: 0 0 0 3px rgba(201,150,42,0.2);
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 0 4px rgba(201,150,42,0.3), 0 8px 25px rgba(59,26,10,0.2);
+}
+
+/* Adjust pack card layout for circular image */
+.pack-card {
+  padding: 2rem 1.5rem 1.75rem;
+  text-align: center;              /* ← Center-align content for circular image */
+}
+
+.pack-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--brown-deep);
+  margin: 0.5rem 0 0.3rem;
+  line-height: 1.3;
+}
+
+.pack-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
 }
 
 .pack-popular-ribbon {
