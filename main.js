@@ -64,18 +64,18 @@ const PRODUCTS = [
 const PACKS = [
   {
     id: 'pack-1',
-    name: '1 Pack',
+    name: 'Pack 1',
     subtitle: 'Classic Bites',
     price: 99,
     contents: ['Classic Brownie Bites'],
-    badge: null,
+    badge: '🏴‍☠️🦜Pirate Starter Pack ',
     popular: false,
     emoji: '📦',
     image: 'pack1.png', // ← ADD THIS
   },
   {
     id: 'pack-2',
-    name: '2 Pack',
+    name: 'Pack 2',
     subtitle: 'Classic & Kaab Ghezal',
     price: 175,
     contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'],
