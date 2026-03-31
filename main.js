@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION (Google Form)
+   PIRATE EDITION (Google Form) - SOUND FIXED
    ============================================= */
 
 'use strict';
@@ -104,7 +104,7 @@ const PACKS = [
 // =============================================
 // BUSINESS WHATSAPP CONFIG
 // =============================================
-const WHATSAPP_NUMBER = '212703920799'; // ← REPLACE with your business number (no +, no spaces)
+const WHATSAPP_NUMBER = '212703920799'; // ← REPLACE with your business number
 
 // =============================================
 // CART STATE
@@ -133,6 +133,250 @@ const productsGrid = document.getElementById('productsGrid');
 const packsGrid = document.getElementById('packsGrid');
 const orderForm = document.getElementById('orderForm');
 const orderProductSelector = document.getElementById('orderProductSelector');
+
+// =============================================
+// PIRATE SOUND SYSTEM
+// =============================================
+const PIRATE_SOUNDS = {
+  ocean: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_102f359568.mp3',
+  parrot: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a238991e.mp3',
+  coin: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
+  laugh: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+  thunder: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3',
+  chest: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
+};
+
+const audioElements = {};
+let isMuted = false;
+let currentVolume = 0.5;
+let soundsInitialized = false;
+
+function initPirateSounds() {
+  if (soundsInitialized) return;
+  
+  Object.keys(PIRATE_SOUNDS).forEach(key => {
+    audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
+    audioElements[key].loop = key === 'ocean';
+    audioElements[key].volume = currentVolume;
+    // Preload audio
+    audioElements[key].load();
+  });
+  
+  if (audioElements.ocean) {
+    audioElements.ocean.volume = 0.2;
+    audioElements.ocean.play().catch(() => {
+      console.log('🔊 Ocean autoplay blocked - will play on user interaction');
+    });
+  }
+  
+  soundsInitialized = true;
+  console.log('🔊 Pirate sounds initialized');
+}
+
+function playPirateSound(soundName, volume = 1) {
+  if (!soundsInitialized) {
+    console.warn('⚠️ Sounds not initialized yet');
+    return;
+  }
+  
+  if (isMuted || !audioElements[soundName]) {
+    console.log('🔇 Sound muted or not found:', soundName);
+    return;
+  }
+  
+  const audio = audioElements[soundName];
+  audio.currentTime = 0;
+  audio.volume = currentVolume * volume;
+  
+  audio.play().catch(err => {
+    console.log('🔊 Sound play error:', err);
+  });
+  
+  console.log('🔊 Playing sound:', soundName);
+}
+
+function createSoundToggle() {
+  const toggle = document.createElement('button');
+  toggle.className = 'sound-toggle';
+  toggle.innerHTML = '<div class="sound-wave"></div><div class="sound-wave"></div>';
+  toggle.setAttribute('aria-label', 'Toggle sound effects');
+  toggle.title = 'Toggle Pirate Sounds';
+  
+  toggle.addEventListener('click', () => {
+    isMuted = !isMuted;
+    toggle.classList.toggle('muted', isMuted);
+    
+    Object.values(audioElements).forEach(audio => {
+      if (isMuted) {
+        audio.pause();
+      } else if (audio.loop) {
+        audio.play().catch(() => {});
+      }
+    });
+    
+    showVolumeIndicator(isMuted ? '🔇 Muted' : '🔊 Sounds On');
+    
+    if (!isMuted) {
+      setTimeout(() => playPirateSound('coin', 0.5), 100);
+    }
+  });
+  
+  document.body.appendChild(toggle);
+  return toggle;
+}
+
+function showVolumeIndicator(text) {
+  let indicator = document.querySelector('.volume-indicator');
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.className = 'volume-indicator';
+    document.body.appendChild(indicator);
+  }
+  
+  indicator.textContent = text;
+  indicator.classList.add('visible');
+  
+  setTimeout(() => {
+    indicator.classList.remove('visible');
+  }, 2000);
+}
+
+// Setup sound triggers for dynamic elements (called AFTER elements exist)
+function setupPirateSoundTriggers() {
+  console.log('🔊 Setting up sound triggers...');
+  
+  // Gold coins hover
+  document.querySelectorAll('.gold-coin').forEach(coin => {
+    coin.addEventListener('mouseenter', () => {
+      console.log('🪙 Coin hover detected');
+      playPirateSound('coin', 0.3);
+    });
+  });
+  
+  // Treasure markers click
+  document.querySelectorAll('.treasure-marker').forEach(marker => {
+    marker.addEventListener('click', () => {
+      console.log('💎 Treasure marker clicked');
+      playPirateSound('coin', 0.5);
+    });
+  });
+  
+  // Order form submit
+  if (orderForm) {
+    orderForm.addEventListener('submit', () => {
+      playPirateSound('chest', 0.6);
+      setTimeout(() => playPirateSound('laugh', 0.4), 500);
+    });
+  }
+  
+  // Google Form button click
+  const googleFormBtn = document.querySelector('.community-form-card .form-submit[href*="google.com"]');
+  if (googleFormBtn) {
+    googleFormBtn.addEventListener('click', () => {
+      console.log('🏴‍️ Google Form button clicked');
+      playPirateSound('coin', 0.4);
+    });
+  }
+  
+  console.log('🔊 Sound triggers setup complete');
+}
+
+// =============================================
+// DAY/NIGHT MODE TOGGLE
+// =============================================
+function initDayNightMode() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection) {
+    console.warn('⚠️ Community section not found');
+    return;
+  }
+  
+  const toggle = document.createElement('button');
+  toggle.className = 'day-night-toggle sun-mode';
+  toggle.setAttribute('aria-label', 'Toggle day/night mode');
+  toggle.title = 'Switch to Night Mode';
+  
+  toggle.addEventListener('click', () => {
+    const isNight = communitySection.classList.toggle('night-mode');
+    toggle.classList.toggle('moon-mode', isNight);
+    toggle.classList.toggle('sun-mode', !isNight);
+    toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
+    
+    // Play thunder sound on toggle
+    console.log('🌙 Night mode toggled:', isNight);
+    playPirateSound('thunder', 0.3);
+    
+    localStorage.setItem('brownieverse-night-mode', isNight);
+    
+    if (isNight) {
+      createStars();
+      createMoon();
+      createNightClouds();
+    }
+  });
+  
+  communitySection.insertBefore(toggle, communitySection.firstChild);
+  
+  // Check saved preference
+  const savedMode = localStorage.getItem('brownieverse-night-mode');
+  if (savedMode === 'true') {
+    communitySection.classList.add('night-mode');
+    toggle.classList.add('moon-mode');
+    toggle.classList.remove('sun-mode');
+    createStars();
+    createMoon();
+    createNightClouds();
+  }
+  
+  console.log('🌙 Day/Night mode initialized');
+}
+
+function createStars() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelectorAll('.star').length > 0) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  for (let i = 0; i < 20; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.top = Math.random() * 40 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = (Math.random() * 3 + 2) + 'px';
+    star.style.height = star.style.width;
+    skyElements.appendChild(star);
+  }
+}
+
+function createMoon() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelector('.moon')) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  const moon = document.createElement('div');
+  moon.className = 'moon';
+  skyElements.appendChild(moon);
+}
+
+function createNightClouds() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelectorAll('.night-cloud').length > 0) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  const cloud1 = document.createElement('div');
+  cloud1.className = 'night-cloud night-cloud-1';
+  skyElements.appendChild(cloud1);
+  
+  const cloud2 = document.createElement('div');
+  cloud2.className = 'night-cloud night-cloud-2';
+  skyElements.appendChild(cloud2);
+}
 
 // =============================================
 // PAGE LOADER
@@ -527,7 +771,7 @@ orderForm.addEventListener('submit', (e) => {
   const message = `
 🍫 *NEW ORDER — BrownieVerse* 🍫
 
- *Customer*: ${name}
+👤 *Customer*: ${name}
 📱 *Phone*: ${phone}
 📍 *Address*: ${address}
 
@@ -586,21 +830,6 @@ function validateOrderForm() {
   if (!hasProducts) { showToast('Please select at least one pack.', 'error'); return false; }
   return true;
 }
-
-// =============================================
-// GOOGLE FORM CLICK TRACKER (Community Section)
-// =============================================
-document.addEventListener('DOMContentLoaded', () => {
-  const googleFormBtn = document.querySelector('.community-form-card .form-submit[href*="google.com"]');
-  if (googleFormBtn) {
-    googleFormBtn.addEventListener('click', () => {
-      showToast('🏴‍️ Opening Google Form… Welcome aboard, Pirate!', 'success');
-      if (typeof playPirateSound === 'function') {
-        playPirateSound('coin', 0.4);
-      }
-    });
-  }
-});
 
 // =============================================
 // TOAST NOTIFICATIONS
@@ -737,216 +966,6 @@ function highlightScheduleDays() {
 }
 
 // =============================================
-// PIRATE SOUND EFFECTS SYSTEM
-// =============================================
-const PIRATE_SOUNDS = {
-  ocean: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_102f359568.mp3',
-  parrot: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a238991e.mp3',
-  coin: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
-  laugh: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-  thunder: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3',
-  chest: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
-};
-
-const audioElements = {};
-let isMuted = false;
-let currentVolume = 0.5;
-
-function initPirateSounds() {
-  Object.keys(PIRATE_SOUNDS).forEach(key => {
-    audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
-    audioElements[key].loop = key === 'ocean';
-    audioElements[key].volume = currentVolume;
-  });
-  
-  if (audioElements.ocean) {
-    audioElements.ocean.volume = 0.2;
-    audioElements.ocean.play().catch(() => {});
-  }
-}
-
-function playPirateSound(soundName, volume = 1) {
-  if (isMuted || !audioElements[soundName]) return;
-  
-  const audio = audioElements[soundName];
-  audio.currentTime = 0;
-  audio.volume = currentVolume * volume;
-  audio.play().catch(() => {});
-}
-
-function createSoundToggle() {
-  const toggle = document.createElement('button');
-  toggle.className = 'sound-toggle';
-  toggle.innerHTML = '<div class="sound-wave"></div><div class="sound-wave"></div>';
-  toggle.setAttribute('aria-label', 'Toggle sound effects');
-  toggle.title = 'Toggle Pirate Sounds';
-  
-  toggle.addEventListener('click', () => {
-    isMuted = !isMuted;
-    toggle.classList.toggle('muted', isMuted);
-    
-    Object.values(audioElements).forEach(audio => {
-      if (isMuted) {
-        audio.pause();
-      } else if (audio.loop) {
-        audio.play().catch(() => {});
-      }
-    });
-    
-    showVolumeIndicator(isMuted ? '🔇 Muted' : '🔊 Sounds On');
-    
-    if (!isMuted) {
-      setTimeout(() => playPirateSound('coin', 0.5), 100);
-    }
-  });
-  
-  document.body.appendChild(toggle);
-  return toggle;
-}
-
-function showVolumeIndicator(text) {
-  let indicator = document.querySelector('.volume-indicator');
-  if (!indicator) {
-    indicator = document.createElement('div');
-    indicator.className = 'volume-indicator';
-    document.body.appendChild(indicator);
-  }
-  
-  indicator.textContent = text;
-  indicator.classList.add('visible');
-  
-  setTimeout(() => {
-    indicator.classList.remove('visible');
-  }, 2000);
-}
-
-function setupPirateSoundTriggers() {
-  document.querySelectorAll('.gold-coin').forEach(coin => {
-    coin.addEventListener('mouseenter', () => {
-      playPirateSound('coin', 0.3);
-    });
-  });
-  
-  const parrotMascot = document.getElementById('parrotMascot');
-  if (parrotMascot) {
-    parrotMascot.addEventListener('mouseenter', () => {
-      playPirateSound('parrot', 0.4);
-    });
-  }
-  
-  if (orderForm) {
-    orderForm.addEventListener('submit', () => {
-      playPirateSound('chest', 0.6);
-      setTimeout(() => playPirateSound('laugh', 0.4), 500);
-    });
-  }
-  
-  const dayNightToggle = document.querySelector('.day-night-toggle');
-  if (dayNightToggle) {
-    dayNightToggle.addEventListener('click', () => {
-      playPirateSound('thunder', 0.3);
-    });
-  }
-  
-  document.querySelectorAll('.treasure-marker').forEach(marker => {
-    marker.addEventListener('click', () => {
-      playPirateSound('coin', 0.5);
-    });
-  });
-}
-
-// =============================================
-// PIRATE DAY/NIGHT MODE TOGGLE
-// =============================================
-function initDayNightMode() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection) return;
-  
-  const toggle = document.createElement('button');
-  toggle.className = 'day-night-toggle sun-mode';
-  toggle.setAttribute('aria-label', 'Toggle day/night mode');
-  toggle.title = 'Switch to Night Mode';
-  
-  toggle.addEventListener('click', () => {
-    const isNight = communitySection.classList.toggle('night-mode');
-    toggle.classList.toggle('moon-mode', isNight);
-    toggle.classList.toggle('sun-mode', !isNight);
-    toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
-    
-    if (typeof playPirateSound === 'function') {
-      playPirateSound('thunder', 0.3);
-    }
-    
-    localStorage.setItem('brownieverse-night-mode', isNight);
-    
-    if (isNight) {
-      createStars();
-      createMoon();
-      createNightClouds();
-    }
-  });
-  
-  communitySection.insertBefore(toggle, communitySection.firstChild);
-  
-  const savedMode = localStorage.getItem('brownieverse-night-mode');
-  if (savedMode === 'true') {
-    communitySection.classList.add('night-mode');
-    toggle.classList.add('moon-mode');
-    toggle.classList.remove('sun-mode');
-    createStars();
-    createMoon();
-    createNightClouds();
-  }
-}
-
-function createStars() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelectorAll('.star').length > 0) return;
-  
-  const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
-  
-  for (let i = 0; i < 20; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.top = Math.random() * 40 + '%';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.animationDelay = Math.random() * 3 + 's';
-    star.style.width = (Math.random() * 3 + 2) + 'px';
-    star.style.height = star.style.width;
-    skyElements.appendChild(star);
-  }
-}
-
-function createMoon() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelector('.moon')) return;
-  
-  const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
-  
-  const moon = document.createElement('div');
-  moon.className = 'moon';
-  skyElements.appendChild(moon);
-}
-
-function createNightClouds() {
-  const communitySection = document.getElementById('community');
-  if (!communitySection || communitySection.querySelectorAll('.night-cloud').length > 0) return;
-  
-  const skyElements = communitySection.querySelector('.night-sky-elements');
-  if (!skyElements) return;
-  
-  const cloud1 = document.createElement('div');
-  cloud1.className = 'night-cloud night-cloud-1';
-  skyElements.appendChild(cloud1);
-  
-  const cloud2 = document.createElement('div');
-  cloud2.className = 'night-cloud night-cloud-2';
-  skyElements.appendChild(cloud2);
-}
-
-// =============================================
 // INTERACTIVE TREASURE MAP
 // =============================================
 function initTreasureMap() {
@@ -1028,13 +1047,9 @@ function initTreasureMap() {
     communitySection.insertBefore(mapContainer, formCard);
   }
   
+  // Setup sound triggers AFTER treasure map is created
   setTimeout(() => {
-    document.querySelectorAll('.treasure-marker').forEach(marker => {
-      marker.addEventListener('click', (e) => {
-        const perkIndex = marker.getAttribute('data-perk');
-        revealPerk(perkIndex, marker);
-      });
-    });
+    setupPirateSoundTriggers();
   }, 100);
 }
 
@@ -1054,9 +1069,7 @@ function revealPerk(index, marker) {
     popup.classList.add('visible');
     marker.classList.add('revealed');
     
-    if (typeof playPirateSound === 'function') {
-      playPirateSound('coin', 0.5);
-    }
+    playPirateSound('coin', 0.5);
     
     createTreasureChest(marker);
     
@@ -1081,7 +1094,7 @@ function createTreasureChest(marker) {
 }
 
 // =============================================
-// UPDATE PIRATE COUNT (Simple Version)
+// UPDATE PIRATE COUNT
 // =============================================
 function updatePirateCount() {
   const el = document.getElementById('pirateCount');
@@ -1093,9 +1106,16 @@ function updatePirateCount() {
 }
 
 // =============================================
-// INIT
+// INIT - MAIN ENTRY POINT
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('🏴‍️ BrownieVerse Initializing...');
+  
+  // Initialize sounds FIRST
+  initPirateSounds();
+  createSoundToggle();
+  
+  // Render content
   renderProducts();
   renderPacks();
   renderOrderProductSelector();
@@ -1114,15 +1134,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const scheduleSection = document.getElementById('schedule');
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
-  // Pirate features
-  initPirateSounds();
-  createSoundToggle();
-  setupPirateSoundTriggers();
+  // Initialize day/night mode
   initDayNightMode();
+  
+  // Initialize treasure map (this will trigger sound setup after map is created)
   initTreasureMap();
+  
+  console.log('🏴‍️ BrownieVerse Initialization Complete!');
 });
 
+// Fallback for already loaded pages
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  console.log('🏴‍️ Page already loaded, initializing...');
+  
+  initPirateSounds();
+  createSoundToggle();
   renderProducts();
   renderPacks();
   renderOrderProductSelector();
@@ -1130,9 +1156,6 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   updatePirateCount();
   observeReveal();
   highlightScheduleDays();
-  initPirateSounds();
-  createSoundToggle();
-  setupPirateSoundTriggers();
   initDayNightMode();
   initTreasureMap();
 }
