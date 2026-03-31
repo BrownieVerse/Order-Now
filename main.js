@@ -508,13 +508,13 @@ function renderPacks() {
       ${pack.popular ? '<div class="pack-popular-ribbon">Most Popular</div>' : ''}
       ${pack.badge ? `<div class="pack-badge">${pack.badge}</div>` : ''}
       
-      <!-- Pack Image -->
-      <div class="pack-img">
+      <!-- Pack Image - CIRCULAR FRAME -->
+      <div class="pack-img pack-img-circle">
         <img src="${pack.image}" alt="${pack.name}" loading="lazy" 
              onerror="this.src='images/placeholder-pack.jpg'; this.onerror=null;" />
       </div>
       
-      <div class="pack-name">${pack.name}</div>
+      <div class="pack-name">${pack.emoji} ${pack.name}</div>
       <div class="pack-subtitle">${pack.subtitle}</div>
       <div class="pack-divider"></div>
       
