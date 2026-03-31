@@ -58,11 +58,54 @@ const PRODUCTS = [
 // =============================================
 // PACKS DATA
 // =============================================
+// =============================================
+// PACKS DATA (4 Pack Types) - WITH IMAGES
+// =============================================
 const PACKS = [
-  { id: 'pack-1', name: '1 Pack', subtitle: 'Classic Bites', price: 99, contents: ['Classic Brownie Bites'], badge: null, popular: false, emoji: '📦' },
-  { id: 'pack-2', name: '2 Pack', subtitle: 'Classic & Kaab Ghezal', price: 175, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'], badge: null, popular: false, emoji: '🎀' },
-  { id: 'pack-3', name: 'Pack Moyen', subtitle: 'Classic, Kaab Ghezal & Oreo', price: 199, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites'], badge: '⭐ Most Popular', popular: true, emoji: '🎁' },
-  { id: 'pack-4', name: 'Grand Pack', subtitle: 'All Flavors', price: 350, contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites', 'Kunaffa Bites'], badge: '🏆 Best Value', popular: false, emoji: '👑' },
+  {
+    id: 'pack-1',
+    name: '1 Pack',
+    subtitle: 'Classic Bites',
+    price: 99,
+    contents: ['Classic Brownie Bites'],
+    badge: null,
+    popular: false,
+    emoji: '📦',
+    image: 'pack1.png', // ← ADD THIS
+  },
+  {
+    id: 'pack-2',
+    name: '2 Pack',
+    subtitle: 'Classic & Kaab Ghezal',
+    price: 175,
+    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites'],
+    badge: null,
+    popular: false,
+    emoji: '🎀',
+    image: 'pack2.png', // ← ADD THIS
+  },
+  {
+    id: 'pack-3',
+    name: 'Pack Moyen',
+    subtitle: 'Classic, Kaab Ghezal & Oreo',
+    price: 199,
+    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites'],
+    badge: '⭐ Most Popular',
+    popular: true,
+    emoji: '🎁',
+    image: 'pack3.png', // ← ADD THIS
+  },
+  {
+    id: 'pack-4',
+    name: 'Grand Pack',
+    subtitle: 'All Flavors',
+    price: 350,
+    contents: ['Classic Brownie Bites', 'Kaab Ghezal Bites', 'Oreo Bites', 'Kunaffa Bites'],
+    badge: '🏆 Best Value',
+    popular: false,
+    emoji: '👑',
+    image: 'pack4.png', // ← ADD THIS
+  },
 ];
 
 // =============================================
