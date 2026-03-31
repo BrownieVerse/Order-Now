@@ -738,7 +738,10 @@ function syncCartToOrderForm() {
 // =============================================
 // ORDER FORM → WHATSAPP
 // =============================================
-orderForm?.addEventListener('submit', (e) => {
+// =============================================
+// ORDER FORM → GOOGLE SHEETS + WHATSAPP
+// =============================================
+orderForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!validateOrderForm()) return;
 
@@ -747,16 +750,48 @@ orderForm?.addEventListener('submit', (e) => {
   const address = document.getElementById('orderAddress')?.value.trim();
   const notes = document.getElementById('orderNotes')?.value.trim();
   
-  const orderItems = Object.entries(orderSelections).map(([pid, qty]) => {
+  // Get selected packs
+  const selectedPacks = Object.entries(orderSelections).map(([pid, qty]) => {
     const pack = PACKS.find(p => p.id === pid);
-    return `• ${pack?.name || pid} ×${qty} = ${pack?.price * qty} DH`;
-  }).join('\n');
+    return {
+      name: pack?.name || pid,
+      price: pack?.price || 0,
+      quantity: qty,
+      total: (pack?.price || 0) * qty
+    };
+  });
   
-  const total = Object.entries(orderSelections).reduce((sum, [pid, qty]) => {
-    const pack = PACKS.find(p => p.id === pid);
-    return sum + (pack ? pack.price * qty : 0);
-  }, 0);
-
+  const total = selectedPacks.reduce((sum, item) => sum + item.total, 0);
+  
+  // Format order items for display
+  const orderItems = selectedPacks.map(item => 
+    `• ${item.name} ×${item.quantity} = ${item.total} DH`
+  ).join('\n');
+  
+  // Prepare data for Google Sheets
+  const sheetData = {
+    name,
+    phone,
+    address,
+    pack: selectedPacks.map(p => p.name).join(', '),
+    quantity: selectedPacks.reduce((sum, p) => sum + p.quantity, 0),
+    total,
+    notes,
+    timestamp: new Date().toISOString()
+  };
+  
+  // Send to Google Sheets (non-blocking)
+  const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwyi-h7XOtPi5Ob_30zfFmWKGffkhOYu1JGHcr-OH3FnT0vOMBQEEbAIuI_AJ9MOLInqw/exec';
+  
+  // Fire-and-forget: don't wait for Sheets response
+  fetch(SHEETS_WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors', // Required for Google Apps Script
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(sheetData)
+  }).catch(err => console.log('Sheets log error:', err));
+  
+  // Prepare WhatsApp message
   const message = `
 🍫 *NEW ORDER — BrownieVerse* 🍫
 👤 *Customer*: ${name}
@@ -766,7 +801,13 @@ orderForm?.addEventListener('submit', (e) => {
 ${orderItems}
 💰 *Total*: ${total} DH
 📝 *Notes*: ${notes || 'None'}
-⏰ *Order Time*: ${new Date().toLocaleString('en-MA', { timeZone: 'Africa/Casablanca', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
+⏰ *Order Time*: ${new Date().toLocaleString('en-MA', { 
+    timeZone: 'Africa/Casablanca',
+    hour: '2-digit', 
+    minute: '2-digit',
+    day: '2-digit',
+    month: 'short'
+  })}
 ──────────────
 Sent from BrownieVerse.ma
   `.trim();
@@ -774,16 +815,19 @@ Sent from BrownieVerse.ma
   const encodedMessage = encodeURIComponent(message);
   const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 
+  // Show loading state
   const submitBtn = document.getElementById('orderSubmitBtn');
   const originalBtnText = submitBtn.innerHTML;
   
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening WhatsApp...';
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Order...';
 
+  // Open WhatsApp after short delay
   setTimeout(() => {
     window.open(whatsappURL, '_blank');
-    showToast('📱 Opening WhatsApp… Please send the message to confirm your order!', 'success');
+    showToast('📱 Order sent to WhatsApp! Please confirm with us.', 'success');
     
+    // Reset form
     setTimeout(() => {
       orderForm?.reset();
       orderSelections = {};
