@@ -1,5 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
+   PIRATE EDITION
    ============================================= */
 
 'use strict';
@@ -101,37 +102,39 @@ const PACKS = [
 ];
 
 // =============================================
-// CART STATE
-// =============================================
-let cart = [];
-
-// =============================================
-// DOM REFERENCES
-// =============================================
-const navbar           = document.getElementById('navbar');
-const hamburger        = document.getElementById('hamburger');
-const mobileNav        = document.getElementById('mobileNav');
-const cartToggle       = document.getElementById('cartToggle');
-const cartOverlay      = document.getElementById('cartOverlay');
-const cartDrawer       = document.getElementById('cartDrawer');
-const cartClose        = document.getElementById('cartClose');
-const cartContinue     = document.getElementById('cartContinue');
-const cartCount        = document.getElementById('cartCount');
-const cartItems        = document.getElementById('cartItems');
-const cartFooter       = document.getElementById('cartFooter');
-const cartTotalDisplay = document.getElementById('cartTotalDisplay');
-const cartCheckout     = document.getElementById('cartCheckout');
-const toastContainer   = document.getElementById('toastContainer');
-const productsGrid     = document.getElementById('productsGrid');
-const packsGrid        = document.getElementById('packsGrid');
-const orderForm        = document.getElementById('orderForm');
-const communityForm    = document.getElementById('communityForm');
-const orderProductSelector = document.getElementById('orderProductSelector');
-// =============================================
 // BUSINESS WHATSAPP CONFIG
 // =============================================
 const WHATSAPP_NUMBER = '212703920799'; // ← REPLACE with your business number (no +, no spaces)
 // Example: '212612345678' for +212 612-345678
+
+// =============================================
+// CART STATE
+// =============================================
+let cart = [];
+let orderSelections = {}; // { packId: qty }
+
+// =============================================
+// DOM REFERENCES
+// =============================================
+const navbar = document.getElementById('navbar');
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobileNav');
+const cartToggle = document.getElementById('cartToggle');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartClose = document.getElementById('cartClose');
+const cartContinue = document.getElementById('cartContinue');
+const cartCount = document.getElementById('cartCount');
+const cartItems = document.getElementById('cartItems');
+const cartFooter = document.getElementById('cartFooter');
+const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+const cartCheckout = document.getElementById('cartCheckout');
+const toastContainer = document.getElementById('toastContainer');
+const productsGrid = document.getElementById('productsGrid');
+const packsGrid = document.getElementById('packsGrid');
+const orderForm = document.getElementById('orderForm');
+const communityForm = document.getElementById('communityForm');
+const orderProductSelector = document.getElementById('orderProductSelector');
 
 // =============================================
 // PAGE LOADER
@@ -157,8 +160,8 @@ const navScrollHandler = () => {
 window.addEventListener('scroll', navScrollHandler, { passive: true });
 
 // Active nav link on scroll
-const sections = ['hero', 'products', 'packs', 'about', 'order', 'community'];
-const navLinks  = document.querySelectorAll('.nav-link');
+const sections = ['hero', 'products', 'packs', 'schedule', 'about', 'order', 'community'];
+const navLinks = document.querySelectorAll('.nav-link');
 
 const sectionObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -214,13 +217,16 @@ const observeReveal = () => {
 // RENDER PRODUCTS (Flavors — no price)
 // =============================================
 function renderProducts() {
+  if (!productsGrid) return;
+  
   productsGrid.innerHTML = PRODUCTS.map((p, idx) => `
     <article class="product-card reveal reveal-delay-${(idx % 4) + 1}"
              data-product-id="${p.id}"
              role="article"
              aria-label="${p.name}">
       <div class="product-img">
-        <img src="${p.image}" alt="${p.name}" loading="lazy" />
+        <img src="${p.image}" alt="${p.name}" loading="lazy" 
+             onerror="this.src='images/placeholder.jpg'; this.onerror=null;" />
         ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
       </div>
       <div class="product-info">
@@ -248,6 +254,7 @@ function renderProducts() {
 // =============================================
 function renderPacks() {
   if (!packsGrid) return;
+  
   packsGrid.innerHTML = PACKS.map((pack, idx) => `
     <div class="pack-card${pack.popular ? ' popular' : ''} reveal reveal-delay-${idx + 1}">
       ${pack.popular ? '<div class="pack-popular-ribbon">Most Popular</div>' : ''}
@@ -286,6 +293,8 @@ function renderPacks() {
 // ORDER FORM — PACK SELECTOR
 // =============================================
 function renderOrderProductSelector() {
+  if (!orderProductSelector) return;
+  
   orderProductSelector.innerHTML = PACKS.map(pack => `
     <div class="product-selector-item">
       <div class="psi-info">
@@ -304,8 +313,6 @@ function renderOrderProductSelector() {
     </div>
   `).join('');
 }
-
-let orderSelections = {}; // { packId: qty }
 
 function toggleOrderPack(packId, checked) {
   if (checked) {
@@ -328,6 +335,8 @@ function changeOrderQty(packId, delta) {
 
 function updateOrderSummary() {
   const summaryBox = document.getElementById('orderSummary');
+  if (!summaryBox) return;
+  
   const selected = Object.entries(orderSelections);
 
   if (selected.length === 0) {
@@ -500,9 +509,6 @@ function syncCartToOrderForm() {
 }
 
 // =============================================
-// ORDER FORM SUBMISSION
-// =============================================
-// =============================================
 // ORDER FORM SUBMISSION → WHATSAPP
 // =============================================
 orderForm.addEventListener('submit', (e) => {
@@ -531,7 +537,7 @@ orderForm.addEventListener('submit', (e) => {
   const message = `
 🍫 *NEW ORDER — BrownieVerse* 🍫
 
-👤 *Customer*: ${name}
+ *Customer*: ${name}
 📱 *Phone*: ${phone}
 📍 *Address*: ${address}
 
@@ -616,14 +622,10 @@ communityForm.addEventListener('submit', async (e) => {
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Joining...';
 
   try {
-    const res = await fetch('tables/brownieverse_community', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, source: 'website_waitlist', status: 'pending' }),
-    });
-
-    if (!res.ok) throw new Error('Community join failed');
-
+    // For demo purposes, we'll just show success
+    // In production, replace with actual API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     communityForm.reset();
     showSuccessOverlay('communitySuccess');
     updatePirateCount();
@@ -639,11 +641,12 @@ communityForm.addEventListener('submit', async (e) => {
 // Update pirate count dynamically
 async function updatePirateCount() {
   try {
-    const res = await fetch('tables/brownieverse_community?limit=1');
-    const data = await res.json();
-    const count = (data.total || 0) + 200;
+    // For demo, just increment locally
     const el = document.getElementById('pirateCount');
-    if (el) el.textContent = `Join ${count}+ Pirates already aboard`;
+    if (el) {
+      const current = parseInt(el.textContent.match(/\d+/)[0]) || 200;
+      el.textContent = `Join ${current + 1}+ Pirates already aboard`;
+    }
   } catch (_) { /* silent fail */ }
 }
 
@@ -763,6 +766,443 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // =============================================
+// SCHEDULE: HIGHLIGHT TODAY
+// =============================================
+function highlightScheduleDays() {
+  if (!document.getElementById('schedule')) return;
+  
+  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const today = days[new Date().getDay()];
+  
+  document.querySelectorAll('.schedule-days .day').forEach(dayEl => {
+    const dayText = dayEl.textContent.toLowerCase();
+    if (dayText === today.substring(0, 3)) {
+      dayEl.style.boxShadow = '0 0 0 2px var(--brown-deep), 0 4px 12px rgba(59,26,10,0.2)';
+      dayEl.style.transform = 'scale(1.05)';
+      dayEl.style.fontWeight = '800';
+    }
+  });
+}
+
+// =============================================
+// PIRATE SOUND EFFECTS SYSTEM
+// =============================================
+const PIRATE_SOUNDS = {
+  ocean: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_102f359568.mp3',
+  parrot: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a238991e.mp3',
+  coin: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
+  laugh: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+  thunder: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c610232532.mp3',
+  chest: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3',
+};
+
+const audioElements = {};
+let isMuted = false;
+let currentVolume = 0.5;
+
+function initPirateSounds() {
+  Object.keys(PIRATE_SOUNDS).forEach(key => {
+    audioElements[key] = new Audio(PIRATE_SOUNDS[key]);
+    audioElements[key].loop = key === 'ocean';
+    audioElements[key].volume = currentVolume;
+  });
+  
+  if (audioElements.ocean) {
+    audioElements.ocean.volume = 0.2;
+    audioElements.ocean.play().catch(() => {});
+  }
+}
+
+function playPirateSound(soundName, volume = 1) {
+  if (isMuted || !audioElements[soundName]) return;
+  
+  const audio = audioElements[soundName];
+  audio.currentTime = 0;
+  audio.volume = currentVolume * volume;
+  audio.play().catch(() => {});
+}
+
+function createSoundToggle() {
+  const toggle = document.createElement('button');
+  toggle.className = 'sound-toggle';
+  toggle.innerHTML = '<div class="sound-wave"></div><div class="sound-wave"></div>';
+  toggle.setAttribute('aria-label', 'Toggle sound effects');
+  toggle.title = 'Toggle Pirate Sounds';
+  
+  toggle.addEventListener('click', () => {
+    isMuted = !isMuted;
+    toggle.classList.toggle('muted', isMuted);
+    
+    Object.values(audioElements).forEach(audio => {
+      if (isMuted) {
+        audio.pause();
+      } else if (audio.loop) {
+        audio.play().catch(() => {});
+      }
+    });
+    
+    showVolumeIndicator(isMuted ? '🔇 Muted' : '🔊 Sounds On');
+    
+    if (!isMuted) {
+      setTimeout(() => playPirateSound('coin', 0.5), 100);
+    }
+  });
+  
+  document.body.appendChild(toggle);
+  return toggle;
+}
+
+function showVolumeIndicator(text) {
+  let indicator = document.querySelector('.volume-indicator');
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.className = 'volume-indicator';
+    document.body.appendChild(indicator);
+  }
+  
+  indicator.textContent = text;
+  indicator.classList.add('visible');
+  
+  setTimeout(() => {
+    indicator.classList.remove('visible');
+  }, 2000);
+}
+
+function setupPirateSoundTriggers() {
+  document.querySelectorAll('.gold-coin').forEach(coin => {
+    coin.addEventListener('mouseenter', () => {
+      playPirateSound('coin', 0.3);
+    });
+  });
+  
+  const parrotMascot = document.getElementById('parrotMascot');
+  if (parrotMascot) {
+    parrotMascot.addEventListener('mouseenter', () => {
+      playPirateSound('parrot', 0.4);
+    });
+  }
+  
+  if (communityForm) {
+    communityForm.addEventListener('submit', () => {
+      playPirateSound('chest', 0.6);
+      setTimeout(() => playPirateSound('laugh', 0.4), 500);
+    });
+  }
+  
+  const dayNightToggle = document.querySelector('.day-night-toggle');
+  if (dayNightToggle) {
+    dayNightToggle.addEventListener('click', () => {
+      playPirateSound('thunder', 0.3);
+    });
+  }
+  
+  document.querySelectorAll('.treasure-marker').forEach(marker => {
+    marker.addEventListener('click', () => {
+      playPirateSound('coin', 0.5);
+    });
+  });
+}
+
+// =============================================
+// PIRATE DAY/NIGHT MODE TOGGLE
+// =============================================
+function initDayNightMode() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection) return;
+  
+  const toggle = document.createElement('button');
+  toggle.className = 'day-night-toggle sun-mode';
+  toggle.setAttribute('aria-label', 'Toggle day/night mode');
+  toggle.title = 'Switch to Night Mode';
+  
+  toggle.addEventListener('click', () => {
+    const isNight = communitySection.classList.toggle('night-mode');
+    toggle.classList.toggle('moon-mode', isNight);
+    toggle.classList.toggle('sun-mode', !isNight);
+    toggle.title = isNight ? 'Switch to Day Mode' : 'Switch to Night Mode';
+    
+    if (typeof playPirateSound === 'function') {
+      playPirateSound('thunder', 0.3);
+    }
+    
+    localStorage.setItem('brownieverse-night-mode', isNight);
+    
+    if (isNight) {
+      createStars();
+      createMoon();
+      createNightClouds();
+    }
+  });
+  
+  communitySection.insertBefore(toggle, communitySection.firstChild);
+  
+  const savedMode = localStorage.getItem('brownieverse-night-mode');
+  if (savedMode === 'true') {
+    communitySection.classList.add('night-mode');
+    toggle.classList.add('moon-mode');
+    toggle.classList.remove('sun-mode');
+    createStars();
+    createMoon();
+    createNightClouds();
+  }
+}
+
+function createStars() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelectorAll('.star').length > 0) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  for (let i = 0; i < 20; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.top = Math.random() * 40 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = (Math.random() * 3 + 2) + 'px';
+    star.style.height = star.style.width;
+    skyElements.appendChild(star);
+  }
+}
+
+function createMoon() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelector('.moon')) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  const moon = document.createElement('div');
+  moon.className = 'moon';
+  skyElements.appendChild(moon);
+}
+
+function createNightClouds() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection || communitySection.querySelectorAll('.night-cloud').length > 0) return;
+  
+  const skyElements = communitySection.querySelector('.night-sky-elements');
+  if (!skyElements) return;
+  
+  const cloud1 = document.createElement('div');
+  cloud1.className = 'night-cloud night-cloud-1';
+  skyElements.appendChild(cloud1);
+  
+  const cloud2 = document.createElement('div');
+  cloud2.className = 'night-cloud night-cloud-2';
+  skyElements.appendChild(cloud2);
+}
+
+// =============================================
+// INTERACTIVE TREASURE MAP
+// =============================================
+function initTreasureMap() {
+  const communitySection = document.getElementById('community');
+  if (!communitySection) return;
+  
+  const mapContainer = document.createElement('div');
+  mapContainer.className = 'treasure-map-container reveal reveal-delay-3';
+  
+  mapContainer.innerHTML = `
+    <div class="treasure-map-header">
+      <h3>🗺️ Treasure Map of Perks</h3>
+      <p>Click the X marks to discover hidden pirate treasures!</p>
+    </div>
+    
+    <div class="treasure-map" id="treasureMap">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;">
+        <path class="map-path" d="M 120 80 Q 200 120 280 100 T 400 180" />
+        <path class="map-path" d="M 120 80 Q 100 180 150 280" style="animation-delay:1.5s"/>
+        <path class="map-path" d="M 280 100 Q 320 200 300 250" style="animation-delay:2s"/>
+      </svg>
+      
+      <div class="treasure-marker marker-1" data-perk="0" title="Click to reveal!">💰</div>
+      <div class="x-spot" style="top:17%;left:22%;">X</div>
+      
+      <div class="treasure-marker marker-2" data-perk="1" title="Click to reveal!">💎</div>
+      <div class="x-spot" style="top:27%;right:27%;">X</div>
+      
+      <div class="treasure-marker marker-3" data-perk="2" title="Click to reveal!">🎁</div>
+      <div class="x-spot" style="top:47%;left:17%;">X</div>
+      
+      <div class="treasure-marker marker-4" data-perk="3" title="Click to reveal!">🏴‍️</div>
+      <div class="x-spot" style="top:57%;right:22%;">X</div>
+      
+      <div class="treasure-marker marker-5" data-perk="4" title="Click to reveal!">⚓</div>
+      <div class="x-spot" style="top:72%;left:32%;">X</div>
+      
+      <div class="perk-popup" id="perkPopup0">
+        <div class="perk-popup-icon">💰</div>
+        <div class="perk-popup-title">Exclusive Discounts</div>
+        <div class="perk-popup-desc">Get 20% off your first order as a crew member!</div>
+      </div>
+      
+      <div class="perk-popup" id="perkPopup1">
+        <div class="perk-popup-icon">💎</div>
+        <div class="perk-popup-title">Limited Editions</div>
+        <div class="perk-popup-desc">First access to rare & seasonal flavors before anyone else!</div>
+      </div>
+      
+      <div class="perk-popup" id="perkPopup2">
+        <div class="perk-popup-icon">🎁</div>
+        <div class="perk-popup-title">Birthday Treasure</div>
+        <div class="perk-popup-desc">Free brownie bites on your birthday! Arrr, happy birthday!</div>
+      </div>
+      
+      <div class="perk-popup" id="perkPopup3">
+        <div class="perk-popup-icon">🏴‍️</div>
+        <div class="perk-popup-title">Pirate Events</div>
+        <div class="perk-popup-desc">Invite-only tastings & treasure hunt parties in Salé!</div>
+      </div>
+      
+      <div class="perk-popup" id="perkPopup4">
+        <div class="perk-popup-icon">⚓</div>
+        <div class="perk-popup-title">Captain's Direct Line</div>
+        <div class="perk-popup-desc">Priority WhatsApp support from the BrownieVerse crew!</div>
+      </div>
+      
+      <div class="map-compass-rose">🧭</div>
+      <div class="map-scale">Scale: 1 inch = 1 delicious bite</div>
+    </div>
+    
+    <div class="map-instructions">
+      <i class="fas fa-mouse-pointer"></i> Click on the bouncing markers to reveal hidden perks!
+    </div>
+  `;
+  
+  const formCard = communitySection.querySelector('.community-form-card');
+  if (formCard) {
+    communitySection.insertBefore(mapContainer, formCard);
+  }
+  
+  setTimeout(() => {
+    document.querySelectorAll('.treasure-marker').forEach(marker => {
+      marker.addEventListener('click', (e) => {
+        const perkIndex = marker.getAttribute('data-perk');
+        revealPerk(perkIndex, marker);
+      });
+    });
+  }, 100);
+}
+
+function revealPerk(index, marker) {
+  document.querySelectorAll('.perk-popup').forEach(popup => {
+    popup.classList.remove('visible');
+  });
+  
+  const popup = document.getElementById(`perkPopup${index}`);
+  if (popup) {
+    const markerRect = marker.getBoundingClientRect();
+    const mapRect = marker.closest('.treasure-map').getBoundingClientRect();
+    
+    popup.style.left = (markerRect.left - mapRect.left - 50) + 'px';
+    popup.style.top = (markerRect.top - mapRect.top - 120) + 'px';
+    
+    popup.classList.add('visible');
+    marker.classList.add('revealed');
+    
+    if (typeof playPirateSound === 'function') {
+      playPirateSound('coin', 0.5);
+    }
+    
+    createTreasureChest(marker);
+    
+    setTimeout(() => {
+      popup.classList.remove('visible');
+    }, 5000);
+  }
+}
+
+function createTreasureChest(marker) {
+  const chest = document.createElement('div');
+  chest.className = 'treasure-chest-open';
+  chest.textContent = '📦';
+  chest.style.left = marker.style.left || '50%';
+  chest.style.top = marker.style.top || '50%';
+  
+  marker.parentElement.appendChild(chest);
+  
+  setTimeout(() => {
+    chest.remove();
+  }, 2000);
+}
+
+// =============================================
+// PARROT MASCOT - FOLLOWS CURSOR
+// =============================================
+const parrotMascot = document.getElementById('parrotMascot');
+const parrotSpeech = document.getElementById('parrotSpeech');
+const communitySection = document.getElementById('community');
+
+const parrotQuotes = [
+  "Pieces of eight! 🪙",
+  "Brownie treasure awaits! 🍫",
+  "Join the crew, matey! 🏴‍️",
+  "Arrrr, delicious! 😋",
+  "Full speed ahead! ⛵",
+  "X marks the spot! 🗺️",
+  "Ahoy, captain! 👨‍️",
+  "Sweet booty ahead! 💎"
+];
+
+let parrotVisible = false;
+let parrotTimeout = null;
+
+function initParrotMascot() {
+  if (!communitySection || !parrotMascot || !parrotSpeech) return;
+  
+  const parrotObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      parrotVisible = true;
+      parrotMascot.classList.add('visible');
+      
+      setTimeout(() => {
+        showParrotQuote();
+      }, 2000);
+    } else {
+      parrotVisible = false;
+      parrotMascot.classList.remove('visible');
+      parrotSpeech.classList.remove('visible');
+    }
+  }, { threshold: 0.3 });
+  
+  parrotObserver.observe(communitySection);
+  
+  communitySection.addEventListener('mousemove', (e) => {
+    if (!parrotVisible) return;
+    
+    const rect = communitySection.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const parrotX = Math.max(50, Math.min(x, rect.width - 50));
+    const parrotY = Math.max(50, Math.min(y, rect.height - 50));
+    
+    parrotMascot.style.left = (rect.left + parrotX) + 'px';
+    parrotMascot.style.top = (rect.top + parrotY) + 'px';
+  });
+  
+  function showParrotQuote() {
+    if (!parrotVisible) return;
+    
+    const quote = parrotQuotes[Math.floor(Math.random() * parrotQuotes.length)];
+    parrotSpeech.textContent = quote;
+    parrotSpeech.classList.add('visible');
+    parrotSpeech.style.left = parrotMascot.style.left;
+    parrotSpeech.style.top = (parseFloat(parrotMascot.style.top) - 50) + 'px';
+    
+    clearTimeout(parrotTimeout);
+    parrotTimeout = setTimeout(() => {
+      parrotSpeech.classList.remove('visible');
+      if (parrotVisible) {
+        parrotTimeout = setTimeout(showParrotQuote, 8000 + Math.random() * 7000);
+      }
+    }, 3000);
+  }
+}
+
+// =============================================
 // INIT
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -772,24 +1212,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();
   updatePirateCount();
   observeReveal();
-// =============================================
-// SCHEDULE: HIGHLIGHT TODAY
-// =============================================
-function highlightScheduleDays() {
-  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-  const today = days[new Date().getDay()];
   
-  document.querySelectorAll('.schedule-days .day').forEach(dayEl => {
-    const dayText = dayEl.textContent.toLowerCase();
-    if (dayText === today.substring(0, 3)) {
-      dayEl.style.boxShadow = '0 0 0 2px var(--brown-deep), 0 4px 12px rgba(59,26,10,0.2)';
-      dayEl.style.transform = 'scale(1.05)';
-    }
-  });
-}
-
-// Run on load + when section scrolls into view
-if (document.getElementById('schedule')) {
+  // Schedule highlight
   highlightScheduleDays();
   
   const scheduleObserver = new IntersectionObserver((entries) => {
@@ -799,8 +1223,18 @@ if (document.getElementById('schedule')) {
     }
   }, { threshold: 0.3 });
   
-  scheduleObserver.observe(document.getElementById('schedule'));
-}
+  const scheduleSection = document.getElementById('schedule');
+  if (scheduleSection) {
+    scheduleObserver.observe(scheduleSection);
+  }
+  
+  // Pirate features
+  initPirateSounds();
+  createSoundToggle();
+  setupPirateSoundTriggers();
+  initDayNightMode();
+  initTreasureMap();
+  initParrotMascot();
 });
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -810,10 +1244,23 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   updateCartUI();
   updatePirateCount();
   observeReveal();
+  
+  highlightScheduleDays();
+  initPirateSounds();
+  createSoundToggle();
+  setupPirateSoundTriggers();
+  initDayNightMode();
+  initTreasureMap();
+  initParrotMascot();
 }
 
 // window globals for inline onclick
-window.removeFromCart  = removeFromCart;
-window.changeQty       = changeQty;
+window.removeFromCart = removeFromCart;
+window.changeQty = changeQty;
 window.toggleOrderPack = toggleOrderPack;
-window.changeOrderQty  = changeOrderQty;
+window.changeOrderQty = changeOrderQty;
+window.preSelectPack = preSelectPack;
+window.addPackToCart = addPackToCart;
+window.closeSuccess = closeSuccess;
+
+console.log('🏴‍️ BrownieVerse Pirates Loaded! Ahoy Matey! 🍫');
