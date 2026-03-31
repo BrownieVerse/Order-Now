@@ -1686,6 +1686,9 @@ h1, h2, h3, h4 {
 /* =============================================
    COMMUNITY / PIRATES SECTION — PIRATE THEME (Fixed Layout)
    ============================================= */
+/* =============================================
+   COMMUNITY / PIRATES SECTION — Two-Column Layout (Fixed)
+   ============================================= */
 .community-section {
   background: 
     radial-gradient(ellipse at 20% 30%, rgba(201,150,42,0.15) 0%, transparent 50%),
@@ -1727,7 +1730,7 @@ h1, h2, h3, h4 {
 .community-map-overlay {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.08'%3E%3Cpath d='M50 50 L350 50 L350 350 L50 350 Z' fill='none' stroke='%235C2A0E' stroke-width='0.5'/%3E%3Ccircle cx='200' cy='200' r='80' fill='none' stroke='%23C9962A' stroke-width='0.5'/%3E%3Ccircle cx='200' cy='200' r='120' fill='none' stroke='%23C9962A' stroke-width='0.3'/%3E%3Cpath d='M200 40 L200 360 M40 200 L360 200' stroke='%235C2A0E' stroke-width='0.3'/%3E%3Cpath d='M100 100 L300 300 M300 100 L100 300' stroke='%235C2A0E' stroke-width='0.2'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.08'%3E%3Cpath d='M50 50 L350 50 L350 350 L50 350 Z' fill='none' stroke='%235C2A0E' stroke-width='0.5'/%3E%3Ccircle cx='200' cy='200' r='80' fill='none' stroke='%23C9962A' stroke-width='0.5'/%3E%3Ccircle cx='200' cy='200' r='120' fill='none' stroke='%23C9962A' stroke-width='0.3'/%3E%3Cpath d='M200 40 L200 360 M40 200 L360 200' stroke='%235C2A0E' stroke-width='0.3'/%3E%3Cpath d='M100 100 L300 300 M300 100 L100 300' stroke='%235C2A0E' stroke-width='0.2'/%3E%3C/g%3E%3C/svg%3E");
   opacity: 0.4;
   pointer-events: none;
   z-index: 0;
@@ -1805,9 +1808,10 @@ h1, h2, h3, h4 {
   to { transform: rotate(360deg); }
 }
 
+/* 🔹 TWO-COLUMN LAYOUT - THE KEY FIX 🔹 */
 .community-inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.1fr 0.9fr; /* Content slightly wider than form */
   gap: 4rem;
   align-items: start;
   position: relative;
@@ -1817,6 +1821,7 @@ h1, h2, h3, h4 {
 .community-content {
   position: relative;
   z-index: 2;
+  padding-right: 1rem;
 }
 
 .community-content .eyebrow { 
@@ -1827,6 +1832,7 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 0.5rem;
   justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .community-content .eyebrow::before,
@@ -1841,6 +1847,7 @@ h1, h2, h3, h4 {
   margin-bottom: 1.5rem;
   color: var(--brown-deep);
   text-shadow: 1px 1px 0 rgba(201,150,42,0.3);
+  line-height: 1.2;
 }
 
 .community-content h2 em {
@@ -1980,7 +1987,7 @@ h1, h2, h3, h4 {
   letter-spacing: 0.05em;
 }
 
-/* Google Form Button Card - Fixed Layout */
+/* 🔹 FORM CARD - RIGHT COLUMN 🔹 */
 .community-form-card {
   background: 
     linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,244,236,0.98) 100%),
@@ -1993,7 +2000,7 @@ h1, h2, h3, h4 {
   text-align: center;
   z-index: 2;
   width: 100%;
-  max-width: 450px;
+  max-width: 420px;
   margin: 0 auto;
 }
 
@@ -2095,7 +2102,7 @@ h1, h2, h3, h4 {
   justify-content: center;
   width: 100%;
   max-width: 300px;
-  margin: 0 auto;
+  margin: 0 auto 1.5rem;
 }
 
 .community-form-card .form-submit::before {
@@ -2168,7 +2175,7 @@ h1, h2, h3, h4 {
 }
 
 .community-form-card > p:last-of-type {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-size: 0.7rem;
   color: var(--text-muted);
   text-align: center;
@@ -2179,6 +2186,7 @@ h1, h2, h3, h4 {
   border: 1px dashed rgba(201,150,42,0.3);
 }
 
+/* Decorative elements */
 .pirate-flag-corner {
   position: absolute;
   font-size: 3rem;
@@ -2235,7 +2243,9 @@ h1, h2, h3, h4 {
   transform: translateX(-50%);
 }
 
-.community-coins {
+/* Animated coins, gems, keys */
+.community-coins,
+.community-gems {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -2243,18 +2253,25 @@ h1, h2, h3, h4 {
   overflow: hidden;
 }
 
-.gold-coin {
+.gold-coin,
+.treasure-gem,
+.ancient-key {
   position: absolute;
+  cursor: pointer;
+  transition: transform 0.3s, opacity 0.3s, filter 0.3s;
+}
+
+.gold-coin {
   font-size: 1.2rem;
   opacity: 0.6;
   animation: coin-float 6s ease-in-out infinite;
   filter: drop-shadow(0 4px 8px rgba(201,150,42,0.4));
-  cursor: pointer;
 }
 
 .gold-coin:hover {
   opacity: 1;
   filter: drop-shadow(0 6px 15px rgba(201,150,42,0.6));
+  transform: scale(1.1);
 }
 
 .gold-coin:nth-child(1) { bottom: 5%; left: 8%; animation-delay: 0s; font-size: 1.4rem; }
@@ -2271,26 +2288,17 @@ h1, h2, h3, h4 {
   50% { transform: translateY(-15px) rotate(180deg); opacity: 0.8; }
 }
 
-.community-gems {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
 .treasure-gem {
-  position: absolute;
   font-size: 1rem;
   opacity: 0.7;
   animation: gem-sparkle 4s ease-in-out infinite;
   filter: drop-shadow(0 2px 6px rgba(201,150,42,0.5));
-  cursor: pointer;
 }
 
 .treasure-gem:hover {
   opacity: 1;
   filter: drop-shadow(0 4px 12px rgba(201,150,42,0.7));
+  transform: scale(1.1);
 }
 
 .treasure-gem:nth-child(1) { top: 20%; left: 5%; animation-delay: 0s; }
@@ -2305,17 +2313,16 @@ h1, h2, h3, h4 {
 }
 
 .ancient-key {
-  position: absolute;
   font-size: 2rem;
   opacity: 0.4;
   z-index: 0;
   animation: key-float 8s ease-in-out infinite;
-  cursor: pointer;
 }
 
 .ancient-key:hover {
   opacity: 0.7;
   filter: drop-shadow(0 4px 12px rgba(201,150,42,0.5));
+  transform: scale(1.1);
 }
 
 .ancient-key-1 { top: 15%; right: 20%; animation-delay: 0s; }
@@ -2337,7 +2344,7 @@ h1, h2, h3, h4 {
 
 .community-waves-top {
   top: -1px;
-  background-image: url("data:image/svg+xml,%3Csvg width='1440' height='60' viewBox='0 0 1440 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q180 60 360 30 T720 30 T1080 30 T1440 30 L1440 60 L0 60 Z' fill='rgba(59,26,10,0.08)'/%3E%3C/svg%3E");
+  background-image: url("image/svg+xml,%3Csvg width='1440' height='60' viewBox='0 0 1440 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q180 60 360 30 T720 30 T1080 30 T1440 30 L1440 60 L0 60 Z' fill='rgba(59,26,10,0.08)'/%3E%3C/svg%3E");
   background-size: 1440px 60px;
   animation: wave-scroll 20s linear infinite;
 }
@@ -2355,8 +2362,166 @@ h1, h2, h3, h4 {
   100% { background-position: 1440px 0; }
 }
 
-/* Treasure Map - Fixed Layout */
+/* Night mode */
+.community-section.night-mode {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.community-section.night-mode .community-content p,
+.community-section.night-mode .community-perk,
+.community-section.night-mode .section-sub {
+  color: #e8e8e8;
+  background: rgba(255,255,255,0.05);
+}
+
+.community-section.night-mode .community-form-card {
+  background: linear-gradient(135deg, rgba(30,30,50,0.95) 0%, rgba(20,20,35,0.98) 100%);
+  border-color: rgba(255,215,0,0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,215,0,0.1);
+}
+
+.community-section.night-mode .form-input {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,215,0,0.3);
+  color: #e8e8e8;
+}
+
+.community-section.night-mode .form-input:focus {
+  background: rgba(255,255,255,0.1);
+  border-color: #ffd700;
+  box-shadow: 0 0 0 3px rgba(255,215,0,0.2);
+}
+
+.night-sky-elements {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.moon {
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #fff9c4 0%, #ffd54f 50%, #ffb300 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 60px rgba(255,215,0,0.6), 0 0 100px rgba(255,215,0,0.3);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.night-mode .moon {
+  opacity: 1;
+  animation: moon-glow 4s ease-in-out infinite;
+}
+
+@keyframes moon-glow {
+  0%, 100% { box-shadow: 0 0 60px rgba(255,215,0,0.6), 0 0 100px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 80px rgba(255,215,0,0.8), 0 0 120px rgba(255,215,0,0.5); }
+}
+
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.night-mode .star {
+  opacity: 1;
+  animation: star-twinkle 3s ease-in-out infinite;
+}
+
+.star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+.star:nth-child(2) { top: 15%; left: 70%; animation-delay: 0.5s; width: 4px; height: 4px; }
+.star:nth-child(3) { top: 25%; left: 25%; animation-delay: 1s; }
+.star:nth-child(4) { top: 8%; left: 45%; animation-delay: 1.5s; width: 2px; height: 2px; }
+.star:nth-child(5) { top: 20%; left: 85%; animation-delay: 2s; }
+.star:nth-child(6) { top: 30%; left: 60%; animation-delay: 0.3s; width: 4px; height: 4px; }
+.star:nth-child(7) { top: 12%; left: 30%; animation-delay: 0.8s; }
+.star:nth-child(8) { top: 25%; left: 80%; animation-delay: 1.2s; width: 3px; height: 3px; }
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.night-cloud {
+  position: absolute;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.night-mode .night-cloud {
+  opacity: 1;
+  animation: cloud-drift 30s linear infinite;
+}
+
+.night-cloud-1 {
+  width: 200px;
+  height: 80px;
+  top: 15%;
+  left: -200px;
+  animation-delay: 0s;
+}
+
+.night-cloud-2 {
+  width: 150px;
+  height: 60px;
+  top: 25%;
+  left: -150px;
+  animation-delay: -15s;
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(100vw + 200px)); }
+}
+
+.day-night-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  border: 2px solid var(--brown-deep);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.4s var(--ease-out);
+}
+
+.day-night-toggle:hover {
+  transform: rotate(180deg) scale(1.1);
+  box-shadow: 0 6px 25px rgba(201,150,42,0.5);
+}
+
+.day-night-toggle.sun-mode::before {
+  content: '☀️';
+}
+
+.day-night-toggle.moon-mode::before {
+  content: '🌙';
+}
+
+/* Treasure Map - Centered above form on mobile, hidden on desktop for cleaner layout */
 .treasure-map-container {
+  display: none; /* Hide on desktop for cleaner two-column layout */
   position: relative;
   background: linear-gradient(135deg, rgba(255,248,220,0.98) 0%, rgba(245,230,200,0.98) 100%);
   border: 3px solid var(--brown-deep);
@@ -2578,168 +2743,27 @@ h1, h2, h3, h4 {
   margin-right: 0.3rem;
 }
 
-/* Night mode */
-.community-section.night-mode {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-}
-
-.community-section.night-mode .community-content p,
-.community-section.night-mode .community-perk,
-.community-section.night-mode .section-sub {
-  color: #e8e8e8;
-  background: rgba(255,255,255,0.05);
-}
-
-.community-section.night-mode .community-form-card {
-  background: linear-gradient(135deg, rgba(30,30,50,0.95) 0%, rgba(20,20,35,0.98) 100%);
-  border-color: rgba(255,215,0,0.4);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,215,0,0.1);
-}
-
-.community-section.night-mode .form-input {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,215,0,0.3);
-  color: #e8e8e8;
-}
-
-.community-section.night-mode .form-input:focus {
-  background: rgba(255,255,255,0.1);
-  border-color: #ffd700;
-  box-shadow: 0 0 0 3px rgba(255,215,0,0.2);
-}
-
-.night-sky-elements {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.moon {
-  position: absolute;
-  top: 5%;
-  right: 10%;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle at 30% 30%, #fff9c4 0%, #ffd54f 50%, #ffb300 100%);
-  border-radius: 50%;
-  box-shadow: 0 0 60px rgba(255,215,0,0.6), 0 0 100px rgba(255,215,0,0.3);
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-
-.night-mode .moon {
-  opacity: 1;
-  animation: moon-glow 4s ease-in-out infinite;
-}
-
-@keyframes moon-glow {
-  0%, 100% { box-shadow: 0 0 60px rgba(255,215,0,0.6), 0 0 100px rgba(255,215,0,0.3); }
-  50% { box-shadow: 0 0 80px rgba(255,215,0,0.8), 0 0 120px rgba(255,215,0,0.5); }
-}
-
-.star {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-
-.night-mode .star {
-  opacity: 1;
-  animation: star-twinkle 3s ease-in-out infinite;
-}
-
-.star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
-.star:nth-child(2) { top: 15%; left: 70%; animation-delay: 0.5s; width: 4px; height: 4px; }
-.star:nth-child(3) { top: 25%; left: 25%; animation-delay: 1s; }
-.star:nth-child(4) { top: 8%; left: 45%; animation-delay: 1.5s; width: 2px; height: 2px; }
-.star:nth-child(5) { top: 20%; left: 85%; animation-delay: 2s; }
-.star:nth-child(6) { top: 30%; left: 60%; animation-delay: 0.3s; width: 4px; height: 4px; }
-.star:nth-child(7) { top: 12%; left: 30%; animation-delay: 0.8s; }
-.star:nth-child(8) { top: 25%; left: 80%; animation-delay: 1.2s; width: 3px; height: 3px; }
-
-@keyframes star-twinkle {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.3); }
-}
-
-.night-cloud {
-  position: absolute;
-  background: rgba(255,255,255,0.05);
-  border-radius: 50%;
-  filter: blur(20px);
-  opacity: 0;
-  transition: opacity 1.5s ease;
-}
-
-.night-mode .night-cloud {
-  opacity: 1;
-  animation: cloud-drift 30s linear infinite;
-}
-
-.night-cloud-1 {
-  width: 200px;
-  height: 80px;
-  top: 15%;
-  left: -200px;
-  animation-delay: 0s;
-}
-
-.night-cloud-2 {
-  width: 150px;
-  height: 60px;
-  top: 25%;
-  left: -150px;
-  animation-delay: -15s;
-}
-
-@keyframes cloud-drift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(100vw + 200px)); }
-}
-
-.day-night-toggle {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  width: 45px;
-  height: 45px;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-  border: 2px solid var(--brown-deep);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  cursor: pointer;
-  z-index: 10;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  transition: all 0.4s var(--ease-out);
-}
-
-.day-night-toggle:hover {
-  transform: rotate(180deg) scale(1.1);
-  box-shadow: 0 6px 25px rgba(201,150,42,0.5);
-}
-
-.day-night-toggle.sun-mode::before {
-  content: '☀️';
-}
-
-.day-night-toggle.moon-mode::before {
-  content: '🌙';
-}
-
-/* Responsive fixes for community section */
+/* =============================================
+   RESPONSIVE — Clean Two-Column on Desktop, Stacked on Mobile
+   ============================================= */
 @media (max-width: 900px) {
   .community-inner {
     grid-template-columns: 1fr;
     gap: 3rem;
+  }
+  
+  .community-content {
+    padding-right: 0;
+    text-align: center;
+  }
+  
+  .community-content .eyebrow {
+    justify-content: center;
+  }
+  
+  .community-form-card {
+    max-width: 100%;
+    padding: 2rem 1.5rem;
   }
   
   .community-coins,
@@ -2754,14 +2778,14 @@ h1, h2, h3, h4 {
     height: 40px;
   }
   
+  /* Show treasure map on mobile since we have vertical space */
+  .treasure-map-container {
+    display: block;
+  }
+  
   .treasure-map { height: 300px; }
   .treasure-marker { font-size: 1.5rem; }
   .perk-popup { max-width: 180px; padding: 0.75rem; }
-  
-  .community-form-card {
-    max-width: 100%;
-    padding: 2rem 1.5rem;
-  }
 }
 
 @media (max-width: 600px) {
@@ -2775,6 +2799,10 @@ h1, h2, h3, h4 {
   
   .treasure-map {
     height: 250px;
+  }
+  
+  .community-content h2 {
+    font-size: 2rem;
   }
 }
 
