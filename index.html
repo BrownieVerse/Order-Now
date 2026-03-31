@@ -477,7 +477,7 @@ Jereb(i) w rred(i) 3lia ;")
   </section>
 
   <!-- ======================== COMMUNITY ======================== -->
-  <section id="community" class="section community-section" aria-labelledby="community-title">
+  <section id="community" class="section community-section" aria-labelledby="community-title" data-community-section="true">
     <!-- Pirate decorative elements -->
     <div class="community-map-overlay" aria-hidden="true"></div>
     
@@ -499,26 +499,26 @@ Jereb(i) w rred(i) 3lia ;")
     </div>
     
     <div class="community-coins" aria-hidden="true">
-      <span class="gold-coin">🪙</span>
-      <span class="gold-coin">💰</span>
-      <span class="gold-coin">🪙</span>
-      <span class="gold-coin">💰</span>
-      <span class="gold-coin">🪙</span>
-      <span class="gold-coin">💰</span>
-      <span class="gold-coin">🪙</span>
-      <span class="gold-coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span>
+      <span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span>
+      <span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span>
+      <span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span>
+      <span class="gold-coin" data-sound="coin">💰</span>
     </div>
     
     <div class="community-gems" aria-hidden="true">
-      <span class="treasure-gem">💎</span>
-      <span class="treasure-gem">💍</span>
-      <span class="treasure-gem">💎</span>
-      <span class="treasure-gem">🔮</span>
-      <span class="treasure-gem">💎</span>
+      <span class="treasure-gem" data-sound="coin">💎</span>
+      <span class="treasure-gem" data-sound="coin">💍</span>
+      <span class="treasure-gem" data-sound="coin">💎</span>
+      <span class="treasure-gem" data-sound="coin">🔮</span>
+      <span class="treasure-gem" data-sound="coin">💎</span>
     </div>
     
-    <div class="ancient-key ancient-key-1" aria-hidden="true">🗝️</div>
-    <div class="ancient-key ancient-key-2" aria-hidden="true">🗝️</div>
+    <div class="ancient-key ancient-key-1" aria-hidden="true" data-sound="coin">🗝️</div>
+    <div class="ancient-key ancient-key-2" aria-hidden="true" data-sound="coin">🗝️</div>
     
     <div class="community-compass community-compass-1" aria-hidden="true">🧭</div>
     <div class="community-compass community-compass-2" aria-hidden="true">🧭</div>
@@ -590,8 +590,8 @@ Jereb(i) w rred(i) 3lia ;")
           </div>
         </div>
 
-        <!-- Community Form -->
-        <div class="community-form-card reveal reveal-delay-2">
+        <!-- Community Google Form Card -->
+        <div class="community-form-card reveal reveal-delay-2" id="communityFormCard">
           <!-- Scroll ribbons -->
           <div class="scroll-ribbon scroll-ribbon-left" aria-hidden="true"></div>
           <div class="scroll-ribbon scroll-ribbon-right" aria-hidden="true"></div>
@@ -604,36 +604,31 @@ Jereb(i) w rred(i) 3lia ;")
           <div class="pirate-flag-corner pirate-flag-corner-bottom-left" aria-hidden="true">🏴‍️</div>
           
           <h3>Join the Waitlist</h3>
-          <p>Secure your spot on the Pirates BrownieVerse crew. We'll send a carrier pigeon when doors open! 📜</p>
+          <p>Secure your spot on the Pirates BrownieVerse crew. Click below to join via our secure Google Form! 📜</p>
 
-<!-- Replace the entire <form id="communityForm">...</form> block with: -->
-
-<div class="community-form-card reveal reveal-delay-2" style="text-align:center;">
-  <h3>Join the Waitlist</h3>
-  <p>Secure your spot on the Pirates BrownieVerse crew. Click below to join via our secure Google Form! 📜</p>
-  
-  <!-- Google Form Link Button -->
-  <a href="https://docs.google.com/forms/d/1zkrnZ6anQUfA4imLO5Pg8FYqvEOEHevL8CMF03F5cJM/viewform?pli=1&edit_requested=true" 
-     target="_blank" 
-     rel="noopener noreferrer"
-     class="btn btn-dark form-submit" 
-     style="width:100%; max-width:300px; margin:0 auto; display:inline-flex; justify-content:center;">
-    <i class="fas fa-skull-crossbones"></i>
-    Join the Pirates
-  </a>
-  
-  <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
-    🤝 No spam. No corporate vibes. Only brownie treasure & pirate adventures.
-  </p>
-  
-  <!-- Optional: Add Google Forms badge for trust -->
-  <div style="margin-top:1.5rem; opacity:0.6;">
-    <img src="https://www.gstatic.com/images/branding/product/1x/forms_2020q4_48dp.png" 
-         alt="Google Forms" 
-         style="height:24px; vertical-align:middle; margin-right:0.5rem;">
-    <span style="font-size:0.7rem; vertical-align:middle;">Secured by Google Forms</span>
-  </div>
-</div>
+          <!-- Google Form Link Button -->
+          <a href="https://docs.google.com/forms/d/1zkrnZ6anQUfA4imLO5Pg8FYqvEOEHevL8CMF03F5cJM/viewform?pli=1&edit_requested=true" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="btn btn-dark form-submit google-form-btn"
+             id="googleFormBtn"
+             data-sound="coin"
+             style="width:100%; max-width:300px; margin:0 auto; display:inline-flex; justify-content:center;">
+            <i class="fas fa-skull-crossbones"></i>
+            Join the Pirates
+          </a>
+          
+          <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
+            🤝 No spam. No corporate vibes. Only brownie treasure & pirate adventures.
+          </p>
+          
+          <!-- Optional: Add Google Forms badge for trust -->
+          <div style="margin-top:1.5rem; opacity:0.6;">
+            <img src="https://www.gstatic.com/images/branding/product/1x/forms_2020q4_48dp.png" 
+                 alt="Google Forms" 
+                 style="height:24px; vertical-align:middle; margin-right:0.5rem;">
+            <span style="font-size:0.7rem; vertical-align:middle;">Secured by Google Forms</span>
+          </div>
           
           <!-- Bottom scroll seal -->
           <div class="scroll-seal scroll-seal-bottom" aria-hidden="true">⚓</div>
