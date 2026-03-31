@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION
+   PIRATE EDITION (Google Form)
    ============================================= */
 
 'use strict';
@@ -105,13 +105,12 @@ const PACKS = [
 // BUSINESS WHATSAPP CONFIG
 // =============================================
 const WHATSAPP_NUMBER = '212703920799'; // ← REPLACE with your business number (no +, no spaces)
-// Example: '212612345678' for +212 612-345678
 
 // =============================================
 // CART STATE
 // =============================================
 let cart = [];
-let orderSelections = {}; // { packId: qty }
+let orderSelections = {};
 
 // =============================================
 // DOM REFERENCES
@@ -133,7 +132,6 @@ const toastContainer = document.getElementById('toastContainer');
 const productsGrid = document.getElementById('productsGrid');
 const packsGrid = document.getElementById('packsGrid');
 const orderForm = document.getElementById('orderForm');
-const communityForm = document.getElementById('communityForm');
 const orderProductSelector = document.getElementById('orderProductSelector');
 
 // =============================================
@@ -214,7 +212,7 @@ const observeReveal = () => {
 };
 
 // =============================================
-// RENDER PRODUCTS (Flavors — no price)
+// RENDER PRODUCTS
 // =============================================
 function renderProducts() {
   if (!productsGrid) return;
@@ -360,16 +358,13 @@ function updateOrderSummary() {
   `;
 }
 
-// Pre-select a pack when clicking "Order This Pack" from the menu
 window.preSelectPack = function(packId) {
-  // Uncheck all first
   PACKS.forEach(p => {
     const cb = document.getElementById(`psi-${p.id}`);
     if (cb) cb.checked = false;
     document.getElementById(`psi-qty-${p.id}`)?.classList.remove('active');
     delete orderSelections[p.id];
   });
-  // Check the selected pack
   orderSelections[packId] = 1;
   const cb = document.getElementById(`psi-${packId}`);
   if (cb) cb.checked = true;
@@ -378,7 +373,7 @@ window.preSelectPack = function(packId) {
 };
 
 // =============================================
-// CART — Add packs to cart
+// CART FUNCTIONS
 // =============================================
 window.addPackToCart = function(packId, event) {
   event?.stopPropagation();
@@ -461,7 +456,6 @@ function updateCartUI() {
   }
 }
 
-// Cart drawer toggle
 function openCart() {
   cartDrawer.classList.add('open');
   cartOverlay.classList.add('open');
@@ -487,7 +481,6 @@ cartCheckout.addEventListener('click', () => {
   document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
 });
 
-// Sync cart to order form
 function syncCartToOrderForm() {
   PACKS.forEach(p => {
     const checkbox = document.getElementById(`psi-${p.id}`);
@@ -516,13 +509,11 @@ orderForm.addEventListener('submit', (e) => {
 
   if (!validateOrderForm()) return;
 
-  // Gather form data
   const name = document.getElementById('orderName').value.trim();
   const phone = document.getElementById('orderPhone').value.trim();
   const address = document.getElementById('orderAddress').value.trim();
   const notes = document.getElementById('orderNotes').value.trim();
   
-  // Build order items string
   const orderItems = Object.entries(orderSelections).map(([pid, qty]) => {
     const pack = PACKS.find(p => p.id === pid);
     return `• ${pack?.name || pid} ×${qty} = ${pack?.price * qty} DH`;
@@ -533,7 +524,6 @@ orderForm.addEventListener('submit', (e) => {
     return sum + (pack ? pack.price * qty : 0);
   }, 0);
 
-  // Format WhatsApp message (URL-encoded)
   const message = `
 🍫 *NEW ORDER — BrownieVerse* 🍫
 
@@ -560,26 +550,19 @@ ${orderItems}
 Sent from BrownieVerse.ma
   `.trim();
 
-  // Encode for URL
   const encodedMessage = encodeURIComponent(message);
   const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 
-  // Show confirmation before redirecting
   const submitBtn = document.getElementById('orderSubmitBtn');
   const originalBtnText = submitBtn.innerHTML;
   
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening WhatsApp...';
 
-  // Small delay for UX, then open WhatsApp
   setTimeout(() => {
-    // Open WhatsApp (works on mobile app + desktop web)
     window.open(whatsappURL, '_blank');
-    
-    // Show success toast
     showToast('📱 Opening WhatsApp… Please send the message to confirm your order!', 'success');
     
-    // Reset form after short delay
     setTimeout(() => {
       orderForm.reset();
       orderSelections = {};
@@ -605,50 +588,19 @@ function validateOrderForm() {
 }
 
 // =============================================
-// COMMUNITY FORM SUBMISSION
+// GOOGLE FORM CLICK TRACKER (Community Section)
 // =============================================
-communityForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const name  = document.getElementById('communityName').value.trim();
-  const email = document.getElementById('communityEmail').value.trim();
-  const phone = document.getElementById('communityPhone').value.trim();
-
-  if (!name)  { showToast('Please enter your name, Captain!', 'error'); return; }
-  if (!email || !email.includes('@')) { showToast('Please enter a valid email address.', 'error'); return; }
-
-  const submitBtn = document.getElementById('communitySubmitBtn');
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Joining...';
-
-  try {
-    // For demo purposes, we'll just show success
-    // In production, replace with actual API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    communityForm.reset();
-    showSuccessOverlay('communitySuccess');
-    updatePirateCount();
-  } catch (err) {
-    console.error('Community error:', err);
-    showToast('Something went wrong. Please try again!', 'error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="fas fa-skull-crossbones"></i> Join the Pirates';
+document.addEventListener('DOMContentLoaded', () => {
+  const googleFormBtn = document.querySelector('.community-form-card .form-submit[href*="google.com"]');
+  if (googleFormBtn) {
+    googleFormBtn.addEventListener('click', () => {
+      showToast('🏴‍️ Opening Google Form… Welcome aboard, Pirate!', 'success');
+      if (typeof playPirateSound === 'function') {
+        playPirateSound('coin', 0.4);
+      }
+    });
   }
 });
-
-// Update pirate count dynamically
-async function updatePirateCount() {
-  try {
-    // For demo, just increment locally
-    const el = document.getElementById('pirateCount');
-    if (el) {
-      const current = parseInt(el.textContent.match(/\d+/)[0]) || 200;
-      el.textContent = `Join ${current + 1}+ Pirates already aboard`;
-    }
-  } catch (_) { /* silent fail */ }
-}
 
 // =============================================
 // TOAST NOTIFICATIONS
@@ -703,7 +655,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // =============================================
-// SMOOTH SCROLL for hash links
+// SMOOTH SCROLL
 // =============================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
@@ -718,7 +670,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // =============================================
-// FLAVOR STRIP — CLICK SCROLL
+// FLAVOR STRIP CLICK
 // =============================================
 document.querySelectorAll('.flavor-pill').forEach(pill => {
   pill.addEventListener('click', () => {
@@ -755,7 +707,7 @@ const heroStats = document.querySelector('.hero-stats');
 if (heroStats) statsObserver.observe(heroStats);
 
 // =============================================
-// PARALLAX HERO EFFECT
+// PARALLAX HERO
 // =============================================
 window.addEventListener('scroll', () => {
   const heroVisual = document.querySelector('.hero-visual');
@@ -882,8 +834,8 @@ function setupPirateSoundTriggers() {
     });
   }
   
-  if (communityForm) {
-    communityForm.addEventListener('submit', () => {
+  if (orderForm) {
+    orderForm.addEventListener('submit', () => {
       playPirateSound('chest', 0.6);
       setTimeout(() => playPirateSound('laugh', 0.4), 500);
     });
@@ -1129,76 +1081,14 @@ function createTreasureChest(marker) {
 }
 
 // =============================================
-// PARROT MASCOT - FOLLOWS CURSOR
+// UPDATE PIRATE COUNT (Simple Version)
 // =============================================
-const parrotMascot = document.getElementById('parrotMascot');
-const parrotSpeech = document.getElementById('parrotSpeech');
-const communitySection = document.getElementById('community');
-
-const parrotQuotes = [
-  "Pieces of eight! 🪙",
-  "Brownie treasure awaits! 🍫",
-  "Join the crew, matey! 🏴‍️",
-  "Arrrr, delicious! 😋",
-  "Full speed ahead! ⛵",
-  "X marks the spot! 🗺️",
-  "Ahoy, captain! 👨‍️",
-  "Sweet booty ahead! 💎"
-];
-
-let parrotVisible = false;
-let parrotTimeout = null;
-
-function initParrotMascot() {
-  if (!communitySection || !parrotMascot || !parrotSpeech) return;
-  
-  const parrotObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      parrotVisible = true;
-      parrotMascot.classList.add('visible');
-      
-      setTimeout(() => {
-        showParrotQuote();
-      }, 2000);
-    } else {
-      parrotVisible = false;
-      parrotMascot.classList.remove('visible');
-      parrotSpeech.classList.remove('visible');
+function updatePirateCount() {
+  const el = document.getElementById('pirateCount');
+  if (el && !el.dataset.static) {
+    if (!el.textContent.includes('200+')) {
+      el.textContent = 'Join 200+ Pirates already aboard';
     }
-  }, { threshold: 0.3 });
-  
-  parrotObserver.observe(communitySection);
-  
-  communitySection.addEventListener('mousemove', (e) => {
-    if (!parrotVisible) return;
-    
-    const rect = communitySection.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const parrotX = Math.max(50, Math.min(x, rect.width - 50));
-    const parrotY = Math.max(50, Math.min(y, rect.height - 50));
-    
-    parrotMascot.style.left = (rect.left + parrotX) + 'px';
-    parrotMascot.style.top = (rect.top + parrotY) + 'px';
-  });
-  
-  function showParrotQuote() {
-    if (!parrotVisible) return;
-    
-    const quote = parrotQuotes[Math.floor(Math.random() * parrotQuotes.length)];
-    parrotSpeech.textContent = quote;
-    parrotSpeech.classList.add('visible');
-    parrotSpeech.style.left = parrotMascot.style.left;
-    parrotSpeech.style.top = (parseFloat(parrotMascot.style.top) - 50) + 'px';
-    
-    clearTimeout(parrotTimeout);
-    parrotTimeout = setTimeout(() => {
-      parrotSpeech.classList.remove('visible');
-      if (parrotVisible) {
-        parrotTimeout = setTimeout(showParrotQuote, 8000 + Math.random() * 7000);
-      }
-    }, 3000);
   }
 }
 
@@ -1215,18 +1105,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Schedule highlight
   highlightScheduleDays();
-  
   const scheduleObserver = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
       highlightScheduleDays();
       scheduleObserver.disconnect();
     }
   }, { threshold: 0.3 });
-  
   const scheduleSection = document.getElementById('schedule');
-  if (scheduleSection) {
-    scheduleObserver.observe(scheduleSection);
-  }
+  if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
   // Pirate features
   initPirateSounds();
@@ -1234,7 +1120,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPirateSoundTriggers();
   initDayNightMode();
   initTreasureMap();
-  initParrotMascot();
 });
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -1244,17 +1129,15 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   updateCartUI();
   updatePirateCount();
   observeReveal();
-  
   highlightScheduleDays();
   initPirateSounds();
   createSoundToggle();
   setupPirateSoundTriggers();
   initDayNightMode();
   initTreasureMap();
-  initParrotMascot();
 }
 
-// window globals for inline onclick
+// Global functions for inline onclick
 window.removeFromCart = removeFromCart;
 window.changeQty = changeQty;
 window.toggleOrderPack = toggleOrderPack;
