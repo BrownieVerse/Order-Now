@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION - Optimized for Two-Column Layout
+   PIRATE EDITION - Optimized for Two-Column Layout + Google Sheets
    ============================================= */
 
 'use strict';
@@ -56,21 +56,18 @@ const PRODUCTS = [
 ];
 
 // =============================================
-// PACKS DATA
-// =============================================
-// =============================================
-// PACKS DATA (4 Pack Types) - WITH IMAGES
+// PACKS DATA (4 Pack Types) - WITH CIRCULAR IMAGES
 // =============================================
 const PACKS = [
   {
     id: 'pack-1',
-    name: '🏴‍☠️ Pirate Starter Pack',  // ← UPDATED NAME
+    name: '🏴‍☠️ Pirate Starter Pack',
     subtitle: 'Classic Bites',
     price: 99,
     contents: ['Classic Brownie Bites'],
-    badge: '🦜 New Crew Member?',      // ← Optional: Add a badge
+    badge: '🦜 New Crew Member?',
     popular: false,
-    emoji: null,                        // ← UPDATED EMOJI
+    emoji: null,
     image: 'pack1.png',
   },
   {
@@ -112,6 +109,7 @@ const PACKS = [
 // CONFIG
 // =============================================
 const WHATSAPP_NUMBER = '212703920799';
+const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwyi-h7XOtPi5Ob_30zfFmWKGffkhOYu1JGHcr-OH3FnT0vOMBQEEbAIuI_AJ9MOLInqw/exec';
 
 // =============================================
 // STATE
@@ -514,7 +512,7 @@ function renderPacks() {
              onerror="this.src='images/placeholder-pack.jpg'; this.onerror=null;" />
       </div>
       
-      <div class="pack-name">${pack.emoji} ${pack.name}</div>
+      <div class="pack-name">${pack.emoji ? pack.emoji + ' ' : ''}${pack.name}</div>
       <div class="pack-subtitle">${pack.subtitle}</div>
       <div class="pack-divider"></div>
       
@@ -550,7 +548,7 @@ function renderOrderProductSelector() {
       <div class="psi-info">
         <input type="checkbox" class="psi-check" id="psi-${pack.id}" data-pack-id="${pack.id}" onchange="toggleOrderPack('${pack.id}', this.checked)" />
         <label for="psi-${pack.id}" style="cursor:pointer">
-          <span class="psi-name">${pack.emoji} ${pack.name}</span>
+          <span class="psi-name">${pack.emoji ? pack.emoji + ' ' : ''}${pack.name}</span>
           <span class="psi-price">&nbsp;— ${pack.price} DH</span>
         </label>
       </div>
@@ -736,9 +734,6 @@ function syncCartToOrderForm() {
 }
 
 // =============================================
-// ORDER FORM → WHATSAPP
-// =============================================
-// =============================================
 // ORDER FORM → GOOGLE SHEETS + WHATSAPP
 // =============================================
 orderForm?.addEventListener('submit', async (e) => {
@@ -780,16 +775,20 @@ orderForm?.addEventListener('submit', async (e) => {
     timestamp: new Date().toISOString()
   };
   
-  // Send to Google Sheets (non-blocking)
-  const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwyi-h7XOtPi5Ob_30zfFmWKGffkhOYu1JGHcr-OH3FnT0vOMBQEEbAIuI_AJ9MOLInqw/exec';
-  
-  // Fire-and-forget: don't wait for Sheets response
+  // ✅ SEND TO GOOGLE SHEETS (Fixed: text/plain + no mode: 'no-cors')
   fetch(SHEETS_WEBHOOK_URL, {
     method: 'POST',
-    mode: 'no-cors', // Required for Google Apps Script
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'text/plain'
+    },
     body: JSON.stringify(sheetData)
-  }).catch(err => console.log('Sheets log error:', err));
+  })
+  .then(response => {
+    console.log('✅ Google Sheets logged order');
+  })
+  .catch(err => {
+    console.log('⚠️ Sheets error (non-critical - WhatsApp still works):', err);
+  });
   
   // Prepare WhatsApp message
   const message = `
@@ -1087,31 +1086,3 @@ document.addEventListener('DOMContentLoaded', () => {
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
   initDayNightMode();
-  initTreasureMap();
-  initCommunitySectionSounds();
-});
-
-// Fallback for already-loaded pages
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  initPirateSounds();
-  createSoundToggle();
-  renderProducts();
-  renderPacks();
-  renderOrderProductSelector();
-  updateCartUI();
-  updatePirateCount();
-  observeReveal();
-  highlightScheduleDays();
-  initDayNightMode();
-  initTreasureMap();
-  initCommunitySectionSounds();
-}
-
-// Global functions
-window.removeFromCart = removeFromCart;
-window.changeQty = changeQty;
-window.toggleOrderPack = toggleOrderPack;
-window.changeOrderQty = changeOrderQty;
-window.preSelectPack = preSelectPack;
-window.addPackToCart = addPackToCart;
-window.closeSuccess = closeSuccess;
