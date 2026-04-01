@@ -1086,3 +1086,31 @@ document.addEventListener('DOMContentLoaded', () => {
   if (scheduleSection) scheduleObserver.observe(scheduleSection);
   
   initDayNightMode();
+  initTreasureMap();
+  initCommunitySectionSounds();
+});
+
+// Fallback for already-loaded pages
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  initPirateSounds();
+  createSoundToggle();
+  renderProducts();
+  renderPacks();
+  renderOrderProductSelector();
+  updateCartUI();
+  updatePirateCount();
+  observeReveal();
+  highlightScheduleDays();
+  initDayNightMode();
+  initTreasureMap();
+  initCommunitySectionSounds();
+}
+
+// Global functions
+window.removeFromCart = removeFromCart;
+window.changeQty = changeQty;
+window.toggleOrderPack = toggleOrderPack;
+window.changeOrderQty = changeOrderQty;
+window.preSelectPack = preSelectPack;
+window.addPackToCart = addPackToCart;
+window.closeSuccess = closeSuccess;
