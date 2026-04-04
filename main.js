@@ -932,7 +932,7 @@ const statsObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const numEls = entry.target.querySelectorAll('.stat-num');
-      const values = [500, 4, 100];
+      const values = [100, 4, 100];
       const suffixes = ['+', '', '%'];
       numEls.forEach((el, i) => animateNumber(el, values[i], suffixes[i]));
       statsObserver.unobserve(entry.target);
@@ -1056,8 +1056,8 @@ function createTreasureChest(marker) {
 // =============================================
 function updatePirateCount() {
   const el = document.getElementById('pirateCount');
-  if (el && !el.dataset.static && !el.textContent.includes('200+')) {
-    el.textContent = 'Join 200+ Pirates already aboard';
+  if (el && !el.dataset.static && !el.textContent.includes('50+')) {
+    el.textContent = 'Join 50+ Pirates already aboard';
   }
 }
 
