@@ -2,38 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#3B1A0A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>BrownieVerse — Gourmet Brownie Bites | Salé, Morocco</title>
+  <meta name="description" content="Brownie bites sghar, handmade with love, bnakhat maghribia w touch 3alamia. Order daba w dkhol l Pirates BrownieVerse Community" />
+  
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍫</text></svg>">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "name": "BrownieVerse",
+    "description": "Premium gourmet brownie bites artisans in Salé, Morocco",
+    "servesCuisine": "Desserts, Brownies",
+    "address": {"@type": "PostalAddress", "addressLocality": "Salé", "addressCountry": "MA"}
+  }
+  </script>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Page Loader -->
+  <div id="page-loader">
+    <div class="loader-logo">Brownie<span>Verse</span></div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <a href="#hero" class="mobile-nav-link">Home</a>
+    <a href="#products" class="mobile-nav-link">Flavors</a>
+    <a href="#packs" class="mobile-nav-link">Menu</a>
+    <a href="#about" class="mobile-nav-link">l'histoire<br/>Dyalna</a>
+    <a href="#order" class="mobile-nav-link">Commandi<br/>hna!</a>
+    <a href="#community" class="mobile-nav-link">Dkhel l3alam<br/>Pirates</a>
+  </nav>
+
+  <!-- Navbar -->
   <header id="navbar" role="banner">
     <div class="container">
       <div class="nav-inner">
-        <a href="#hero" class="nav-logo">
+        <a href="#hero" class="nav-logo" aria-label="BrownieVerse home">
           BrownieVerse
-          <span>GOURMET · ARTISAN · SALÉ</span>
+          <span>Gourmet · Artisan · Salé</span>
         </a>
-        <nav class="nav-links">
-          <a href="#products" class="nav-link">OUR FLAVORS</a>
-          <a href="#packs" class="nav-link">OUR MENU</a>
-          <a href="#about" class="nav-link">OUR STORY</a>
-          <a href="#order" class="nav-link">ORDER</a>
-          <a href="#community" class="nav-link">JOIN PIRATES</a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#products" class="nav-link">Flavors</a>
+          <a href="#packs" class="nav-link">Menu</a>
+          <a href="#about" class="nav-link">l'histoire<br/>Dyalna</a>
+          <a href="#order" class="nav-link">Commandi<br/>hna!</a>
+          <a href="#community" class="nav-link">Dkhel l3alam<br/>Pirates</a>
         </nav>
+
         <div class="nav-right">
           <button class="cart-btn" id="cartToggle" aria-label="Open cart">
             <i class="fas fa-shopping-bag"></i>
             <span class="cart-count" id="cartCount">0</span>
           </button>
-          <a href="#order" class="btn btn-gold nav-cta">ORDER NOW</a>
-          <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <a href="#order" class="btn btn-gold nav-cta" id="navOrderBtn">Commandi db!</a>
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -41,18 +80,32 @@
     </div>
   </header>
 
-  <!-- Mobile Navigation -->
-  <nav class="mobile-nav" id="mobileNav">
-    <a href="#products" class="mobile-nav-link">Our Flavors</a>
-    <a href="#packs" class="mobile-nav-link">Our Menu</a>
-    <a href="#about" class="mobile-nav-link">Our Story</a>
-    <a href="#order" class="mobile-nav-link">Order</a>
-    <a href="#community" class="mobile-nav-link">Join Pirates</a>
-  </nav>
-
   <!-- Hero Section -->
-  <section id="hero">
+  <section id="hero" aria-label="Hero section">
     <div class="hero-bg"></div>
+    <div class="hero-texture"></div>
+    <div class="hero-floating-circles" aria-hidden="true">
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual-inner">
+        <div class="hero-brownie-showcase">
+          <div class="brownie-circle bc-main">
+            <img src="c.jpg" alt="Classic Brownie Bites" loading="eager" />
+          </div>
+          <div class="brownie-circle bc-top">
+            <img src="o.jpg" alt="Oreo Brownie Bites" loading="eager" />
+          </div>
+          <div class="brownie-circle bc-bot">
+            <img src="k.jpg" alt="Kunaffa Brownie Bites" loading="eager" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">✦ Handcrafted in Salé, Morocco</div>
@@ -61,116 +114,248 @@
           <span class="highlight">3alam</span><br/>
           Dyal lbenna
         </h1>
-        <p class="hero-sub">Premium artisan brownie bites, B lemssa maghribia + global flavors. mssawb b Niyya, w delivered b love</p>
+        <p class="hero-sub">
+          premium artisan brownie bites, B lemssa maghribia + global flavors. mssawb b Niyya, w delivered b love
+        </p>
         <div class="hero-ctas">
           <a href="#products" class="btn btn-gold btn-lg">
-            <i class="fas fa-cookie-bite"></i> L9a Nekha Lighat3jbk
+            <i class="fas fa-cookie-bite"></i>
+            L9a Nekha Lighat3jbk
           </a>
-          <a href="#packs" class="btn btn-outline-gold btn-lg">
-            <i class="fas fa-box-open"></i> Khtar mn l Menu dyalna
+          <a href="#packs" class="btn btn-outline btn-lg">
+            <i class="fas fa-box-open"></i>
+            Khtar mn l Menu dyalna
           </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num">100+</span>
+            <span class="stat-label">clients fr7an</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">4</span>
+            <span class="stat-label">Unique Flavors</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Handmade</span>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Schedule Section -->
-  <section class="schedule-section">
-    <div class="container">
-      <div class="schedule-grid">
-        <!-- Place Your Order -->
-        <div class="schedule-card">
-          <div class="schedule-icon">🛒</div>
-          <h2>Place Your Order</h2>
-          <div class="schedule-days">
-            <span class="day active">TUE</span>
-            <span class="day active">WED</span>
-            <span class="day active">THU</span>
-            <span class="day active">FRI</span>
-            <span class="day">SAT</span>
-            <span class="day">SUN</span>
-            <span class="day">MON</span>
-          </div>
-          <p class="schedule-desc">Orders open Tuesday morning and close Friday at 6 PM. Weekend cravings? Order early Friday for next-week delivery! 🍫</p>
-          <a href="#order" class="btn btn-gold">
-            <i class="fas fa-shopping-bag"></i> ORDER NOW
-          </a>
-        </div>
-
-        <!-- Delivery Day -->
-        <div class="schedule-card">
-          <div class="schedule-icon">🚚</div>
-          <h2>Delivery Day</h2>
-          <div class="delivery-highlight">
-            <span class="delivery-day">MONDAY</span>
-            <span class="delivery-time">9 AM – 6 PM</span>
-          </div>
-          <p class="schedule-desc">All orders placed Tue–Fri are freshly baked and delivered on Monday. Can't wait? <strong>WhatsApp us</strong> for urgent requests. 📱</p>
-        </div>
-      </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
     </div>
   </section>
+
+  <!-- Marquee Strip -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="marquee-item">Classic Brownie Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kaab Ghezal Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Oreo Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kunaffa Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Handcrafted in Salé <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Classic Brownie Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kaab Ghezal Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Oreo Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Kunaffa Bites <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Handcrafted in Salé <span class="marquee-dot"></span></div>
+    </div>
+  </div>
 
   <!-- Products Section -->
-  <section id="products" class="section products-section">
+  <section id="products" class="section" aria-labelledby="products-title">
     <div class="container">
-      <div class="section-header">
-        <span class="eyebrow">BROWNIE BITES</span>
-        <h2 class="section-title">Our Flavors</h2>
-        <p class="section-sub">Koula brownie bite is a masterpiece — Mcheklta, m3elka, w 3amra b benna atl9aha ghir 3ndna ;").</p>
+      <div class="products-header">
+        <div>
+          <span class="eyebrow reveal">Our Brownie Bites</span>
+          <h2 class="section-title reveal reveal-delay-1" id="products-title">Made for The Dessert Lovers</h2>
+          <p class="section-sub reveal reveal-delay-2">
+            Koula brownie bite is a masterpiece — Mcheklta, m3elka, w 3amra b benna atl9aha ghir 3ndna ;").
+          </p>
+        </div>
       </div>
-      <div class="products-grid" id="productsGrid"></div>
-    </div>
-  </section>
-
-  <!-- Packs Section -->
-  <section id="packs" class="section packs-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="eyebrow">OUR MENU</span>
-        <h2 class="section-title">Our Menu</h2>
-        <p class="section-sub">Choose your pack and indulge in the perfect combination of flavors.</p>
-      </div>
-      <div class="packs-grid" id="packsGrid"></div>
-      <div style="text-align:center; margin-top:3rem;">
-        <a href="#order" class="btn btn-gold btn-lg">
-          <i class="fas fa-shopping-bag"></i> ORDER YOUR PACK
+      <div class="products-grid" id="productsGrid" aria-label="Flavor catalog"></div>
+      <div style="text-align:center; margin-top:3rem;" class="reveal">
+        <a href="#packs" class="btn btn-dark btn-lg">
+          <i class="fas fa-box-open"></i>
+          L9a l Pack lighaynassbek!
         </a>
       </div>
     </div>
   </section>
 
+  <!-- Packs Section -->
+  <section id="packs" class="section packs-section" aria-labelledby="packs-title">
+    <div class="packs-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div style="text-align:center; margin-bottom:1rem;">
+        <span class="eyebrow reveal">Brownie Bites</span>
+        <h2 class="section-title reveal reveal-delay-1" id="packs-title">l Menu dyalna</h2>
+        <p class="section-sub reveal reveal-delay-2" style="margin:0 auto 3rem;">
+          khtar l pack dyalk w stemt3 blamada9at limkhebyin fl lpack
+        </p>
+      </div>
+      <div class="packs-grid" id="packsGrid" aria-label="Pack options"></div>
+      <div style="text-align:center; margin-top:3rem;" class="reveal">
+        <a href="#order" class="btn btn-gold btn-lg">
+          <i class="fas fa-clipboard-list"></i>
+          Commandi l Pack Dyalk hna
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schedule Section -->
+  <section id="schedule" class="section schedule-section" aria-labelledby="schedule-title">
+    <div class="container">
+      <div class="schedule-header">
+        <span class="eyebrow reveal">🗓️ W9tach n9der n7et l commande Dyaly?</span>
+        <h2 class="section-title reveal reveal-delay-1" id="schedule-title">
+          Fresh Bites, <span class="highlight">Perfect Timing</span>
+        </h2>
+        <p class="section-sub reveal reveal-delay-2">
+          "small batches = freshness max 🔥 Commandi hna w follow imta ghadi ywslek lkhir dyal brownies
+        </p>
+      </div>
+      <div class="schedule-grid">
+        <div class="schedule-card reveal reveal-delay-1">
+          <div class="schedule-icon">🛒</div>
+          <h3>7ett la commande dyalk</h3>
+          <div class="schedule-days">
+            <span class="day active">Tue</span>
+            <span class="day active">Wed</span>
+            <span class="day active">Thu</span>
+            <span class="day active">Fri</span>
+            <span class="day inactive">Sat</span>
+            <span class="day inactive">Sun</span>
+            <span class="day inactive">Mon</span>
+          </div>
+          <p class="schedule-desc">
+            order window: mn Tlat sba7 l Jm3a 6pm. ila bghiti weekend brownies, order bkrri friday w ywwslouk Tnin 🔥
+          </p>
+          <a href="#order" class="btn btn-gold btn-sm">
+            <i class="fas fa-cookie-bite"></i> Commadi hna
+          </a>
+        </div>
+        <div class="schedule-card reveal reveal-delay-2">
+          <div class="schedule-icon">🚚</div>
+          <h3>Delivery Day</h3>
+          <div class="delivery-highlight">
+            <span class="delivery-day">Tnin</span>
+            <span class="delivery-time">9 AM – 6 PM</span>
+          </div>
+          <p class="schedule-desc">
+            Ga3 les commande mn Tlat tal jm3a are freshly baked and delivered f Tnin. Can't wait? <strong>WhatsApp us</strong> for urgent requests. 📱
+          </p>
+          <a href="https://wa.me/212703920799" class="btn btn-outline btn-sm" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> Quick Question?
+          </a>
+        </div>
+      </div>
+      <div class="schedule-tips reveal reveal-delay-3">
+        <div class="tip-item">
+          <span class="tip-icon">✨</span>
+          <span><strong>Pro Tip:</strong> Commandi 9bl lkhmis bach tdmen delivery dyalk twsslk nhar tnin.</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🎁</span>
+          <span><strong>Gift Orders?</strong> Khli lina note libghity, for a custom gift card</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">📍</span>
+          <span><strong>Delivery Area:</strong> Salé + surrounding neighborhoods (Rabat, Temara on request).</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flavor Strip -->
+  <div class="flavor-strip" aria-hidden="true">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:2rem;">
+        <span class="eyebrow">Our Signature Flavors</span>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.3rem;">4 unique creations Baked with love →</p>
+      </div>
+      <div class="flavor-strip-inner" id="flavorStrip">
+        <div class="flavor-pill"><span class="fp-emoji">🍫</span><span class="fp-name">Classic Brownie Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🌙</span><span class="fp-name">Kaab Ghezal Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🍪</span><span class="fp-name">Oreo Bites</span></div>
+        <div class="flavor-pill"><span class="fp-emoji">🌿</span><span class="fp-name">Kunaffa Bites</span></div>
+      </div>
+    </div>
+  </div>
+
   <!-- About Section -->
-  <section id="about" class="section about-section">
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="about-bg-pattern" aria-hidden="true"></div>
     <div class="container">
       <div class="about-grid">
-        <div class="about-visual">
-          <div class="about-logo-container">
-            <img src="logo-placeholder.png" alt="BrownieVerse Logo" class="about-logo" />
+        <div class="about-visual reveal">
+          <div class="about-accent" aria-hidden="true"></div>
+          <div class="about-img-main">
+            <img src="bl.png" alt="BrownieVerse artisan baking" loading="lazy" />
+          </div>
+          <div class="about-img-float">
+            <img src="kz.jpg" alt="Kaab Ghezal Brownie Bites" loading="lazy" />
           </div>
         </div>
         <div class="about-content">
-          <span class="eyebrow">OUR STORY</span>
-          <h2 class="section-title">Built for Flavor Seekers</h2>
-          <div class="divider"></div>
-          <p>BrownieVerse bdat f cuisine sghira f Salé, fin l7ob dyal chocolat wl2ibda3 tlaqaa m3a ttorat lmaghribi lghani Dyalna. Our Concept houwa ana l brownies classic likan3rfou y9der ywli chi 7aja li extraordinary.</p>
-          <p>Kol recette kandiroha katjma3 bin chocolat riche w flavors maghribiya w international — men lbenna dial Kaab Ghezl, 7tta lcrunch dial kunaffa. Resultat? brownie bite with fusions li ma3mrk de9ty f7alha.</p>
-          <p>7na machi ghi brownie brand. 7na universe, community dyal nas li passionate about experimenting & creating new Mind-Blowing Experiences. Jereb(i) w rred(i) 3lia ;")</p>
+          <span class="eyebrow reveal">L'histoire Dyalna</span>
+          <h2 class="reveal reveal-delay-1" id="about-title">Born from Passion,<br/>Built for Flavor Seekers</h2>
+          <div class="divider reveal reveal-delay-2"></div>
+          <p class="reveal reveal-delay-2">
+            BrownieVerse bdat f cuisine sghira f Salé, fin l7ob dyal chocolat wl2ibda3 tlaqaa m3a ttorat lmaghribi lghani Dyalna. Our Concept houwa ana l brownies classic likan3rfou y9der ywli chi 7aja li extraordinary.
+          </p>
+          <p class="reveal reveal-delay-3">
+            Kol recette kandiroha katjma3 bin chocolat riche w flavors maghribiya w international — men lbenna dial Kaab Ghezl, 7tta lcrunch dial kunaffa. Resultat? brownie bite with fusions li ma3mrk de9ty f7alha.
+          </p>
+          <p class="reveal reveal-delay-3">
+            7na machi ghi brownie brand. 7na universe, community dyal nas li passionate about experimenting & creating new Mind-Blowing Experiences. Jereb(i) w rred(i) 3lia ;")
+          </p>
+          <div class="about-values reveal reveal-delay-4">
+            <div class="about-value">
+              <div class="about-value-icon">🍫</div>
+              <h4>Premium Ingredients</h4>
+              <p>Quality couverture chocolate</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🤲</div>
+              <h4>Handcrafted Always</h4>
+              <p>Every bite made by hand, in small batches</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🌍</div>
+              <h4>Fusion Heritage</h4>
+              <p>fin lbenna lmaghribia goes international, in every bite</p>
+            </div>
+            <div class="about-value">
+              <div class="about-value-icon">🚀</div>
+              <h4>Dayman Ljadid</h4>
+              <p>New flavors, limited drops, and seasonal specials</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Order Section -->
-  <section id="order" class="section order-section">
+  <section id="order" class="section" aria-labelledby="order-title">
+    <div class="order-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="order-container">
         <div class="order-left">
-          <span class="eyebrow">ORDER ONLINE</span>
-          <h2 class="section-title">Brownie Bites Dyalk,<br/>Delivered Fresh</h2>
-          <div class="divider"></div>
-          <p>bghiti brownies dyalk b style dyalk? order custom w ghadi n9adouhoum fresh w nwslohom f Salé w nawa7i.</p>
-          <div class="order-perks">
+          <span class="eyebrow reveal">Commandi Online</span>
+          <h2 class="reveal reveal-delay-1" id="order-title">Brownie Bites Dyalk,<br/>Delivered Fresh</h2>
+          <div class="divider reveal reveal-delay-2"></div>
+          <p class="reveal reveal-delay-2">
+            bghiti brownies dyalk b style dyalk? order custom w ghadi n9adouhoum fresh w nwslohom f Salé w nawa7i."
+          </p>
+          <div class="order-perks reveal reveal-delay-3">
             <div class="order-perk">
               <div class="perk-icon">🧁</div>
               <div class="perk-text">
@@ -181,7 +366,7 @@
             <div class="order-perk">
               <div class="perk-icon">🚴</div>
               <div class="perk-text">
-                <h4>Delivery Monday</h4>
+                <h4>Delivery tnin</h4>
                 <p>commandi bekri bach twsslk lcomande dyalk bekri</p>
               </div>
             </div>
@@ -192,25 +377,32 @@
                 <p>ga3 les commandes are handmade and crafted with love</p>
               </div>
             </div>
+            <div class="order-perk">
+              <div class="perk-icon">💬</div>
+              <div class="perk-text">
+                <h4>WhatsApp Confirmation</h4>
+                <p>aywsslek message de confirmation via whatsapp f 9el mm 60s</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="order-form-card">
+        <div class="order-form-card reveal reveal-delay-2">
           <h3>commandi hna</h3>
           <p>#mmer les info dyalk, wghantwasslou m3ak f2a9rab wa9t</p>
-          <form id="orderForm">
+          <form id="orderForm" novalidate>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="orderName">Full Name *</label>
-                <input class="form-input" type="text" id="orderName" placeholder="Your full name" required />
+                <input class="form-input" type="text" id="orderName" name="full_name" placeholder="Your full name" required />
               </div>
               <div class="form-group">
                 <label class="form-label" for="orderPhone">Phone Number *</label>
-                <input class="form-input" type="tel" id="orderPhone" placeholder="+212 6XX XXX XXX" required />
+                <input class="form-input" type="tel" id="orderPhone" name="phone" placeholder="+212 6XX XXX XXX" required />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label" for="orderAddress">Delivery Address *</label>
-              <input class="form-input" type="text" id="orderAddress" placeholder="Street, neighborhood, city" required />
+              <input class="form-input" type="text" id="orderAddress" name="address" placeholder="Street, neighborhood, city" required />
             </div>
             <div class="form-group">
               <label class="form-label">khtar l pack linasbek *</label>
@@ -221,10 +413,11 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="orderNotes">Special Instructions</label>
-              <textarea class="form-textarea" id="orderNotes" placeholder="Allergies, special requests..."></textarea>
+              <textarea class="form-textarea" id="orderNotes" name="notes" placeholder="Allergies, special requests, gift message..."></textarea>
             </div>
-            <button type="submit" class="btn btn-gold form-submit">
-              <i class="fas fa-paper-plane"></i> Send Order
+            <button type="submit" class="btn btn-gold form-submit" id="orderSubmitBtn">
+              <i class="fas fa-paper-plane"></i>
+              Send Order
             </button>
           </form>
         </div>
@@ -233,106 +426,212 @@
   </section>
 
   <!-- Community Section -->
-  <section id="community" class="section community-section">
+  <section id="community" class="section community-section" aria-labelledby="community-title" data-community-section="true">
+    <div class="community-map-overlay" aria-hidden="true"></div>
+    <div class="night-sky-elements" aria-hidden="true">
+      <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+    </div>
+    <div class="community-pirate-ships" aria-hidden="true">
+      <span class="pirate-ship">⛵</span><span class="pirate-ship">🏴‍️</span><span class="pirate-ship">⛵</span>
+    </div>
+    <div class="community-coins" aria-hidden="true">
+      <span class="gold-coin" data-sound="coin">🪙</span><span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span><span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span><span class="gold-coin" data-sound="coin">💰</span>
+      <span class="gold-coin" data-sound="coin">🪙</span><span class="gold-coin" data-sound="coin">💰</span>
+    </div>
+    <div class="community-gems" aria-hidden="true">
+      <span class="treasure-gem" data-sound="coin">💎</span><span class="treasure-gem" data-sound="coin">💍</span>
+      <span class="treasure-gem" data-sound="coin">💎</span><span class="treasure-gem" data-sound="coin">🔮</span>
+      <span class="treasure-gem" data-sound="coin">💎</span>
+    </div>
+    <div class="ancient-key ancient-key-1" aria-hidden="true" data-sound="coin">🗝️</div>
+    <div class="ancient-key ancient-key-2" aria-hidden="true" data-sound="coin">🗝️</div>
+    <div class="community-compass community-compass-1" aria-hidden="true">🧭</div>
+    <div class="community-compass community-compass-2" aria-hidden="true">🧭</div>
+    <div class="community-waves community-waves-top" aria-hidden="true"></div>
+    <div class="community-waves community-waves-bottom" aria-hidden="true"></div>
+    <div class="community-deco" aria-hidden="true"></div>
+    <div class="community-deco-2" aria-hidden="true"></div>
+
     <div class="container">
       <div class="community-inner">
         <div class="community-content">
-          <span class="eyebrow">🏴‍☠️ PRIVATE CREW ONLY</span>
-          <h2 class="section-title">Ktachef l 3alam dyal<br/><em>Pirates</em><br/>BrownieVerse de Salé</h2>
-          <div class="divider"></div>
-          <p>ahoy Pirate 🏴‍☠️ hada machi ghir fanbase… hada espace l pirates dyal Sale, hadi community dyal Pirates li3ziz 3lihoum lmoughamarat w yktachfou 2adwa9 jdida🍫</p>
-          <div class="community-perks">
+          <span class="eyebrow reveal">🏴‍☠️ Private Crew Only</span>
+          <h2 class="reveal reveal-delay-1" id="community-title">
+            Ktachef l 3alam dyal<br/><em>Pirates</em><br/>BrownieVerse de Salé
+          </h2>
+          <div class="divider reveal reveal-delay-2" style="background: var(--gold); width: 60px;"></div>
+          <p class="reveal reveal-delay-2">
+            "ahoy Pirate 🏴‍☠️ hada machi ghir fanbase… hada espace l pirates dyal Sale, hadi community dyal Pirates li3ziz 3lihoum lmoughamarat w yktachfou 2adwa9 jdida🍫, hadi machi community 3adia, hadi Pirates BrownieVerse de Sale, li ka <strong>Pirate</strong> ghadi ykoun 3ndk fiha <strong>access exclusive</strong> l secret drops, <strong>limited flavors</strong>, <strong>Special Events</strong> dyal Pirates BrownieVerse w <strong>insider news</strong> qbel ga3 civilians 😈🔥
+          </p>
+          <div class="community-perks reveal reveal-delay-3">
             <div class="community-perk"><div class="cp-check">⚓</div><span>access prioritaire l new flavors w editions limitee 🔥</span></div>
             <div class="community-perk"><div class="cp-check">💰</div><span>💰 Prix bloqués à vie (ma kaytbdlouch 3lik)</span></div>
             <div class="community-perk"><div class="cp-check">🗺️</div><span>Secret map to behind-the-scenes kitchen content</span></div>
             <div class="community-perk"><div class="cp-check">🎉</div><span>Private crew gatherings & pirate events in Salé</span></div>
+            <div class="community-perk"><div class="cp-check">📯</div><span>🔥 Offres exclusives ghir l-Pirates</span></div>
           </div>
-          <div class="community-count">
-            <i class="fas fa-skull-crossbones"></i>
-            <span id="pirateCount">50+ Pirates already aboard</span>
+          <div style="margin-top:2rem;" class="reveal reveal-delay-4">
+            <div class="community-count">
+              <i class="fas fa-skull-crossbones"></i>
+              <span id="pirateCount">50+ Pirates already aboard</span>
+            </div>
+          </div>
+          <div class="reveal reveal-delay-4" style="margin-top:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:flex-start;">
+            <span style="font-size:0.7rem; color:var(--text-muted); display:flex; align-items:center; gap:0.3rem;">
+              <i class="fas fa-shield-alt" style="color:var(--gold)"></i> No spam ever
+            </span>
+            <span style="font-size:0.7rem; color:var(--text-muted); display:flex; align-items:center; gap:0.3rem;">
+              <i class="fas fa-lock" style="color:var(--gold)"></i> Secure crew list
+            </span>
+            <span style="font-size:0.7rem; color:var(--text-muted); display:flex; align-items:center; gap:0.3rem;">
+              <i class="fas fa-gem" style="color:var(--gold)"></i> Premium treats only
+            </span>
           </div>
         </div>
-        <div class="community-form-card">
-          <h3>Join the Waitlist</h3>
-          <p>Dmmen Blastek f Pirates BrownieVerse crew. Clicki lte7t to join via our secure Google Form! 📜</p>
-          <a href="https://docs.google.com/forms/d/1zkrnZ6anQUfA4imLO5Pg8FYqvEOEHevL8CMF03F5cJM/viewform" 
-             target="_blank" 
-             class="btn btn-gold form-submit">
-            <i class="fas fa-skull-crossbones"></i> Welli Pirate
-          </a>
+        <div class="community-form-wrapper">
+          <div class="community-form-card reveal reveal-delay-2" id="communityFormCard">
+            <div class="scroll-ribbon scroll-ribbon-left" aria-hidden="true"></div>
+            <div class="scroll-ribbon scroll-ribbon-right" aria-hidden="true"></div>
+            <div class="scroll-seal scroll-seal-top" aria-hidden="true">🏴‍️</div>
+            <div class="pirate-flag-corner pirate-flag-corner-top-right" aria-hidden="true">🏴‍️</div>
+            <div class="pirate-flag-corner pirate-flag-corner-bottom-left" aria-hidden="true">🏴‍️</div>
+            <h3>Join the Waitlist</h3>
+            <p>Dmmen Blastek f Pirates BrownieVerse crew. Clicki lte7t to join via our secure Google Form! 📜</p>
+            <a href="https://docs.google.com/forms/d/1zkrnZ6anQUfA4imLO5Pg8FYqvEOEHevL8CMF03F5cJM/viewform?pli=1&edit_requested=true" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="btn btn-dark form-submit google-form-btn"
+               id="googleFormBtn"
+               data-sound="coin">
+              <i class="fas fa-skull-crossbones"></i>
+              Welli Pirate
+            </a>
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center;">
+              🤝 ma kayn la spam la Formal vibes … ghir brownie treasures 🍫 w pirate adventures 🏴‍️ Arrrrrr.
+            </p>
+            <div style="margin-top:1.5rem; opacity:0.6; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+              <img src="https://www.gstatic.com/images/branding/product/1x/forms_2020q4_48dp.png" alt="Google Forms" style="height:24px;">
+              <span style="font-size:0.7rem;">Secured by Google Forms</span>
+            </div>
+            <div class="scroll-seal scroll-seal-bottom" aria-hidden="true">⚓</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer role="contentinfo">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#hero" class="nav-logo">
             BrownieVerse
-            <span>GOURMET · ARTISAN · SALÉ</span>
+            <span>Gourmet · Artisan · Salé</span>
           </a>
           <p>"mn Salé 🔥 brownie bites handmade w premium, heritage maghribi + World Class flavors"</p>
           <div class="footer-socials">
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Explore</h4>
           <ul>
-            <li><a href="#products">Our Flavors</a></li>
-            <li><a href="#packs">Our Menu</a></li>
-            <li><a href="#about">Our Story</a></li>
-            <li><a href="#community">Join Pirates</a></li>
+            <li><a href="#products">Flavors</a></li>
+            <li><a href="#packs">Menu</a></li>
+            <li><a href="#about">l'histoire dyalna</a></li>
+            <li><a href="#community">Welli Pirates</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Order</h4>
           <ul>
-            <li><a href="#order">Order Online</a></li>
+            <li><a href="#order">Commandi Online</a></li>
             <li><a href="#packs">Gift Packs</a></li>
-            <li><a href="#order">Custom Orders</a></li>
+            <li><a href="#order">commandi 3la dou9ek</a></li>
+            <li><a href="#order">service traiteur</a></li>
           </ul>
         </div>
-        <div class="footer-col">
+        <div class="footer-col footer-contact">
           <h4>Contact</h4>
-          <p><i class="fas fa-map-marker-alt"></i> Salé, Morocco</p>
-          <p><i class="fab fa-whatsapp"></i> +212 703 9207 99</p>
-          <p><i class="fas fa-envelope"></i> BrownieVerse.O@gmail.com</p>
+          <p><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> Salé, Morocco</p>
+          <p><i class="fab fa-whatsapp" style="color:var(--gold)"></i> WhatsApp us to order</p>
+          <p><i class="fas fa-envelope" style="color:var(--gold)"></i> BrownieVerse.O@gmail.com</p>
+          <p style="margin-top:1rem;font-size:0.75rem;opacity:0.4;">Tue – Sun: 9am – 8pm</p>
         </div>
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 BrownieVerse. Made with ♥ in Salé, Morocco.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">FAQ</a>
+        </div>
       </div>
     </div>
   </footer>
 
   <!-- Cart Drawer -->
-  <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
     <div class="cart-header">
       <h3>Your Selection</h3>
-      <button class="cart-close" id="cartClose"><i class="fas fa-times"></i></button>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>mzl maderty wlou fl cart dyalk.<br/>3merha b chwia dyal l7lawa</p>
+      </div>
+    </div>
     <div class="cart-footer" id="cartFooter" style="display:none;">
       <div class="cart-total-row">
         <span>Total</span>
         <span class="cart-total-price" id="cartTotalDisplay">0 DH</span>
       </div>
-      <a href="#order" class="btn btn-gold cart-checkout-btn">Kmel lcommande dyalk</a>
+      <a href="#order" class="btn btn-gold cart-checkout-btn" id="cartCheckout">
+        <i class="fas fa-clipboard-list"></i>
+        Kmel lcommande dyalk
+      </a>
       <button class="cart-continue-btn" id="cartContinue">Kmel Scroll</button>
     </div>
   </aside>
 
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
+  <!-- Success Overlays -->
+  <div class="success-overlay" id="orderSuccess" role="dialog" aria-modal="true">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h3>Commande recu!</h3>
+      <p>"l'order dyal brownie bites dyalk tsjjel bnjah 🎉 ghadi ywsslk message de confirmation f WhatsApp f 9el mn 60 sec Stay tuned 😋🍫 🍫</p>
+      <button class="btn btn-gold" onclick="closeSuccess('orderSuccess')">
+        <i class="fas fa-check"></i> Awesome!
+      </button>
+    </div>
+  </div>
 
+  <div class="success-overlay" id="communitySuccess" role="dialog" aria-modal="true">
+    <div class="success-card">
+      <div class="success-icon">🏴‍️</div>
+      <h3>Welcome, Pirate!</h3>
+      <p>felicitation Chedity blasstk f l private community dyal Pirates BrownieVerse de Salé. stay tuned, ghadi ywslek access dyalk qariban… adventure on 🔥🍫</p>
+      <button class="btn btn-dark" onclick="closeSuccess('communitySuccess')">
+        <i class="fas fa-skull-crossbones"></i> Arrr, Lessss Go!
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Main JS -->
   <script src="main.js"></script>
 </body>
 </html>
