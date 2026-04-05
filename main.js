@@ -1,6 +1,6 @@
 /* =============================================
    BrownieVerse — Main JavaScript
-   PIRATE EDITION - Optimized for Two-Column Layout + Google Sheets
+   PIRATE EDITION - Optimized for Mobile + Desktop
    ============================================= */
 
 'use strict';
@@ -54,17 +54,6 @@ const PRODUCTS = [
     emoji: '🌿',
   },
 ];
-// Scroll Reveal Animation for About Section
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // =============================================
 // PACKS DATA (4 Pack Types) - WITH CIRCULAR IMAGES
@@ -155,6 +144,22 @@ const packsGrid = document.getElementById('packsGrid');
 const orderForm = document.getElementById('orderForm');
 const orderProductSelector = document.getElementById('orderProductSelector');
 const communitySection = document.getElementById('community');
+
+// =============================================
+// SCROLL REVEAL ANIMATION (Single Observer for All)
+// =============================================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+const observeReveal = () => {
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+};
 
 // =============================================
 // PIRATE SOUND SYSTEM
@@ -464,22 +469,6 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
     document.body.style.overflow = '';
   });
 });
-
-// =============================================
-// SCROLL REVEAL
-// =============================================
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-const observeReveal = () => {
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-};
 
 // =============================================
 // RENDER FUNCTIONS
