@@ -638,5 +638,418 @@
   <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="pjvFPAtE9C6OsusdhIopp";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
+  <!-- 🎮 BROWNIE CUSTOMIZATION GAME (MOBILE OPTIMIZED) -->
+<section class="bv-game-section" id="brownie-game">
+  <div class="bv-game-header">
+    <h2>🎮 Build Your Dream Brownie</h2>
+    <p class="bv-slogan">"In BrownieVerse, you crave it, we make it."</p>
+  </div>
+
+  <div class="bv-game-container">
+    <!-- LEFT: Controls -->
+    <div class="bv-controls">
+      <div class="bv-category" data-type="base">
+        <h3>🧱 Base</h3>
+        <div class="bv-options bv-scroll" id="base-options"></div>
+      </div>
+      <div class="bv-category" data-type="filling">
+        <h3>🌊 Filling <span class="bv-limit">(max 2)</span></h3>
+        <div class="bv-options bv-scroll" id="filling-options"></div>
+      </div>
+      <div class="bv-category" data-type="topping">
+        <h3>✨ Toppings <span class="bv-limit">(max 3)</span></h3>
+        <div class="bv-options bv-scroll" id="topping-options"></div>
+      </div>
+      <div class="bv-category" data-type="sauce">
+        <h3>💧 Sauces <span class="bv-limit">(max 2)</span></h3>
+        <div class="bv-options bv-scroll" id="sauce-options"></div>
+      </div>
+      
+      <button id="bv-manifest-btn" class="bv-btn bv-btn-primary">🍫 Manifest My Brownie</button>
+      <button id="bv-reset-btn" class="bv-btn bv-btn-ghost">🔄 Start Over</button>
+    </div>
+
+    <!-- RIGHT: Preview & Results -->
+    <div class="bv-preview">
+      <div class="bv-brownie-stack" id="bv-brownie-stack">
+        <div class="bv-placeholder">Tap ingredients to build your masterpiece...</div>
+      </div>
+      
+      <div class="bv-chaos-meter">
+        <span class="bv-chaos-label">Chaos Level:</span>
+        <div class="bv-meter-track"><div class="bv-meter-fill" id="bv-chaos-fill"></div></div>
+        <span class="bv-chaos-text" id="bv-chaos-text">Pure & Simple</span>
+      </div>
+
+      <div class="bv-result-box" id="bv-result-box" style="display:none;">
+        <h4>📜 Your Creation:</h4>
+        <p id="bv-result-text"></p>
+        <div class="bv-disclaimer">
+          ⚠️ <strong>Captain's Warning:</strong> We fully support your creativity… but if you mix chili, marshmallow, and tuna—you're on your own, captain. 🏴‍️ (Don't worry, our real 49 DH custom brownies come with expert guidance!)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="bv-cta-box">
+    <h3>🚀 Coming Soon: Real Custom Brownies</h3>
+    <p>Love what you built? Soon you'll be able to order your actual creation for just <strong>49 DH</strong>!</p>
+    <button class="bv-btn bv-btn-cta" onclick="window.open('https://wa.me/212600000000?text=I%20want%20to%20join%20the%20custom%20brownie%20waitlist!', '_blank')">📝 Join the Waitlist</button>
+  </div>
+</section>
+
+<!-- 🎨 MOBILE-OPTIMIZED STYLES -->
+<style>
+  .bv-game-section {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #2E1B1B 0%, #1A120B 100%);
+    color: #FFF8F0;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    border-radius: 16px;
+    margin: 2rem auto;
+    max-width: 1100px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bv-slogan {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #FF7043;
+    margin: 0.5rem 0 1.5rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .bv-game-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    text-align: left;
+  }
+  .bv-category h3 {
+    margin: 0 0 0.5rem;
+    color: #D7CCC8;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bv-limit { font-size: 0.8rem; color: #8D6E63; font-weight: normal; }
+  .bv-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .bv-option {
+    background: #3E2723;
+    border: 2px solid #5D4037;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.95rem;
+    user-select: none;
+    touch-action: manipulation;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .bv-option:active { transform: scale(0.96); }
+  .bv-option.active {
+    background: #FF7043;
+    border-color: #FF7043;
+    color: #1A120B;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(255,112,67,0.4);
+  }
+  .bv-btn {
+    padding: 0.9rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.6rem;
+    font-size: 1rem;
+    touch-action: manipulation;
+    min-height: 48px;
+  }
+  .bv-btn-primary { background: #FF7043; color: #1A120B; width: 100%; }
+  .bv-btn-primary:hover, .bv-btn-primary:active { background: #F4511E; transform: translateY(-1px); }
+  .bv-btn-ghost { background: transparent; color: #D7CCC8; border: 1px solid #5D4037; width: 100%; }
+  .bv-btn-ghost:hover, .bv-btn-ghost:active { background: #3E2723; }
+  .bv-btn-cta { background: #4CAF50; color: white; font-size: 1.1rem; padding: 1rem 2rem; width: 100%; margin-top: 0.5rem; }
+  .bv-btn-cta:hover, .bv-btn-cta:active { background: #388E3C; transform: translateY(-1px); }
+
+  .bv-preview {
+    background: #2E1B1B;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #5D4037;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  .bv-brownie-stack {
+    width: 100%;
+    max-width: 260px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+  }
+  .bv-layer {
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    animation: bv-pop 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  @keyframes bv-pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .bv-placeholder {
+    color: #8D6E63;
+    font-style: italic;
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  .bv-chaos-meter { width: 100%; }
+  .bv-meter-track {
+    background: #3E2723;
+    height: 14px;
+    border-radius: 7px;
+    overflow: hidden;
+    margin: 0.4rem 0;
+  }
+  .bv-meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4CAF50, #FFC107, #FF5722);
+    transition: width 0.4s ease;
+  }
+  .bv-chaos-text { font-size: 0.85rem; color: #D7CCC8; }
+  .bv-result-box {
+    background: #3E2723;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    text-align: center;
+    animation: bv-fade 0.3s ease;
+    width: 100%;
+  }
+  @keyframes bv-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .bv-disclaimer {
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+    background: rgba(255,112,67,0.12);
+    border-left: 3px solid #FF7043;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #FFE0B2;
+    text-align: left;
+  }
+  .bv-cta-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #3E2723;
+    border-radius: 12px;
+    border: 2px dashed #FF7043;
+  }
+  .bv-cta-box h3 { margin: 0 0 0.5rem; color: #FF7043; font-size: 1.2rem; }
+  .bv-cta-box p { margin: 0 0 1rem; color: #D7CCC8; font-size: 0.95rem; }
+
+  /* 📱 MOBILE OPTIMIZATIONS */
+  @media (max-width: 768px) {
+    .bv-game-section { padding: 1.5rem 0.8rem; margin: 1rem 0.5rem; }
+    .bv-slogan { font-size: 1.05rem; margin: 0.5rem 0 1.2rem; }
+    .bv-game-container { grid-template-columns: 1fr; gap: 1.5rem; }
+    
+    /* Horizontal scroll for ingredients on mobile */
+    .bv-options.bv-scroll {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.6rem;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+    }
+    .bv-option { flex: 0 0 auto; min-width: 100px; }
+    
+    .bv-preview {
+      min-height: auto;
+      padding: 1.2rem 1rem;
+      position: sticky;
+      top: 0.5rem;
+      z-index: 5;
+      background: rgba(46,27,27,0.95);
+      backdrop-filter: blur(8px);
+    }
+    .bv-brownie-stack { min-height: 140px; max-width: 220px; margin: 0 auto; }
+    .bv-layer { padding: 0.5rem; font-size: 0.85rem; }
+    
+    .bv-btn { font-size: 1rem; padding: 0.8rem 1rem; }
+    .bv-cta-box { padding: 1.2rem; margin-top: 1.5rem; }
+    .bv-cta-box h3 { font-size: 1.1rem; }
+    .bv-cta-box p { font-size: 0.9rem; }
+  }
+
+  @media (max-width: 480px) {
+    .bv-game-section { padding: 1.2rem 0.5rem; }
+    .bv-slogan { font-size: 0.95rem; }
+    .bv-category h3 { font-size: 1rem; }
+    .bv-option { min-width: 90px; font-size: 0.85rem; padding: 0.5rem 0.7rem; }
+    .bv-brownie-stack { min-height: 120px; max-width: 200px; }
+    .bv-layer { font-size: 0.8rem; padding: 0.4rem; }
+    .bv-disclaimer { font-size: 0.8rem; padding: 0.6rem; }
+  }
+</style>
+
+<!-- ⚙️ JAVASCRIPT (UNCHANGED LOGIC, MOBILE READY) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ingredients = {
+    base: [
+      { id: 'b1', name: 'Classic Fudge', icon: '🍫', color: '#3E2723' },
+      { id: 'b2', name: 'Kaab Ghezal', icon: '🌙', color: '#5D4037' },
+      { id: 'b3', name: 'Oreo Crust', icon: '🍪', color: '#212121' },
+      { id: 'b4', name: 'Pistachio Kunafa', icon: '🌿', color: '#66BB6A' }
+    ],
+    filling: [
+      { id: 'f1', name: 'Salted Caramel', icon: '🍯', color: '#FFB300' },
+      { id: 'f2', name: 'Peanut Butter', icon: '🥜', color: '#D7CCC8' },
+      { id: 'f3', name: 'Raspberry Jam', icon: '🍓', color: '#E91E63' },
+      { id: 'f4', name: 'Nutella Core', icon: '🌰', color: '#4E342E' }
+    ],
+    topping: [
+      { id: 't1', name: 'Crushed Oreos', icon: '🍪', color: '#424242' },
+      { id: 't2', name: 'Sea Salt Flakes', icon: '🧂', color: '#E0E0E0' },
+      { id: 't3', name: 'Marshmallow', icon: '☁️', color: '#F5F5F5' },
+      { id: 't4', name: 'Chili Flakes', icon: '🌶️', color: '#D32F2F' },
+      { id: 't5', name: 'Gold Dust', icon: '✨', color: '#FFD700' }
+    ],
+    sauce: [
+      { id: 's1', name: 'Chocolate Ganache', icon: '🫠', color: '#3E2723' },
+      { id: 's2', name: 'White Chocolate', icon: '🤍', color: '#FFF8E1' },
+      { id: 's3', name: 'Pistachio Drizzle', icon: '🟢', color: '#81C784' },
+      { id: 's4', name: 'Caramel Swirl', icon: '🌀', color: '#FF8F00' }
+    ]
+  };
+
+  let build = { base: null, filling: [], topping: [], sauce: [] };
+  const maxFilling = 2, maxTopping = 3, maxSauce = 2;
+
+  const stackEl = document.getElementById('bv-brownie-stack');
+  const chaosFill = document.getElementById('bv-chaos-fill');
+  const chaosText = document.getElementById('bv-chaos-text');
+  const resultBox = document.getElementById('bv-result-box');
+  const resultText = document.getElementById('bv-result-text');
+
+  Object.keys(ingredients).forEach(type => {
+    const container = document.getElementById(`${type}-options`);
+    ingredients[type].forEach(item => {
+      const btn = document.createElement('div');
+      btn.className = 'bv-option';
+      btn.dataset.id = item.id;
+      btn.dataset.type = type;
+      btn.innerHTML = `${item.icon} ${item.name}`;
+      btn.addEventListener('click', () => toggleItem(type, item, btn));
+      container.appendChild(btn);
+    });
+  });
+
+  function toggleItem(type, item, btn) {
+    if (type === 'base') {
+      build.base = build.base?.id === item.id ? null : item;
+      document.querySelectorAll(`[data-type="base"] .bv-option`).forEach(b => b.classList.toggle('active', b.dataset.id === build.base?.id));
+    } else {
+      const arr = build[type];
+      const idx = arr.findIndex(i => i.id === item.id);
+      if (idx > -1) arr.splice(idx, 1);
+      else {
+        if (arr.length >= (type === 'filling' ? maxFilling : type === 'topping' ? maxTopping : maxSauce)) return;
+        arr.push(item);
+      }
+      document.querySelectorAll(`[data-type="${type}"] .bv-option`).forEach(b => b.classList.toggle('active', arr.some(i => i.id === b.dataset.id)));
+    }
+    updatePreview();
+  }
+
+  function updatePreview() {
+    stackEl.innerHTML = '';
+    const layers = [];
+    if (build.base) layers.push({ ...build.base, label: 'BASE' });
+    build.filling.forEach(i => layers.push({ ...i, label: 'FILLING' }));
+    build.topping.forEach(i => layers.push({ ...i, label: 'TOPPING' }));
+    build.sauce.forEach(i => layers.push({ ...i, label: 'SAUCE' }));
+
+    if (layers.length === 0) {
+      stackEl.innerHTML = '<div class="bv-placeholder">Tap ingredients to build your masterpiece...</div>';
+      chaosFill.style.width = '0%';
+      chaosText.textContent = 'Pure & Simple';
+      resultBox.style.display = 'none';
+      return;
+    }
+
+    layers.forEach(l => {
+      const div = document.createElement('div');
+      div.className = 'bv-layer';
+      div.style.background = l.color;
+      div.style.color = ['#FFB300', '#E91E63', '#D32F2F', '#FFD700'].includes(l.color) ? '#1A120B' : '#FFF8F0';
+      div.textContent = `${l.icon} ${l.name}`;
+      stackEl.appendChild(div);
+    });
+
+    const total = build.filling.length + build.topping.length + build.sauce.length + (build.base ? 1 : 0);
+    const chaos = Math.min(100, (total / 8) * 100);
+    chaosFill.style.width = `${chaos}%`;
+    const labels = ['Pure & Simple', 'Balanced', 'Adventurous', 'Chaotic Good', 'Wild Mode', '🏴‍️ Captain\'s Choice'];
+    chaosText.textContent = labels[Math.min(Math.floor(chaos / 20), labels.length - 1)];
+    resultBox.style.display = 'none';
+  }
+
+  document.getElementById('bv-manifest-btn').addEventListener('click', () => {
+    if (!build.base && build.filling.length === 0 && build.topping.length === 0 && build.sauce.length === 0) return;
+    
+    const nameParts = [];
+    if (build.base) nameParts.push(build.base.name);
+    nameParts.push(...build.filling.map(i => i.name));
+    nameParts.push(...build.topping.map(i => i.name));
+    nameParts.push(...build.sauce.map(i => i.name));
+    
+    const brownieName = nameParts.join(' & ');
+    const isWild = build.topping.some(t => t.name.includes('Chili')) && build.filling.some(f => f.name.includes('Marshmallow'));
+    const funnyMsg = isWild 
+      ? "⚓ Captain, you've summoned a flavor kraken. Respect. 🌶️☁️"
+      : build.topping.length > 2 ? "✨ Maximum indulgence activated. Your dentist called."
+      : "🍫 Perfection. We're taking notes.";
+    
+    resultText.innerHTML = `<strong>${brownieName} Brownie</strong><br>${funnyMsg}`;
+    resultBox.style.display = 'block';
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  document.getElementById('bv-reset-btn').addEventListener('click', () => {
+    build = { base: null, filling: [], topping: [], sauce: [] };
+    document.querySelectorAll('.bv-option').forEach(b => b.classList.remove('active'));
+    updatePreview();
+  });
+});
+</script>
+<!-- 🎮 END BROWNIE GAME SECTION -->
 </body>
 </html>
