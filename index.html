@@ -638,7 +638,7 @@
   <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="pjvFPAtE9C6OsusdhIopp";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
-  <!-- 🎮 BROWNIE CUSTOMIZATION GAME (MOBILE OPTIMIZED) -->
+<!-- 🎮 BROWNIE CUSTOMIZATION GAME (VISUAL MODE) -->
 <section class="bv-game-section" id="brownie-game">
   <div class="bv-game-header">
     <h2>🎮 Build Your Dream Brownie</h2>
@@ -649,27 +649,27 @@
     <!-- LEFT: Controls -->
     <div class="bv-controls">
       <div class="bv-category" data-type="base">
-        <h3>🧱 Base</h3>
-        <div class="bv-options bv-scroll" id="base-options"></div>
+        <h3>🧱 Base (Select One)</h3>
+        <div class="bv-options" id="base-options"></div>
       </div>
       <div class="bv-category" data-type="filling">
-        <h3>🌊 Filling <span class="bv-limit">(max 2)</span></h3>
-        <div class="bv-options bv-scroll" id="filling-options"></div>
+        <h3>🌊 Filling (Max 2)</h3>
+        <div class="bv-options" id="filling-options"></div>
       </div>
       <div class="bv-category" data-type="topping">
-        <h3>✨ Toppings <span class="bv-limit">(max 3)</span></h3>
-        <div class="bv-options bv-scroll" id="topping-options"></div>
+        <h3>✨ Toppings (Max 3)</h3>
+        <div class="bv-options" id="topping-options"></div>
       </div>
       <div class="bv-category" data-type="sauce">
-        <h3>💧 Sauces <span class="bv-limit">(max 2)</span></h3>
-        <div class="bv-options bv-scroll" id="sauce-options"></div>
+        <h3>💧 Sauces (Max 2)</h3>
+        <div class="bv-options" id="sauce-options"></div>
       </div>
       
-      <button id="bv-manifest-btn" class="bv-btn bv-btn-primary">🍫 Manifest My Brownie</button>
+      <button id="bv-manifest-btn" class="bv-btn bv-btn-primary"> Manifest My Brownie</button>
       <button id="bv-reset-btn" class="bv-btn bv-btn-ghost">🔄 Start Over</button>
     </div>
 
-    <!-- RIGHT: Preview & Results -->
+    <!-- RIGHT: Visual Preview -->
     <div class="bv-preview">
       <div class="bv-brownie-stack" id="bv-brownie-stack">
         <div class="bv-placeholder">Tap ingredients to build your masterpiece...</div>
@@ -695,11 +695,11 @@
   <div class="bv-cta-box">
     <h3>🚀 Coming Soon: Real Custom Brownies</h3>
     <p>Love what you built? Soon you'll be able to order your actual creation for just <strong>49 DH</strong>!</p>
-    <button class="bv-btn bv-btn-cta" onclick="window.open('https://wa.me/212703920799?text=I%20want%20to%20join%20the%20custom%20brownie%20waitlist!', '_blank')">📝 Join the Waitlist</button>
+    <button class="bv-btn bv-btn-cta" onclick="window.open('https://wa.me/212600000000?text=I%20want%20to%20join%20the%20custom%20brownie%20waitlist!', '_blank')">📝 Join the Waitlist</button>
   </div>
 </section>
 
-<!-- 🎨 MOBILE-OPTIMIZED STYLES -->
+<!-- 🎨 STYLES -->
 <style>
   .bv-game-section {
     font-family: system-ui, -apple-system, sans-serif;
@@ -736,7 +736,6 @@
     justify-content: space-between;
     align-items: center;
   }
-  .bv-limit { font-size: 0.8rem; color: #8D6E63; font-weight: normal; }
   .bv-options {
     display: flex;
     flex-wrap: wrap;
@@ -800,24 +799,59 @@
   }
   .bv-brownie-stack {
     width: 100%;
-    max-width: 260px;
-    min-height: 180px;
+    max-width: 280px;
+    min-height: 250px;
     display: flex;
     flex-direction: column-reverse;
-    gap: 4px;
+    gap: 0px;
     margin-bottom: 0.5rem;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    overflow: hidden;
   }
+  
+  /* VISUAL BROWNIE LAYERS */
   .bv-layer {
-    padding: 0.6rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-align: center;
-    animation: bv-pop 0.25s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    width: 100%;
+    height: 80px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    animation: bv-pop 0.3s ease;
+    border-bottom: 1px solid #1A120B;
   }
+  .bv-layer:last-child { border-radius: 12px 12px 0 0; z-index: 5; }
+  .bv-layer:first-child { border-radius: 0 0 12px 12px; z-index: 1; }
+  
+  /* Topping Overlays */
+  .bv-layer--topping {
+    background: transparent !important;
+    height: 40px;
+    background-image: none !important;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    mix-blend-mode: screen;
+  }
+
+  /* Sauce Overlays */
+  .bv-layer--sauce {
+    background: transparent !important;
+    height: 30px;
+    z-index: 15;
+    background-image: radial-gradient(circle, var(--sauce-color) 20%, transparent 21%) !important;
+    background-size: 20px 20px !important;
+    opacity: 0.8;
+  }
+
   @keyframes bv-pop {
-    0% { transform: scale(0.9); opacity: 0; }
+    0% { transform: scale(0.8); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
   }
   .bv-placeholder {
@@ -878,56 +912,26 @@
     .bv-game-section { padding: 1.5rem 0.8rem; margin: 1rem 0.5rem; }
     .bv-slogan { font-size: 1.05rem; margin: 0.5rem 0 1.2rem; }
     .bv-game-container { grid-template-columns: 1fr; gap: 1.5rem; }
-    
-    /* Horizontal scroll for ingredients on mobile */
-    .bv-options.bv-scroll {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 0.6rem;
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch;
-      mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
-    }
+    .bv-options { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.6rem; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
     .bv-option { flex: 0 0 auto; min-width: 100px; }
-    
-    .bv-preview {
-      min-height: auto;
-      padding: 1.2rem 1rem;
-      position: sticky;
-      top: 0.5rem;
-      z-index: 5;
-      background: rgba(46,27,27,0.95);
-      backdrop-filter: blur(8px);
-    }
-    .bv-brownie-stack { min-height: 140px; max-width: 220px; margin: 0 auto; }
-    .bv-layer { padding: 0.5rem; font-size: 0.85rem; }
-    
+    .bv-preview { min-height: auto; padding: 1.2rem 1rem; position: sticky; top: 0.5rem; z-index: 5; background: rgba(46,27,27,0.95); backdrop-filter: blur(8px); }
+    .bv-brownie-stack { min-height: 200px; max-width: 240px; margin: 0 auto; }
+    .bv-layer { height: 60px; }
+    .bv-layer--topping { height: 30px; font-size: 1.2rem; }
     .bv-btn { font-size: 1rem; padding: 0.8rem 1rem; }
-    .bv-cta-box { padding: 1.2rem; margin-top: 1.5rem; }
-    .bv-cta-box h3 { font-size: 1.1rem; }
-    .bv-cta-box p { font-size: 0.9rem; }
-  }
-
-  @media (max-width: 480px) {
-    .bv-game-section { padding: 1.2rem 0.5rem; }
-    .bv-slogan { font-size: 0.95rem; }
-    .bv-category h3 { font-size: 1rem; }
-    .bv-option { min-width: 90px; font-size: 0.85rem; padding: 0.5rem 0.7rem; }
-    .bv-brownie-stack { min-height: 120px; max-width: 200px; }
-    .bv-layer { font-size: 0.8rem; padding: 0.4rem; }
-    .bv-disclaimer { font-size: 0.8rem; padding: 0.6rem; }
   }
 </style>
 
-<!-- ⚙️ JAVASCRIPT (UNCHANGED LOGIC, MOBILE READY) -->
+<!-- ⚙️ JAVASCRIPT -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Ingredient data with Image URLs
   const ingredients = {
     base: [
-      { id: 'b1', name: 'Classic Fudge', icon: '🍫', color: '#3E2723' },
-      { id: 'b2', name: 'Kaab Ghezal', icon: '🌙', color: '#5D4037' },
-      { id: 'b3', name: 'Oreo Crust', icon: '🍪', color: '#212121' },
-      { id: 'b4', name: 'Pistachio Kunafa', icon: '🌿', color: '#66BB6A' }
+      { id: 'b1', name: 'Classic Fudge', icon: '🍫', img: 'base-classic.jpg', fallback: '#3E2723' },
+      { id: 'b2', name: 'Kaab Ghezal', icon: '🌙', img: 'base-kaab.jpg', fallback: '#5D4037' },
+      { id: 'b3', name: 'Oreo Crust', icon: '🍪', img: 'base-oreo.jpg', fallback: '#212121' },
+      { id: 'b4', name: 'Pistachio Dubai', icon: '🌿', img: 'base-pistachio.jpg', fallback: '#66BB6A' }
     ],
     filling: [
       { id: 'f1', name: 'Salted Caramel', icon: '🍯', color: '#FFB300' },
@@ -959,6 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultBox = document.getElementById('bv-result-box');
   const resultText = document.getElementById('bv-result-text');
 
+  // Render options
   Object.keys(ingredients).forEach(type => {
     const container = document.getElementById(`${type}-options`);
     ingredients[type].forEach(item => {
@@ -992,10 +997,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function updatePreview() {
     stackEl.innerHTML = '';
     const layers = [];
-    if (build.base) layers.push({ ...build.base, label: 'BASE' });
-    build.filling.forEach(i => layers.push({ ...i, label: 'FILLING' }));
-    build.topping.forEach(i => layers.push({ ...i, label: 'TOPPING' }));
-    build.sauce.forEach(i => layers.push({ ...i, label: 'SAUCE' }));
+    if (build.base) layers.push({ ...build.base, layerType: 'base' });
+    build.filling.forEach(i => layers.push({ ...i, layerType: 'filling' }));
+    build.topping.forEach(i => layers.push({ ...i, layerType: 'topping' }));
+    build.sauce.forEach(i => layers.push({ ...i, layerType: 'sauce' }));
 
     if (layers.length === 0) {
       stackEl.innerHTML = '<div class="bv-placeholder">Tap ingredients to build your masterpiece...</div>';
@@ -1007,10 +1012,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     layers.forEach(l => {
       const div = document.createElement('div');
-      div.className = 'bv-layer';
-      div.style.background = l.color;
-      div.style.color = ['#FFB300', '#E91E63', '#D32F2F', '#FFD700'].includes(l.color) ? '#1A120B' : '#FFF8F0';
-      div.textContent = `${l.icon} ${l.name}`;
+      div.className = `bv-layer bv-layer--${l.layerType}`;
+      
+      if (l.layerType === 'base') {
+        // Try to load image, fallback to color
+        div.style.backgroundImage = `url(${l.img})`;
+        div.style.backgroundColor = l.fallback;
+        div.style.backgroundSize = 'cover';
+      } else if (l.layerType === 'topping') {
+        div.innerHTML = l.icon.repeat(4);
+        div.style.color = l.color;
+      } else if (l.layerType === 'sauce') {
+        div.style.setProperty('--sauce-color', l.color);
+      } else {
+        div.style.background = l.color;
+        div.style.color = ['#FFB300', '#E91E63', '#D32F2F', '#FFD700'].includes(l.color) ? '#1A120B' : '#FFF8F0';
+      }
+      
       stackEl.appendChild(div);
     });
 
@@ -1034,7 +1052,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const brownieName = nameParts.join(' & ');
     const isWild = build.topping.some(t => t.name.includes('Chili')) && build.filling.some(f => f.name.includes('Marshmallow'));
     const funnyMsg = isWild 
-      ? "⚓ Captain, you've summoned a flavor kraken. Respect. 🌶️☁️"
+      ? "⚓ Captain, you've summoned a flavor kraken. Respect. 🌶️️"
       : build.topping.length > 2 ? "✨ Maximum indulgence activated. Your dentist called."
       : "🍫 Perfection. We're taking notes.";
     
