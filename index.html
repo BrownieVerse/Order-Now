@@ -1121,5 +1121,12 @@
     if (e.key === 'Escape' && bvGame.open) closeBrownieGame();
   });
   </script>
+  <!-- 🏴‍️ BROWNIE CUSTOMIZATION GAME MODAL -->
+<div id="brownieGameModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;overflow-y:auto;padding:20px;">
+  <div style="max-width:800px;margin:20px auto;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <button onclick="closeBrownieGame()" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;color:#666;" aria-label="Close game">✕</button>
+    <div id="brownieGameContent" style="padding:20px;"></div>
+  </div>
+</div>
 </body>
 </html>
