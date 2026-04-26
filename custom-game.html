@@ -655,58 +655,81 @@
     }
 
     // 🎨 AI Image Generation (Mock for Demo)
-    function generateImage() {
-      var btn = document.getElementById('generateBtn');
-      var loading = document.getElementById('loading');
-      var result = document.getElementById('result');
-      var resultImg = document.getElementById('resultImg');
-      
-      btn.disabled = true;
-      loading.classList.add('active');
-      result.classList.remove('active');
-      
-      // Build prompt for AI (in real version, send to API)
-      var fillingStr = selections.fillings.join(' and ');
-      var toppingStr = selections.toppings.join(' and ');
-      var sauceStr = selections.sauce === 'no-sauce' ? 'nothing' : selections.sauce;
-      var prompt = 'A mouthwatering artisan brownie, ' + selections.base + ' base, filled with ' + fillingStr + ', topped with ' + toppingStr + ', drizzled with ' + sauceStr + ', professional food photography, warm lighting, chocolate aesthetic, Moroccan dessert style';
-      
-      // Simulate API delay
-      setTimeout(function() {
-        // Generate mock image URL (using placeholder service)
-        var colors = {
-          'classic-fudge': '3E2723',
-          'kaab-ghezal': '8D6E63',
-          'oreo': '212121',
-          'choco-dubai': '4CAF50',
-          'midnight-espresso': '1B1B1B',
-          'red-velvet': 'C62828'
-        };
-        var bgColor = colors[selections.base] || '5D4037';
-        var emoji = '🍫';
-        if (selections.toppings.indexOf('gold-flakes') !== -1) emoji = '✨';
-        else if (selections.toppings.indexOf('bacon') !== -1) emoji = '🥓';
-        
-        var baseName = optionLabels[selections.base].split(' ')[0];
-        var encodedText = encodeURIComponent(emoji + ' ' + baseName + ' Brownie');
-        var mockUrl = 'https://placehold.co/600x400/' + bgColor + '/white?text=' + encodedText + '&font=montserrat';
-        
-        resultImg.src = mockUrl;
-        
-        var specialName = 'Dream';
-        if (selections.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
-        else if (selections.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
-        
-        document.getElementById('resultName').textContent = 'The ' + optionLabels[selections.base] + ' ' + specialName;
-        
-        loading.classList.remove('active');
-        result.classList.add('active');
-        btn.disabled = false;
-        
-        // Scroll to result
-        result.scrollIntoView({ behavior: 'smooth' });
-      }, 2500);
-    }
+// 🎨 AI Image Generation (REAL - Using Pollinations.ai)
+function generateImage() {
+  var btn = document.getElementById('generateBtn');
+  var loading = document.getElementById('loading');
+  var result = document.getElementById('result');
+  var resultImg = document.getElementById('resultImg');
+  
+  btn.disabled = true;
+  loading.classList.add('active');
+  result.classList.remove('active');
+  
+  // Build detailed prompt based on selections
+  var baseName = optionLabels[selections.base];
+  var fillingText = selections.fillings.length > 0 ? 
+    'filled with ' + selections.fillings.map(function(f) { return optionLabels[f]; }).join(' and ') : '';
+  var toppingText = selections.toppings.length > 0 ? 
+    'topped with ' + selections.toppings.map(function(t) { return optionLabels[t]; }).join(', ') : '';
+  var sauceText = selections.sauce !== 'no-sauce' ? 
+    'drizzled with ' + optionLabels[selections.sauce] : '';
+  
+  // Create detailed prompt
+  var prompt = 'Professional food photography of a luxurious artisan brownie, ' + 
+    baseName + ' brownie base, ' + 
+    fillingText + ', ' + 
+    toppingText + ', ' + 
+    sauceText + ', ' +
+    'gourmet dessert, Moroccan pastry, warm lighting, studio quality, ' +
+    'mouthwatering, chocolate dripping, high detail, 4k, appetizing';
+  
+  // Clean up prompt (remove extra spaces and commas)
+  prompt = prompt.replace(/,\s*,/g, ',').replace(/,\s*$/, '').replace(/^\s*,/, '');
+  
+  // Encode for URL
+  var encodedPrompt = encodeURIComponent(prompt);
+  
+  // Generate image URL using Pollinations.ai (FREE, no API key)
+  var seed = Math.floor(Math.random() * 10000);
+  var imageUrl = 'https://image.pollinations.ai/prompt/' + encodedPrompt + 
+    '?width=600&height=600&nologo=true&seed=' + seed + '&model=flux';
+  
+  console.log('Generating image with prompt:', prompt);
+  console.log('Image URL:', imageUrl);
+  
+  // Create image and wait for it to load
+  var img = new Image();
+  img.onload = function() {
+    resultImg.src = imageUrl;
+    
+    // Generate creative name
+    var specialName = 'Dream';
+    if (selections.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
+    else if (selections.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
+    else if (selections.toppings.indexOf('bacon') !== -1) specialName = 'Salty Pirate';
+    else if (selections.fillings.indexOf('matcha') !== -1) specialName = 'Zen Master';
+    
+    document.getElementById('resultName').textContent = 'The ' + baseName.split(' ')[0] + ' ' + specialName;
+    
+    loading.classList.remove('active');
+    result.classList.add('active');
+    btn.disabled = false;
+    
+    // Scroll to result
+    result.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  img.onerror = function() {
+    console.error('Failed to load image');
+    alert('Oops! The AI is having trouble right now. Please try again in a moment! ');
+    loading.classList.remove('active');
+    btn.disabled = false;
+  };
+  
+  // Trigger load
+  img.src = imageUrl;
+}
 
     function resetGame() {
       // Reset state
