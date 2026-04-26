@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏴‍☠️ Brownie Customization Game | BrownieVerse</title>
+  <style>
+    :root {
+      --primary: #5D4037;
+      --primary-dark: #3E2723;
+      --accent: #FF7043;
+      --gold: #FFD54F;
+      --cream: #FFF8F0;
+      --text: #2E1B1B;
+      --shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--cream) 0%, #FFE0B2 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.5;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    
+    /* 🔐 Access Gate */
+    .gate {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      margin: 20px auto;
+      max-width: 500px;
+    }
+    .gate h2 { color: var(--primary); margin-bottom: 10px; }
+    .gate p { margin: 15px 0; color: #666; }
+    .gate input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .gate button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: transform 0.2s;
+    }
+    .gate button:hover { transform: scale(1.03); background: var(--primary-dark); }
+    .gate .error { color: var(--accent); font-weight: 500; margin-top: 10px; display: none; }
+    
+    /* 🎮 Game UI */
+    .game { display: none; }
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .header h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 5px; }
+    .header .slogan { color: var(--accent); font-weight: 600; font-style: italic; }
+    
+    .steps { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
+    .step-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: var(--accent); }
+    
+    .selection-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 15px 0;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .selection-card.active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .selection-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.3rem; }
+    
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .option {
+      background: var(--cream);
+      border: 2px solid transparent;
+      border-radius: 15px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .option:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .option.selected {
+      border-color: var(--primary);
+      background: #FFF3E0;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(93,64,55,0.2);
+    }
+    .option .emoji { font-size: 24px; display: block; margin-bottom: 5px; }
+    
+    .preview {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .preview.active { display: block; }
+    .preview h3 { color: var(--primary); margin-bottom: 15px; }
+    
+    .brownie-preview {
+      width: 200px; height: 200px;
+      background: linear-gradient(145deg, #3E2723, #5D4037);
+      border-radius: 20px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .brownie-preview::after {
+      content: "🍫";
+      font-size: 60px;
+      position: absolute;
+    }
+    
+    .generate-btn {
+      background: linear-gradient(135deg, var(--accent), #FF5722);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 20px 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(255,87,34,0.4);
+    }
+    .generate-btn:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255,87,34,0.6); }
+    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    
+    .loading { display: none; text-align: center; padding: 30px; }
+    .loading.active { display: block; }
+    .spinner {
+      width: 50px; height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    .result { display: none; text-align: center; }
+    .result.active { display: block; animation: popIn 0.4s; }
+    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    
+    .result-img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      margin: 20px auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      border: 4px solid white;
+    }
+    
+    .cta {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      margin: 25px 0;
+    }
+    .cta h3 { margin-bottom: 10px; font-size: 1.3rem; }
+    .cta p { margin-bottom: 15px; opacity: 0.9; }
+    .cta .waitlist-btn {
+      background: var(--gold);
+      color: var(--primary-dark);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+      transition: transform 0.2s;
+    }
+    .cta .waitlist-btn:hover { transform: scale(1.05); }
+    
+    .disclaimer {
+      background: #FFF3E0;
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 0 10px 10px 0;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #5D4037;
+    }
+    
+    .pirate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold);
+      color: var(--primary-dark);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    
+    .nav-btns { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+    .nav-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .nav-btn.prev { background: #eee; color: var(--text); }
+    .nav-btn.next { background: var(--primary); color: white; }
+    .nav-btn:hover { transform: translateY(-2px); }
+    
+    @media (max-width: 600px) {
+      .options { grid-template-columns: 1fr 1fr; }
+      .brownie-preview { width: 160px; height: 160px; }
+      .header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- 🔐 ACCESS GATE -->
+    <div id="gate" class="gate">
+      <div class="pirate-badge">🏴‍☠️ Founding Pirates Only</div>
+      <h2>Private Deck Access</h2>
+      <p>Enter your credentials to unlock the Brownie Customization Game</p>
+      <input type="email" id="email" placeholder="Your waitlist email" required />
+      <input type="text" id="code" placeholder="Private access code" required />
+      <button onclick="checkAccess()">Set Sail! ⚓</button>
+      <p class="error" id="error">❌ Invalid credentials. Not a Founding Pirate yet?</p>
+      <p style="margin-top:20px;font-size:14px;color:#666;">
+        Not a member? <a href="https://brownieverse.github.io/Order-Now/" style="color:var(--accent);font-weight:600;">Join the waitlist here</a>
+      </p>
+    </div>
+
+    <!-- 🎮 GAME UI (Hidden Until Access Granted) -->
+    <div id="game" class="game">
+      
+      <div class="header">
+        <h1>🏴‍☠️ Build Your Dream Brownie</h1>
+        <p class="slogan">"In BrownieVerse, you crave it, we make it."</p>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="steps">
+        <div class="step-dot active" id="dot-0"></div>
+        <div class="step-dot" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+      </div>
+
+      <!-- Step 0: Base -->
+      <div class="selection-card active" id="step-0">
+        <h3>🍫 Choose Your Base</h3>
+        <div class="options">
+          <div class="option" data-value="classic-fudge" onclick="selectOption('base', this)">
+            <span class="emoji">🍫</span>Classic Fudge
+          </div>
+          <div class="option" data-value="kaab-ghezal" onclick="selectOption('base', this)">
+            <span class="emoji">🌙</span>Kaab Ghezal
+          </div>
+          <div class="option" data-value="oreo" onclick="selectOption('base', this)">
+            <span class="emoji">🍪</span>Oreo Crunch
+          </div>
+          <div class="option" data-value="choco-dubai" onclick="selectOption('base', this)">
+            <span class="emoji">🌿</span>Choco-Dubai
+          </div>
+          <div class="option" data-value="midnight-espresso" onclick="selectOption('base', this)">
+            <span class="emoji">☕</span>Midnight Espresso
+          </div>
+          <div class="option" data-value="red-velvet" onclick="selectOption('base', this)">
+            <span class="emoji">❤️</span>Red Velvet Swirl
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn next" onclick="nextStep(1)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 1: Fillings -->
+      <div class="selection-card" id="step-1">
+        <h3>🌀 Add Fillings (Pick 1-2)</h3>
+        <div class="options">
+          <div class="option" data-value="salted-caramel" onclick="toggleOption('filling', this)">
+            <span class="emoji">🧂</span>Salted Caramel
+          </div>
+          <div class="option" data-value="pistachio-cream" onclick="toggleOption('filling', this)">
+            <span class="emoji">💚</span>Pistachio Cream
+          </div>
+          <div class="option" data-value="white-chocolate" onclick="toggleOption('filling', this)">
+            <span class="emoji">⚪</span>White Choco Lava
+          </div>
+          <div class="option" data-value="peanut-butter" onclick="toggleOption('filling', this)">
+            <span class="emoji">🥜</span>Peanut Butter Core
+          </div>
+          <div class="option" data-value="raspberry-swirl" onclick="toggleOption('filling', this)">
+            <span class="emoji">🍓</span>Raspberry Swirl
+          </div>
+          <div class="option" data-value="speculoos" onclick="toggleOption('filling', this)">
+            <span class="emoji">🍪</span>Speculoos Crunch
+          </div>
+          <div class="option" data-value="chili-dark" onclick="toggleOption('filling', this)">
+            <span class="emoji">🌶️</span>Chili Dark (🔥)
+          </div>
+          <div class="option" data-value="matcha" onclick="toggleOption('filling', this)">
+            <span class="emoji">🍵</span>Matcha Swirl
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn prev" onclick="prevStep(0)">← Back</button>
+          <button class="nav-btn next" onclick="nextStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Toppings -->
+      <div class="selection-card" id="step-2">
+        <h3>✨ Pile On Toppings (Pick 1-3)</h3>
+        <div class="options">
+          <div class="option" data-value="gold-flakes" onclick="toggleOption('topping', this)">
+            <span class="emoji">✨</span>Edible Gold Flakes
+          </div>
+          <div class="option" data-value="marshmallow" onclick="toggleOption('topping', this)">
+            <span class="emoji">☁️</span>Toast'd Marshmallows
+          </div>
+          <div class="option" data-value="oreo-crumbles" onclick="toggleOption('topping', this)">
+            <span class="emoji">🍪</span>Oreo Crumbles
+          </div>
+          <div class="option" data-value="pistachio-dust" onclick="toggleOption('topping', this)">
+            <span class="emoji">💚</span>Pistachio Dust
+          </div>
+          <div class="option" data-value="sea-salt" onclick="toggleOption('topping', this)">
+            <span class="emoji">🧂</span>Fleur de Sel
+          </div>
+          <div class="option" data-value="brownie-bits" onclick="toggleOption('topping', this)">
+            <span class="emoji">🍫</span>Brownie Bits (meta!)
+          </div>
+          <div class="option" data-value="cotton-candy" onclick="toggleOption('topping', this)">
+            <span class="emoji">🍭</span>Cotton Candy Cloud
+          </div>
+          <div class="option" data-value="bacon" onclick="toggleOption('topping', this)">
+            <span class="emoji">🥓</span>Crispy Bacon (yes really)
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn prev" onclick="prevStep(1)">← Back</button>
+          <button class="nav-btn next" onclick="nextStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Sauces -->
+      <div class="selection-card" id="step-3">
+        <h3>🌊 Drizzle Your Sauce (Pick 1)</h3>
+        <div class="options">
+          <div class="option" data-value="dark-chocolate" onclick="selectOption('sauce', this)">
+            <span class="emoji">🍫</span>Dark Chocolate Ganache
+          </div>
+          <div class="option" data-value="caramel" onclick="selectOption('sauce', this)">
+            <span class="emoji">🍯</span>Sea Salt Caramel
+          </div>
+          <div class="option" data-value="white-choc" onclick="selectOption('sauce', this)">
+            <span class="emoji">⚪</span>White Chocolate Drizzle
+          </div>
+          <div class="option" data-value="pistachio" onclick="selectOption('sauce', this)">
+            <span class="emoji">💚</span>Pistachio Cream Swirl
+          </div>
+          <div class="option" data-value="berry-reduction" onclick="selectOption('sauce', this)">
+            <span class="emoji">🍓</span>Berry Reduction
+          </div>
+          <div class="option" data-value="no-sauce" onclick="selectOption('sauce', this)">
+            <span class="emoji">❌</span>Keep It Pure (no sauce)
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn prev" onclick="prevStep(2)">← Back</button>
+          <button class="nav-btn next" onclick="showPreview()">Generate My Brownie! 🎨</button>
+        </div>
+      </div>
+
+      <!-- Preview & Generate -->
+      <div class="preview" id="preview">
+        <h3>👀 Your Creation Preview</h3>
+        <div class="brownie-preview" id="brownieDisplay">
+          <span id="previewText">Your custom brownie awaits...</span>
+        </div>
+        <p id="selectedSummary" style="margin:15px 0;color:#666;font-size:14px;"></p>
+        <button class="generate-btn" id="generateBtn" onclick="generateImage()">
+          ✨ Generate AI Brownie Image ✨
+        </button>
+        <div class="disclaimer">
+          ⚠️ <strong>Pirate Disclaimer:</strong> We fully support your creativity… but if you mix chili, marshmallow, and tuna—you're on your own, captain. 🏴‍☠️
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn prev" onclick="resetGame()">← Start Over</button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>🎨 AI is crafting your masterpiece...<br><small>(This is a demo - real feature coming soon!)</small></p>
+      </div>
+
+      <!-- Result -->
+      <div class="result" id="result">
+        <h3>🏆 Behold Your Creation!</h3>
+        <img class="result-img" id="resultImg" src="" alt="Your custom brownie" />
+        <p style="margin:15px 0;font-weight:600;color:var(--primary);">
+          "<span id="resultName">Your Custom Brownie</span>"
+        </p>
+        
+        <div class="cta">
+          <h3>🚀 Coming Soon: Order This IRL!</h3>
+          <p>For just <strong>49 DH</strong>, your dream brownie could be delivered to your door. Join the waitlist to be first in line!</p>
+          <a href="https://brownieverse.github.io/Order-Now/" class="waitlist-btn">🔔 Notify Me When It Launches</a>
+        </div>
+        
+        <button class="nav-btn next" onclick="resetGame()" style="background:#eee;color:var(--text);margin-top:15px;">
+          🔄 Build Another
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 🔐 Access Control (Demo - Replace with real auth in production)
+    const VALID_CREDS = [
+      { email: 'founder@brownieverse.ma', code: 'PIRATE001' },
+      { email: 'crew@brownieverse.ma', code: 'CREW2024' }
+      // Add more Founding Pirate credentials here
+    ];
+
+    function checkAccess() {
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const code = document.getElementById('code').value.trim().toUpperCase();
+      const error = document.getElementById('error');
+      
+      const valid = VALID_CREDS.some(c => c.email === email && c.code === code);
+      
+      if (valid) {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        error.style.display = 'none';
+      } else {
+        error.style.display = 'block';
+        // Shake animation for error
+        const gate = document.getElementById('gate');
+        gate.style.animation = 'none';
+        setTimeout(() => { gate.style.animation = 'shake 0.5s'; }, 10);
+      }
+    }
+
+    // 🎮 Game State
+    const selections = {
+      base: null,
+      fillings: [],
+      toppings: [],
+      sauce: null
+    };
+
+    const optionLabels = {
+      'classic-fudge': 'Classic Fudge',
+      'kaab-ghezal': 'Kaab Ghezal',
+      'oreo': 'Oreo Crunch',
+      'choco-dubai': 'Choco-Dubai',
+      'midnight-espresso': 'Midnight Espresso',
+      'red-velvet': 'Red Velvet',
+      'salted-caramel': 'Salted Caramel',
+      'pistachio-cream': 'Pistachio Cream',
+      'white-chocolate': 'White Choco Lava',
+      'peanut-butter': 'Peanut Butter',
+      'raspberry-swirl': 'Raspberry',
+      'speculoos': 'Speculoos',
+      'chili-dark': 'Chili Dark 🔥',
+      'matcha': 'Matcha',
+      'gold-flakes': 'Gold Flakes ✨',
+      'marshmallow': 'Marshmallows',
+      'oreo-crumbles': 'Oreo Crumbles',
+      'pistachio-dust': 'Pistachio Dust',
+      'sea-salt': 'Sea Salt',
+      'brownie-bits': 'Brownie Bits',
+      'cotton-candy': 'Cotton Candy',
+      'bacon': 'Crispy Bacon 🥓',
+      'dark-chocolate': 'Dark Choco Ganache',
+      'caramel': 'Sea Salt Caramel',
+      'white-choc': 'White Choco Drizzle',
+      'pistachio': 'Pistachio Cream',
+      'berry-reduction': 'Berry Reduction',
+      'no-sauce': 'No Sauce'
+    };
+
+    // Selection Logic
+    function selectOption(category, el) {
+      // Deselect siblings
+      el.parentElement.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      // Select clicked
+      el.classList.add('selected');
+      // Store value
+      selections[category] = el.dataset.value;
+    }
+
+    function toggleOption(category, el) {
+      const arr = selections[category + 's'] || selections[category];
+      const value = el.dataset.value;
+      const max = category === 'filling' ? 2 : 3;
+      
+      if (el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        selections[category + 's'] = arr.filter(v => v !== value);
+      } else {
+        if (arr.length >= max) return; // Limit selections
+        el.classList.add('selected');
+        selections[category + 's'] = [...arr, value];
+      }
+    }
+
+    // Navigation
+    function nextStep(step) {
+      // Validate required selections
+      if (step === 1 && !selections.base) { alert('Pick a base first! 🍫'); return; }
+      if (step === 2 && selections.fillings.length === 0) { alert('Add at least 1 filling! 🌀'); return; }
+      if (step === 3 && selections.toppings.length === 0) { alert('Add at least 1 topping! ✨'); return; }
+      
+      // Update UI
+      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+      // Update dots
+      document.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i <= step);
+      });
+    }
+
+    function prevStep(step) {
+      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+      document.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i <= step);
+      });
+    }
+
+    function showPreview() {
+      if (!selections.sauce) { alert('Pick a sauce (or "Keep It Pure")! 🌊'); return; }
+      
+      // Update preview text
+      const parts = [
+        optionLabels[selections.base],
+        ...(selections.fillings.map(f => optionLabels[f])),
+        ...(selections.toppings.map(t => optionLabels[t])),
+        selections.sauce !== 'no-sauce' ? optionLabels[selections.sauce] : null
+      ].filter(Boolean);
+      
+      document.getElementById('previewText').textContent = parts.join(' + ');
+      document.getElementById('selectedSummary').textContent = `Base: ${optionLabels[selections.base]} | Fillings: ${selections.fillings.map(f=>optionLabels[f]).join(', ') || 'None'} | Toppings: ${selections.toppings.map(t=>optionLabels[t]).join(', ')} | Sauce: ${selections.sauce !== 'no-sauce' ? optionLabels[selections.sauce] : 'None'}`;
+      
+      // Show preview section
+      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
+      document.getElementById('preview').classList.add('active');
+    }
+
+    // 🎨 AI Image Generation (Mock for Demo)
+    async function generateImage() {
+      const btn = document.getElementById('generateBtn');
+      const loading = document.getElementById('loading');
+      const result = document.getElementById('result');
+      const resultImg = document.getElementById('resultImg');
+      
+      btn.disabled = true;
+      loading.classList.add('active');
+      result.classList.remove('active');
+      
+      // Build prompt for AI (in real version, send to API)
+      const prompt = `A mouthwatering artisan brownie, ${selections.base} base, filled with ${selections.fillings.join(' and ')}, topped with ${selections.toppings.join(' and ')}, drizzled with ${selections.sauce === 'no-sauce' ? 'nothing' : selections.sauce}, professional food photography, warm lighting, chocolate aesthetic, Moroccan dessert style`;
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2500));
+      
+      // Generate mock image URL (using placeholder service)
+      // In production: replace with real AI API call (Replicate, Hugging Face, etc.)
+      const colors = {
+        'classic-fudge': '3E2723',
+        'kaab-ghezal': '8D6E63',
+        'oreo': '212121',
+        'choco-dubai': '4CAF50',
+        'midnight-espresso': '1B1B1B',
+        'red-velvet': 'C62828'
+      };
+      const bgColor = colors[selections.base] || '5D4037';
+      const emoji = selections.toppings.includes('gold-flakes') ? '✨' : selections.toppings.includes('bacon') ? '🥓' : '🍫';
+      
+      // Create a fun mock image using placeholder service
+      const mockUrl = `https://placehold.co/600x400/${bgColor}/white?text=${encodeURIComponent(emoji + ' ' + optionLabels[selections.base].split(' ')[0] + ' Brownie')}&font=montserrat`;
+      
+      resultImg.src = mockUrl;
+      document.getElementById('resultName').textContent = `The ${optionLabels[selections.base]} ${selections.toppings.includes('gold-flakes') ? 'Gold Rush' : selections.fillings.includes('chili-dark') ? 'Fire Ship' : 'Dream'}`;
+      
+      loading.classList.remove('active');
+      result.classList.add('active');
+      btn.disabled = false;
+      
+      // Scroll to result
+      result.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetGame() {
+      // Reset state
+      selections.base = null;
+      selections.fillings = [];
+      selections.toppings = [];
+      selections.sauce = null;
+      
+      // Reset UI
+      document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelectorAll('.selection-card, .preview, .loading, .result').forEach(el => el.classList.remove('active'));
+      document.getElementById('step-0').classList.add('active');
+      document.querySelectorAll('.step-dot').forEach((dot, i) => dot.classList.toggle('active', i === 0));
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Add CSS animation for error shake
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
