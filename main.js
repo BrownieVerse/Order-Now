@@ -1168,11 +1168,15 @@ function getGameHTML() {
       .step-dot.active {
         background: #FF7043;
       }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     </style>
     
     <!-- Access Gate -->
     <div id="bvGate" style="text-align:center;padding:30px;">
-      <div style="display:inline-block;background:#FFD54F;color:#3E2723;padding:8px 20px;border-radius:50px;font-weight:700;margin-bottom:20px;">🏴‍☠️ Founding Pirates Only</div>
+      <div style="display:inline-block;background:#FFD54F;color:#3E2723;padding:8px 20px;border-radius:50px;font-weight:700;margin-bottom:20px;">🏴‍️ Founding Pirates Only</div>
       <h2 style="color:#5D4037;margin-bottom:15px;">Private Deck Access</h2>
       <p style="color:#666;margin-bottom:25px;">Enter your credentials to unlock the Brownie Customization Game</p>
       <input type="email" id="bvEmail" placeholder="Your waitlist email" style="width:100%;max-width:350px;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:10px;font-size:16px;">
@@ -1393,16 +1397,8 @@ function getGameHTML() {
         </div>
       </div>
     </div>
-
-    <style>
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    </style>
   `;
 }
-
 // Game State
 var gameData = {
   base: null,
