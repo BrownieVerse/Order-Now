@@ -530,7 +530,7 @@ function renderPacks() {
         <span class="pack-price-currency">DH</span>
       </div>
       
-      <a href="#order" class="pack-cta" onclick="preSelectPack('${pack.id}')">
+      <a href="#order" class="pack-cta" onclick="window.preSelectPack('${pack.id}')">
         <i class="fas fa-shopping-bag"></i>
         Order This Pack
       </a>
@@ -546,16 +546,16 @@ function renderOrderProductSelector() {
   orderProductSelector.innerHTML = PACKS.map(pack => `
     <div class="product-selector-item">
       <div class="psi-info">
-        <input type="checkbox" class="psi-check" id="psi-${pack.id}" data-pack-id="${pack.id}" onchange="toggleOrderPack('${pack.id}', this.checked)" />
+        <input type="checkbox" class="psi-check" id="psi-${pack.id}" data-pack-id="${pack.id}" onchange="window.toggleOrderPack('${pack.id}', this.checked)" />
         <label for="psi-${pack.id}" style="cursor:pointer">
           <span class="psi-name">${pack.emoji ? pack.emoji + ' ' : ''}${pack.name}</span>
           <span class="psi-price">&nbsp;— ${pack.price} DH</span>
         </label>
       </div>
       <div class="psi-qty" id="psi-qty-${pack.id}">
-        <button type="button" class="qty-btn" onclick="changeOrderQty('${pack.id}', -1)">−</button>
+        <button type="button" class="qty-btn" onclick="window.changeOrderQty('${pack.id}', -1)">−</button>
         <span class="qty-val" id="psi-qty-val-${pack.id}">1</span>
-        <button type="button" class="qty-btn" onclick="changeOrderQty('${pack.id}', 1)">+</button>
+        <button type="button" class="qty-btn" onclick="window.changeOrderQty('${pack.id}', 1)">+</button>
       </div>
     </div>
   `).join('');
@@ -679,10 +679,10 @@ function updateCartUI() {
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">${item.price} DH</div>
           <div class="cart-item-controls">
-            <button class="ci-qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
+            <button class="ci-qty-btn" onclick="window.changeQty('${item.id}', -1)">−</button>
             <span class="ci-qty">${item.qty}</span>
-            <button class="ci-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
-            <button class="ci-remove" onclick="removeFromCart('${item.id}')"><i class="fas fa-trash"></i> Remove</button>
+            <button class="ci-qty-btn" onclick="window.changeQty('${item.id}', 1)">+</button>
+            <button class="ci-remove" onclick="window.removeFromCart('${item.id}')"><i class="fas fa-trash"></i> Remove</button>
           </div>
         </div>
         <div class="cart-item-total">${item.price * item.qty} DH</div>
@@ -1062,9 +1062,9 @@ function updatePirateCount() {
 }
 
 // =============================================
-// 🏴‍☠️ BROWNIE CUSTOMIZATION GAME (NEW)
+// 🏴‍☠️ BROWNIE CUSTOMIZATION GAME (FIXED)
 // =============================================
-var bvGame = {
+window.bvGame = {
   selections: { base: null, fillings: [], toppings: [], sauce: null },
   open: false,
   optionLabels: {
@@ -1082,17 +1082,294 @@ var bvGame = {
   validCreds: [
     { email: 'abdohaoudi2004@gmail.com', code: 'PIRATE03' },
     { email: 'brownieverse.o@gmail.com', code: 'CAPTAIN' }
-  ]
+  ],
+  
+  // Check Access Credentials
+  checkAccess: function() {
+    var email = document.getElementById('bvEmail').value.trim().toLowerCase();
+    var code = document.getElementById('bvCode').value.trim().toUpperCase();
+    var error = document.getElementById('bvError');
+    var valid = false;
+    for (var i = 0; i < this.validCreds.length; i++) {
+      if (this.validCreds[i].email === email && this.validCreds[i].code.toUpperCase() === code) { 
+        valid = true; 
+        break; 
+      }
+    }
+    if (valid) {
+      document.getElementById('bvGate').style.display = 'none';
+      document.getElementById('bvGameUI').style.display = 'block';
+      error.style.display = 'none';
+    } else {
+      error.style.display = 'block';
+      var gate = document.getElementById('bvGate');
+      gate.style.animation = 'none';
+      setTimeout(function() { gate.style.animation = 'shake 0.5s'; }, 10);
+    }
+  },
+
+  // Selection Logic
+  select: function(cat, el) {
+    var sibs = el.parentElement.querySelectorAll('.game-option');
+    for (var i = 0; i < sibs.length; i++) {
+      sibs[i].classList.remove('selected');
+      sibs[i].style.borderColor = 'transparent';
+      sibs[i].style.background = '#FFF8F0';
+    }
+    el.classList.add('selected');
+    el.style.borderColor = '#5D4037';
+    el.style.background = '#FFF3E0';
+    this.selections[cat] = el.getAttribute('data-value');
+  },
+
+  toggle: function(cat, el) {
+    var arr = this.selections[cat + 's'] || this.selections[cat];
+    var val = el.getAttribute('data-value');
+    var max = cat === 'filling' ? 2 : 3;
+    
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      el.style.borderColor = 'transparent';
+      el.style.background = '#FFF8F0';
+      var newArr = [];
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] !== val) newArr.push(arr[i]);
+      }
+      this.selections[cat + 's'] = newArr;
+    } else {
+      if (arr.length >= max) {
+        alert('You can only select up to ' + max + ' ' + (cat === 'filling' ? 'fillings' : 'toppings') + '!');
+        return;
+      }
+      el.classList.add('selected');
+      el.style.borderColor = '#5D4037';
+      el.style.background = '#FFF3E0';
+      var newArr = arr.slice();
+      newArr.push(val);
+      this.selections[cat + 's'] = newArr;
+    }
+  },
+
+  // Navigation
+  next: function(step) {
+    if (step === 1 && !this.selections.base) { 
+      alert('Pick a base first! 🍫'); 
+      return; 
+    }
+    if (step === 2 && this.selections.fillings.length === 0) { 
+      alert('Add at least 1 filling! 🌀'); 
+      return; 
+    }
+    if (step === 3 && this.selections.toppings.length === 0) { 
+      alert('Add at least 1 topping! ✨'); 
+      return; 
+    }
+    
+    for (var i = 0; i < 4; i++) {
+      var card = document.getElementById('bvStep' + i);
+      if (card) {
+        card.style.display = 'none';
+        card.classList.remove('active');
+      }
+      var dot = document.getElementById('bvDot' + i);
+      if (dot) {
+        dot.style.background = i <= step ? '#FF7043' : '#ddd';
+      }
+    }
+    
+    var currentCard = document.getElementById('bvStep' + step);
+    if (currentCard) {
+      currentCard.style.display = 'block';
+      currentCard.classList.add('active');
+    }
+  },
+
+  prev: function(step) {
+    for (var i = 0; i < 4; i++) {
+      var card = document.getElementById('bvStep' + i);
+      if (card) {
+        card.style.display = 'none';
+        card.classList.remove('active');
+      }
+      var dot = document.getElementById('bvDot' + i);
+      if (dot) {
+        dot.style.background = i <= step ? '#FF7043' : '#ddd';
+      }
+    }
+    
+    var currentCard = document.getElementById('bvStep' + step);
+    if (currentCard) {
+      currentCard.style.display = 'block';
+      currentCard.classList.add('active');
+    }
+  },
+
+  // Preview
+  showPreview: function() {
+    if (!this.selections.sauce) { 
+      alert('Pick a sauce (or "Keep It Pure")! 🌊'); 
+      return; 
+    }
+    
+    var parts = [this.optionLabels[this.selections.base]];
+    for (var i = 0; i < this.selections.fillings.length; i++) {
+      parts.push(this.optionLabels[this.selections.fillings[i]]);
+    }
+    for (var i = 0; i < this.selections.toppings.length; i++) {
+      parts.push(this.optionLabels[this.selections.toppings[i]]);
+    }
+    if (this.selections.sauce !== 'no-sauce') {
+      parts.push(this.optionLabels[this.selections.sauce]);
+    }
+    
+    var clean = [];
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i]) clean.push(parts[i]);
+    }
+    
+    document.getElementById('bvPreviewText').textContent = clean.join(' + ');
+    
+    var fillTxt = this.selections.fillings.length > 0 ? 
+      this.selections.fillings.map(function(f){ return this.optionLabels[f]; }, this).join(', ') : 'None';
+    var topTxt = this.selections.toppings.map(function(t){ return this.optionLabels[t]; }, this).join(', ');
+    var sauceTxt = this.selections.sauce !== 'no-sauce' ? 
+      this.optionLabels[this.selections.sauce] : 'None';
+    
+    document.getElementById('bvSummary').textContent = 
+      'Base: ' + this.optionLabels[this.selections.base] + 
+      ' | Fillings: ' + fillTxt + 
+      ' | Toppings: ' + topTxt + 
+      ' | Sauce: ' + sauceTxt;
+    
+    for (var i = 0; i < 4; i++) { 
+      var card = document.getElementById('bvStep' + i); 
+      if (card) {
+        card.style.display = 'none';
+        card.classList.remove('active');
+      }
+    }
+    
+    var previewCard = document.getElementById('bvPreview');
+    if (previewCard) {
+      previewCard.style.display = 'block';
+      previewCard.classList.add('active');
+    }
+  },
+
+  // AI Image Generation (Pollinations.ai - FREE)
+  generate: function() {
+    var btn = document.getElementById('bvGenBtn');
+    var loading = document.getElementById('bvLoading');
+    var result = document.getElementById('bvResult');
+    var resultImg = document.getElementById('bvResultImg');
+    
+    btn.disabled = true;
+    loading.style.display = 'block';
+    loading.classList.add('active');
+    result.style.display = 'none';
+    result.classList.remove('active');
+    
+    var baseName = this.optionLabels[this.selections.base];
+    var fillTxt = this.selections.fillings.length > 0 ? 
+      'filled with ' + this.selections.fillings.map(function(f){ return this.optionLabels[f]; }, this).join(' and ') : '';
+    var topTxt = this.selections.toppings.length > 0 ? 
+      'topped with ' + this.selections.toppings.map(function(t){ return this.optionLabels[t]; }, this).join(', ') : '';
+    var sauceTxt = this.selections.sauce !== 'no-sauce' ? 
+      'drizzled with ' + this.optionLabels[this.selections.sauce] : '';
+    
+    var prompt = 'Professional food photography of a luxurious artisan brownie, ' + 
+      baseName + ' brownie base, ' + fillTxt + ', ' + topTxt + ', ' + sauceTxt + 
+      ', gourmet dessert, Moroccan pastry, warm lighting, studio quality, mouthwatering, chocolate dripping, high detail, 4k, appetizing';
+    prompt = prompt.replace(/,\s*,/g, ',').replace(/,\s*$/, '').replace(/^\s*,/, '');
+    
+    var encoded = encodeURIComponent(prompt);
+    var seed = Math.floor(Math.random() * 10000);
+    var imageUrl = 'https://image.pollinations.ai/prompt/' + encoded + 
+      '?width=600&height=600&nologo=true&seed=' + seed + '&model=flux';
+    
+    var img = new Image();
+    var self = this;
+    
+    img.onload = function() {
+      resultImg.src = imageUrl;
+      var specialName = 'Dream';
+      if (self.selections.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
+      else if (self.selections.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
+      else if (self.selections.toppings.indexOf('bacon') !== -1) specialName = 'Salty Pirate';
+      
+      document.getElementById('bvResultName').textContent = 
+        'The ' + baseName.split(' ')[0] + ' ' + specialName;
+      
+      loading.style.display = 'none';
+      loading.classList.remove('active');
+      result.style.display = 'block';
+      result.classList.add('active');
+      btn.disabled = false;
+      result.scrollIntoView({ behavior: 'smooth' });
+    };
+    
+    img.onerror = function() {
+      alert('Oops! AI is busy. Please try again! ');
+      loading.style.display = 'none';
+      loading.classList.remove('active');
+      btn.disabled = false;
+    };
+    
+    img.src = imageUrl;
+  },
+
+  // Reset Game
+  reset: function() {
+    this.selections = { base: null, fillings: [], toppings: [], sauce: null };
+    
+    var opts = document.querySelectorAll('.game-option');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].classList.remove('selected');
+      opts[i].style.borderColor = 'transparent';
+      opts[i].style.background = '#FFF8F0';
+    }
+    
+    var cards = document.querySelectorAll('.game-card, #bvPreview, #bvLoading, #bvResult');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].style.display = 'none';
+      cards[i].classList.remove('active');
+    }
+    
+    var gate = document.getElementById('bvGate');
+    if (gate) {
+      gate.style.display = 'block';
+      gate.classList.add('active');
+    }
+    
+    var gameUI = document.getElementById('bvGameUI');
+    if (gameUI) {
+      gameUI.style.display = 'none';
+    }
+    
+    var step0 = document.getElementById('bvStep0');
+    if (step0) {
+      step0.style.display = 'block';
+      step0.classList.add('active');
+    }
+    
+    var dots = document.querySelectorAll('.step-dot');
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].style.background = i === 0 ? '#FF7043' : '#ddd';
+    }
+  }
 };
 
 // Open Game Modal
 function openBrownieGame() {
   var modal = document.getElementById('brownieGameModal');
   var content = document.getElementById('brownieGameContent');
-  if (!modal || !content) return;
+  if (!modal || !content) {
+    console.error('Game modal or content not found!');
+    return;
+  }
   
   modal.style.display = 'block';
-  bvGame.open = true;
+  window.bvGame.open = true;
   content.innerHTML = getGameHTML();
   document.body.style.overflow = 'hidden';
   
@@ -1103,6 +1380,8 @@ function openBrownieGame() {
     style.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-5px)}20%,40%,60%,80%{transform:translateX(5px)}}';
     document.head.appendChild(style);
   }
+  
+  console.log('Game opened successfully!');
 }
 
 // Close Game Modal
@@ -1111,8 +1390,11 @@ function closeBrownieGame() {
   if (modal) {
     modal.style.display = 'none';
   }
-  bvGame.open = false;
+  if (window.bvGame) {
+    window.bvGame.open = false;
+  }
   document.body.style.overflow = '';
+  console.log('Game closed');
 }
 
 // Generate Game HTML
@@ -1124,7 +1406,7 @@ function getGameHTML() {
       <p style="color:#666;margin:15px 0;">Enter your credentials to unlock the Brownie Customization Game</p>
       <input type="email" id="bvEmail" placeholder="Your waitlist email" style="width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:10px;">
       <input type="text" id="bvCode" placeholder="Private access code" style="width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:10px;">
-      <button class="game-btn" onclick="bvGame.checkAccess()" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;">Set Sail! ⚓</button>
+      <button class="game-btn" onclick="window.bvGame.checkAccess()" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">Set Sail! ⚓</button>
       <p id="bvError" style="color:#FF7043;font-weight:500;margin-top:10px;display:none;">❌ Invalid credentials</p>
       <p style="margin-top:20px;font-size:14px;color:#666;">Not a member? <a href="https://forms.gle/XsuFgEPq72zxBBLbA" style="color:#FF7043;font-weight:600;">Join the waitlist</a></p>
     </div>
@@ -1134,79 +1416,79 @@ function getGameHTML() {
         <p class="slogan" style="color:#FF7043;font-style:italic;font-weight:600;">"In BrownieVerse, you crave it, we make it."</p>
       </div>
       <div class="game-steps" style="display:flex;justify-content:center;gap:8px;margin:20px 0;">
-        <div class="step-dot active" id="bvDot0" style="width:12px;height:12px;border-radius:50%;background:#FF7043;"></div>
-        <div class="step-dot" id="bvDot1" style="width:12px;height:12px;border-radius:50%;background:#ddd;"></div>
-        <div class="step-dot" id="bvDot2" style="width:12px;height:12px;border-radius:50%;background:#ddd;"></div>
-        <div class="step-dot" id="bvDot3" style="width:12px;height:12px;border-radius:50%;background:#ddd;"></div>
+        <div class="step-dot active" id="bvDot0" style="width:12px;height:12px;border-radius:50%;background:#FF7043;transition:background 0.3s;"></div>
+        <div class="step-dot" id="bvDot1" style="width:12px;height:12px;border-radius:50%;background:#ddd;transition:background 0.3s;"></div>
+        <div class="step-dot" id="bvDot2" style="width:12px;height:12px;border-radius:50%;background:#ddd;transition:background 0.3s;"></div>
+        <div class="step-dot" id="bvDot3" style="width:12px;height:12px;border-radius:50%;background:#ddd;transition:background 0.3s;"></div>
       </div>
       <div id="bvStep0" class="game-card active" style="background:white;border-radius:20px;padding:25px;margin:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:block;">
         <h3 style="color:#5D4037;margin:0 0 15px 0;font-size:1.3rem;">🍫 Choose Your Base</h3>
         <div class="game-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
-          <div class="game-option" data-value="classic-fudge" onclick="bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍫</span>Classic Fudge</div>
-          <div class="game-option" data-value="kaab-ghezal" onclick="bvGame.select('base',this)"><span class="emoji">🌙</span>Kaab Ghezal</div>
-          <div class="game-option" data-value="oreo" onclick="bvGame.select('base',this)"><span class="emoji">🍪</span>Oreo Crunch</div>
-          <div class="game-option" data-value="choco-dubai" onclick="bvGame.select('base',this)"><span class="emoji">🌿</span>Choco-Dubai</div>
-          <div class="game-option" data-value="midnight-espresso" onclick="bvGame.select('base',this)"><span class="emoji">☕</span>Midnight Espresso</div>
-          <div class="game-option" data-value="red-velvet" onclick="bvGame.select('base',this)"><span class="emoji">❤️</span>Red Velvet</div>
+          <div class="game-option" data-value="classic-fudge" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍫</span>Classic Fudge</div>
+          <div class="game-option" data-value="kaab-ghezal" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🌙</span>Kaab Ghezal</div>
+          <div class="game-option" data-value="oreo" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍪</span>Oreo Crunch</div>
+          <div class="game-option" data-value="choco-dubai" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🌿</span>Choco-Dubai</div>
+          <div class="game-option" data-value="midnight-espresso" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">☕</span>Midnight Espresso</div>
+          <div class="game-option" data-value="red-velvet" onclick="window.bvGame.select('base',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">❤️</span>Red Velvet</div>
         </div>
-        <div style="text-align:center;margin-top:20px;"><button class="game-btn" onclick="bvGame.next(1)">Next →</button></div>
+        <div style="text-align:center;margin-top:20px;"><button class="game-btn" onclick="window.bvGame.next(1)" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">Next →</button></div>
       </div>
-      <div id="bvStep1" class="game-card" style="display:none;">
+      <div id="bvStep1" class="game-card" style="display:none;background:white;border-radius:20px;padding:25px;margin:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
         <h3>🌀 Add Fillings (Pick 1-2)</h3>
-        <div class="game-options">
-          <div class="game-option" data-value="salted-caramel" onclick="bvGame.toggle('filling',this)"><span class="emoji">🧂</span>Salted Caramel</div>
-          <div class="game-option" data-value="pistachio-cream" onclick="bvGame.toggle('filling',this)"><span class="emoji">💚</span>Pistachio Cream</div>
-          <div class="game-option" data-value="white-chocolate" onclick="bvGame.toggle('filling',this)"><span class="emoji">⚪</span>White Choco</div>
-          <div class="game-option" data-value="peanut-butter" onclick="bvGame.toggle('filling',this)"><span class="emoji">🥜</span>Peanut Butter</div>
-          <div class="game-option" data-value="raspberry-swirl" onclick="bvGame.toggle('filling',this)"><span class="emoji">🍓</span>Raspberry</div>
-          <div class="game-option" data-value="speculoos" onclick="bvGame.toggle('filling',this)"><span class="emoji">🍪</span>Speculoos</div>
-          <div class="game-option" data-value="chili-dark" onclick="bvGame.toggle('filling',this)"><span class="emoji">🌶️</span>Chili Dark 🔥</div>
-          <div class="game-option" data-value="matcha" onclick="bvGame.toggle('filling',this)"><span class="emoji">🍵</span>Matcha</div>
+        <div class="game-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+          <div class="game-option" data-value="salted-caramel" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🧂</span>Salted Caramel</div>
+          <div class="game-option" data-value="pistachio-cream" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">💚</span>Pistachio Cream</div>
+          <div class="game-option" data-value="white-chocolate" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">⚪</span>White Choco</div>
+          <div class="game-option" data-value="peanut-butter" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🥜</span>Peanut Butter</div>
+          <div class="game-option" data-value="raspberry-swirl" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍓</span>Raspberry</div>
+          <div class="game-option" data-value="speculoos" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍪</span>Speculoos</div>
+          <div class="game-option" data-value="chili-dark" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🌶️</span>Chili Dark 🔥</div>
+          <div class="game-option" data-value="matcha" onclick="window.bvGame.toggle('filling',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍵</span>Matcha</div>
         </div>
         <div style="text-align:center;margin-top:20px;display:flex;gap:10px;justify-content:center;">
-          <button class="game-btn secondary" onclick="bvGame.prev(0)" style="background:#eee;color:#2E1B1B;">← Back</button>
-          <button class="game-btn" onclick="bvGame.next(2)">Next →</button>
+          <button class="game-btn secondary" onclick="window.bvGame.prev(0)" style="background:#eee;color:#2E1B1B;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;">← Back</button>
+          <button class="game-btn" onclick="window.bvGame.next(2)" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">Next →</button>
         </div>
       </div>
-      <div id="bvStep2" class="game-card" style="display:none;">
+      <div id="bvStep2" class="game-card" style="display:none;background:white;border-radius:20px;padding:25px;margin:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
         <h3>✨ Pile On Toppings (Pick 1-3)</h3>
-        <div class="game-options">
-          <div class="game-option" data-value="gold-flakes" onclick="bvGame.toggle('topping',this)"><span class="emoji">✨</span>Gold Flakes</div>
-          <div class="game-option" data-value="marshmallow" onclick="bvGame.toggle('topping',this)"><span class="emoji">☁️</span>Marshmallows</div>
-          <div class="game-option" data-value="oreo-crumbles" onclick="bvGame.toggle('topping',this)"><span class="emoji">🍪</span>Oreo Crumbles</div>
-          <div class="game-option" data-value="pistachio-dust" onclick="bvGame.toggle('topping',this)"><span class="emoji">💚</span>Pistachio Dust</div>
-          <div class="game-option" data-value="sea-salt" onclick="bvGame.toggle('topping',this)"><span class="emoji">🧂</span>Sea Salt</div>
-          <div class="game-option" data-value="brownie-bits" onclick="bvGame.toggle('topping',this)"><span class="emoji">🍫</span>Brownie Bits</div>
-          <div class="game-option" data-value="cotton-candy" onclick="bvGame.toggle('topping',this)"><span class="emoji">🍭</span>Cotton Candy</div>
-          <div class="game-option" data-value="bacon" onclick="bvGame.toggle('topping',this)"><span class="emoji">🥓</span>Crispy Bacon</div>
+        <div class="game-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+          <div class="game-option" data-value="gold-flakes" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">✨</span>Gold Flakes</div>
+          <div class="game-option" data-value="marshmallow" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">☁️</span>Marshmallows</div>
+          <div class="game-option" data-value="oreo-crumbles" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍪</span>Oreo Crumbles</div>
+          <div class="game-option" data-value="pistachio-dust" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">💚</span>Pistachio Dust</div>
+          <div class="game-option" data-value="sea-salt" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🧂</span>Sea Salt</div>
+          <div class="game-option" data-value="brownie-bits" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍫</span>Brownie Bits</div>
+          <div class="game-option" data-value="cotton-candy" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍭</span>Cotton Candy</div>
+          <div class="game-option" data-value="bacon" onclick="window.bvGame.toggle('topping',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🥓</span>Crispy Bacon</div>
         </div>
         <div style="text-align:center;margin-top:20px;display:flex;gap:10px;justify-content:center;">
-          <button class="game-btn secondary" onclick="bvGame.prev(1)">← Back</button>
-          <button class="game-btn" onclick="bvGame.next(3)">Next →</button>
+          <button class="game-btn secondary" onclick="window.bvGame.prev(1)" style="background:#eee;color:#2E1B1B;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;">← Back</button>
+          <button class="game-btn" onclick="window.bvGame.next(3)" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">Next →</button>
         </div>
       </div>
-      <div id="bvStep3" class="game-card" style="display:none;">
+      <div id="bvStep3" class="game-card" style="display:none;background:white;border-radius:20px;padding:25px;margin:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
         <h3>🌊 Drizzle Your Sauce (Pick 1)</h3>
-        <div class="game-options">
-          <div class="game-option" data-value="dark-chocolate" onclick="bvGame.select('sauce',this)"><span class="emoji">🍫</span>Dark Choco</div>
-          <div class="game-option" data-value="caramel" onclick="bvGame.select('sauce',this)"><span class="emoji">🍯</span>Sea Salt Caramel</div>
-          <div class="game-option" data-value="white-choc" onclick="bvGame.select('sauce',this)"><span class="emoji">⚪</span>White Choco</div>
-          <div class="game-option" data-value="pistachio" onclick="bvGame.select('sauce',this)"><span class="emoji">💚</span>Pistachio Cream</div>
-          <div class="game-option" data-value="berry-reduction" onclick="bvGame.select('sauce',this)"><span class="emoji">🍓</span>Berry Reduction</div>
-          <div class="game-option" data-value="no-sauce" onclick="bvGame.select('sauce',this)"><span class="emoji">❌</span>Keep It Pure</div>
+        <div class="game-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+          <div class="game-option" data-value="dark-chocolate" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍫</span>Dark Choco</div>
+          <div class="game-option" data-value="caramel" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍯</span>Sea Salt Caramel</div>
+          <div class="game-option" data-value="white-choc" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">⚪</span>White Choco</div>
+          <div class="game-option" data-value="pistachio" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">💚</span>Pistachio Cream</div>
+          <div class="game-option" data-value="berry-reduction" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">🍓</span>Berry Reduction</div>
+          <div class="game-option" data-value="no-sauce" onclick="window.bvGame.select('sauce',this)" style="background:#FFF8F0;border:2px solid transparent;border-radius:15px;padding:15px 10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:14px;"><span class="emoji" style="font-size:24px;display:block;margin-bottom:5px;">❌</span>Keep It Pure</div>
         </div>
         <div style="text-align:center;margin-top:20px;display:flex;gap:10px;justify-content:center;">
-          <button class="game-btn secondary" onclick="bvGame.prev(2)">← Back</button>
-          <button class="game-btn" onclick="bvGame.showPreview()">Generate! 🎨</button>
+          <button class="game-btn secondary" onclick="window.bvGame.prev(2)" style="background:#eee;color:#2E1B1B;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;">← Back</button>
+          <button class="game-btn" onclick="window.bvGame.showPreview()" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">Generate! 🎨</button>
         </div>
       </div>
-      <div id="bvPreview" class="game-card" style="display:none;text-align:center;">
+      <div id="bvPreview" class="game-card" style="display:none;text-align:center;background:white;border-radius:20px;padding:25px;margin:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
         <h3>👀 Your Creation</h3>
         <div class="brownie-display" id="bvDisplay" style="width:200px;height:200px;margin:0 auto 20px;background:linear-gradient(145deg,#3E2723,#5D4037);border-radius:20px;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;position:relative;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,0.3);"><span id="bvPreviewText">Your brownie...</span></div>
         <p id="bvSummary" style="margin:15px 0;color:#666;font-size:14px;"></p>
-        <button class="game-btn" id="bvGenBtn" onclick="bvGame.generate()">✨ Generate AI Image ✨</button>
-        <div class="game-disclaimer" style="background:#FFF3E0;border-left:4px solid #FF7043;padding:15px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;">⚠️ <strong>Pirate Disclaimer:</strong> We support your creativity… but if you mix chili, marshmallow, and tuna—you're on your own, captain. 🏴‍☠️</div>
-        <div style="text-align:center;margin-top:15px;"><button class="game-btn secondary" onclick="bvGame.reset()">← Start Over</button></div>
+        <button class="game-btn" id="bvGenBtn" onclick="window.bvGame.generate()" style="background:linear-gradient(135deg,#FF7043,#FF5722);color:white;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;box-shadow:0 4px 15px rgba(255,87,34,0.4);">✨ Generate AI Image ✨</button>
+        <div class="game-disclaimer" style="background:#FFF3E0;border-left:4px solid #FF7043;padding:15px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;">⚠️ <strong>Pirate Disclaimer:</strong> We support your creativity… but if you mix chili, marshmallow, and tuna—you're on your own, captain. 🏴‍️</div>
+        <div style="text-align:center;margin-top:15px;"><button class="game-btn secondary" onclick="window.bvGame.reset()" style="background:#eee;color:#2E1B1B;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;">← Start Over</button></div>
       </div>
       <div id="bvLoading" class="game-loading" style="display:none;text-align:center;padding:30px;">
         <div class="spinner" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #FF7043;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px;"></div>
@@ -1221,163 +1503,25 @@ function getGameHTML() {
           <p>For just <strong>49 DH</strong>, your dream brownie could be delivered!</p>
           <a href="https://brownieverse.github.io/Order-Now/" style="display:inline-block;background:#FFD54F;color:#3E2723;padding:12px 30px;border-radius:50px;text-decoration:none;font-weight:700;margin-top:15px;">🔔 Return to Site</a>
         </div>
-        <button class="game-btn secondary" onclick="bvGame.reset()" style="margin-top:15px;">🔄 Build Another</button>
+        <button class="game-btn secondary" onclick="window.bvGame.reset()" style="background:#eee;color:#2E1B1B;border:none;padding:14px 30px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 5px;margin-top:15px;">🔄 Build Another</button>
       </div>
     </div>
   `;
 }
 
-// Check Access Credentials
-bvGame.checkAccess = function() {
-  var email = document.getElementById('bvEmail').value.trim().toLowerCase();
-  var code = document.getElementById('bvCode').value.trim().toUpperCase();
-  var error = document.getElementById('bvError');
-  var valid = false;
-  for (var i = 0; i < bvGame.validCreds.length; i++) {
-    if (bvGame.validCreds[i].email === email && bvGame.validCreds[i].code.toUpperCase() === code) { valid = true; break; }
-  }
-  if (valid) {
-    document.getElementById('bvGate').style.display = 'none';
-    document.getElementById('bvGameUI').style.display = 'block';
-    error.style.display = 'none';
-  } else {
-    error.style.display = 'block';
-    var gate = document.getElementById('bvGate');
-    gate.style.animation = 'none';
-    setTimeout(function() { gate.style.animation = 'shake 0.5s'; }, 10);
-  }
-};
-
-// Selection Logic
-bvGame.select = function(cat, el) {
-  var sibs = el.parentElement.querySelectorAll('.game-option');
-  for (var i = 0; i < sibs.length; i++) sibs[i].classList.remove('selected');
-  el.classList.add('selected');
-  bvGame.selections[cat] = el.dataset.value;
-};
-
-bvGame.toggle = function(cat, el) {
-  var arr = bvGame.selections[cat + 's'] || bvGame.selections[cat];
-  var val = el.dataset.value;
-  var max = cat === 'filling' ? 2 : 3;
-  if (el.classList.contains('selected')) {
-    el.classList.remove('selected');
-    var newArr = [];
-    for (var i = 0; i < arr.length; i++) if (arr[i] !== val) newArr.push(arr[i]);
-    bvGame.selections[cat + 's'] = newArr;
-  } else {
-    if (arr.length >= max) return;
-    el.classList.add('selected');
-    var newArr = arr.slice();
-    newArr.push(val);
-    bvGame.selections[cat + 's'] = newArr;
-  }
-};
-
-// Navigation
-bvGame.next = function(step) {
-  if (step === 1 && !bvGame.selections.base) { alert('Pick a base first! 🍫'); return; }
-  if (step === 2 && bvGame.selections.fillings.length === 0) { alert('Add at least 1 filling! 🌀'); return; }
-  if (step === 3 && bvGame.selections.toppings.length === 0) { alert('Add at least 1 topping! ✨'); return; }
-  for (var i = 0; i < 4; i++) {
-    var card = document.getElementById('bvStep' + i);
-    if (card) card.classList.remove('active');
-    var dot = document.getElementById('bvDot' + i);
-    if (dot) dot.classList.toggle('active', i <= step);
-  }
-  document.getElementById('bvStep' + step).classList.add('active');
-};
-
-bvGame.prev = function(step) {
-  for (var i = 0; i < 4; i++) {
-    var card = document.getElementById('bvStep' + i);
-    if (card) card.classList.remove('active');
-    var dot = document.getElementById('bvDot' + i);
-    if (dot) dot.classList.toggle('active', i <= step);
-  }
-  document.getElementById('bvStep' + step).classList.add('active');
-};
-
-// Preview
-bvGame.showPreview = function() {
-  if (!bvGame.selections.sauce) { alert('Pick a sauce (or "Keep It Pure")! 🌊'); return; }
-  var parts = [bvGame.optionLabels[bvGame.selections.base]];
-  for (var i = 0; i < bvGame.selections.fillings.length; i++) parts.push(bvGame.optionLabels[bvGame.selections.fillings[i]]);
-  for (var i = 0; i < bvGame.selections.toppings.length; i++) parts.push(bvGame.optionLabels[bvGame.selections.toppings[i]]);
-  if (bvGame.selections.sauce !== 'no-sauce') parts.push(bvGame.optionLabels[bvGame.selections.sauce]);
-  var clean = [];
-  for (var i = 0; i < parts.length; i++) if (parts[i]) clean.push(parts[i]);
-  document.getElementById('bvPreviewText').textContent = clean.join(' + ');
-  var fillTxt = bvGame.selections.fillings.length > 0 ? bvGame.selections.fillings.map(function(f){return bvGame.optionLabels[f];}).join(', ') : 'None';
-  var topTxt = bvGame.selections.toppings.map(function(t){return bvGame.optionLabels[t];}).join(', ');
-  var sauceTxt = bvGame.selections.sauce !== 'no-sauce' ? bvGame.optionLabels[bvGame.selections.sauce] : 'None';
-  document.getElementById('bvSummary').textContent = 'Base: ' + bvGame.optionLabels[bvGame.selections.base] + ' | Fillings: ' + fillTxt + ' | Toppings: ' + topTxt + ' | Sauce: ' + sauceTxt;
-  for (var i = 0; i < 4; i++) { var card = document.getElementById('bvStep' + i); if (card) card.classList.remove('active'); }
-  document.getElementById('bvPreview').classList.add('active');
-};
-
-// AI Image Generation (Pollinations.ai - FREE)
-bvGame.generate = function() {
-  var btn = document.getElementById('bvGenBtn');
-  var loading = document.getElementById('bvLoading');
-  var result = document.getElementById('bvResult');
-  var resultImg = document.getElementById('bvResultImg');
-  btn.disabled = true;
-  loading.classList.add('active');
-  result.classList.remove('active');
-  var baseName = bvGame.optionLabels[bvGame.selections.base];
-  var fillTxt = bvGame.selections.fillings.length > 0 ? 'filled with ' + bvGame.selections.fillings.map(function(f){return bvGame.optionLabels[f];}).join(' and ') : '';
-  var topTxt = bvGame.selections.toppings.length > 0 ? 'topped with ' + bvGame.selections.toppings.map(function(t){return bvGame.optionLabels[t];}).join(', ') : '';
-  var sauceTxt = bvGame.selections.sauce !== 'no-sauce' ? 'drizzled with ' + bvGame.optionLabels[bvGame.selections.sauce] : '';
-  var prompt = 'Professional food photography of a luxurious artisan brownie, ' + baseName + ' brownie base, ' + fillTxt + ', ' + topTxt + ', ' + sauceTxt + ', gourmet dessert, Moroccan pastry, warm lighting, studio quality, mouthwatering, chocolate dripping, high detail, 4k, appetizing';
-  prompt = prompt.replace(/,\s*,/g, ',').replace(/,\s*$/, '').replace(/^\s*,/, '');
-  var encoded = encodeURIComponent(prompt);
-  var seed = Math.floor(Math.random() * 10000);
-  var imageUrl = 'https://image.pollinations.ai/prompt/' + encoded + '?width=600&height=600&nologo=true&seed=' + seed + '&model=flux';
-  var img = new Image();
-  img.onload = function() {
-    resultImg.src = imageUrl;
-    var specialName = 'Dream';
-    if (bvGame.selections.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
-    else if (bvGame.selections.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
-    else if (bvGame.selections.toppings.indexOf('bacon') !== -1) specialName = 'Salty Pirate';
-    document.getElementById('bvResultName').textContent = 'The ' + baseName.split(' ')[0] + ' ' + specialName;
-    loading.classList.remove('active');
-    result.classList.add('active');
-    btn.disabled = false;
-    result.scrollIntoView({ behavior: 'smooth' });
-  };
-  img.onerror = function() {
-    alert('Oops! AI is busy. Please try again! ');
-    loading.classList.remove('active');
-    btn.disabled = false;
-  };
-  img.src = imageUrl;
-};
-
-// Reset Game
-bvGame.reset = function() {
-  bvGame.selections = { base: null, fillings: [], toppings: [], sauce: null };
-  var opts = document.querySelectorAll('.game-option');
-  for (var i = 0; i < opts.length; i++) opts[i].classList.remove('selected');
-  var cards = document.querySelectorAll('.game-card, #bvPreview, #bvLoading, #bvResult');
-  for (var i = 0; i < cards.length; i++) cards[i].classList.remove('active');
-  document.getElementById('bvGate').style.display = 'block';
-  document.getElementById('bvGameUI').style.display = 'none';
-  document.getElementById('bvStep0').classList.add('active');
-  var dots = document.querySelectorAll('.step-dot');
-  for (var i = 0; i < dots.length; i++) dots[i].classList.toggle('active', i === 0);
-};
-
 // Close modal on outside click
 document.addEventListener('click', function(e) {
   var modal = document.getElementById('brownieGameModal');
-  if (e.target === modal && bvGame.open) closeBrownieGame();
+  if (e.target === modal && window.bvGame && window.bvGame.open) {
+    closeBrownieGame();
+  }
 });
 
 // Close on Escape key
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && bvGame.open) closeBrownieGame();
+  if (e.key === 'Escape' && window.bvGame && window.bvGame.open) {
+    closeBrownieGame();
+  }
 });
 
 // =============================================
