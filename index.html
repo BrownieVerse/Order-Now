@@ -688,6 +688,155 @@
 
 <!-- 🎨 Game CSS (Only loads when needed) -->
 <style id="gameStyles">
+  /* 🖥️ DESKTOP ENHANCEMENTS - Buttons & Layout */
+@media (min-width: 769px) {
+  
+  /* Main CTA Buttons - Compact & Fitted */
+  .hero-cta-button,
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    white-space: nowrap !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  /* Primary Button (L9a Nekha Lighat3jbk) */
+  .btn-primary,
+  button[style*="background:#D4A574"],
+  .gold-button {
+    background: linear-gradient(135deg, #D4A574, #C99569) !important;
+    color: #2E1B1B !important;
+    border: 2px solid transparent !important;
+    box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3) !important;
+  }
+  
+  .btn-primary:hover,
+  button[style*="background:#D4A574"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4) !important;
+    background: linear-gradient(135deg, #C99569, #B88559) !important;
+  }
+  
+  /* Secondary Button (Khtar mn l Menu dyalna) */
+  .btn-secondary,
+  button[style*="background:transparent"],
+  .outline-button {
+    background: transparent !important;
+    color: #5D4037 !important;
+    border: 2px solid #D4A574 !important;
+    box-shadow: 0 2px 10px rgba(93, 64, 55, 0.1) !important;
+  }
+  
+  .btn-secondary:hover,
+  button[style*="background:transparent"]:hover {
+    background: rgba(212, 165, 116, 0.1) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(93, 64, 55, 0.15) !important;
+  }
+  
+  /* Orange CTA Button (Khtar3(i) L Brownie) */
+  .orange-cta,
+  button[style*="background:#FF6B35"],
+  .pirate-button {
+    background: linear-gradient(135deg, #FF6B35, #F15A29) !important;
+    color: white !important;
+    border: 2px solid transparent !important;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4) !important;
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+  }
+  
+  .orange-cta:hover,
+  button[style*="background:#FF6B35"]:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5) !important;
+  }
+  
+  /* Top Navigation Buttons */
+  .nav-button,
+  header button {
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Commandi db! Button */
+  .commandi-btn,
+  button[style*="background:#D4A574"] {
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+  
+  /* Hero Section Button Container - Better Spacing */
+  .hero-buttons,
+  .cta-container,
+  div[style*="display:flex"] {
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  /* Card Buttons (if any) */
+  .card-button,
+  .product-card button {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Icon + Text Alignment */
+  button span,
+  .btn-icon-text {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  
+  /* Reduce excessive width on buttons */
+  button[style*="width:100%"],
+  .full-width-button {
+    max-width: 280px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Fine-tune specific button sizes */
+  button:has(span),
+  .button-with-icon {
+    padding: 12px 20px !important;
+  }
+  
+  /* Ensure buttons don't overflow containers */
+  .button-container,
+  .action-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+/* 📱 MOBILE - Keep Original (No Changes) */
+@media (max-width: 768px) {
+  /* All mobile styles remain untouched */
+  /* Your existing mobile CSS will continue to work */
+}
+
+/* 🎨 Color Variables (for reference) */
+:root {
+  --brown-dark: #2E1B1B;
+  --brown-primary: #5D4037;
+  --brown-light: #8D6E63;
+  --gold: #D4A574;
+  --gold-light: #E6B88A;
+  --cream: #FFF8F0;
+  --orange: #FF6B35;
+  --orange-dark: #F15A29;
+}
   /* Reuse your existing CSS variables if defined, or define locally */
   .game-container { font-family: 'Segoe UI', system-ui, sans-serif; color: #2E1B1B; }
   .game-header { text-align: center; padding: 20px; background: linear-gradient(135deg, #FFF8F0, #FFE0B2); border-radius: 20px 20px 0 0; }
@@ -786,7 +935,7 @@
     
     validCreds: [
       { email: 'abdohaoudi2004@gmail.com', code: 'PIRATE03' },
-      { email: 'halelg2001@gmail.com', code: 'CAPTAIN' }
+      { email: 'brownieverse.o@gmail.com', code: 'CAPTAIN' }
     ]
   };
 
@@ -949,8 +1098,8 @@
           <p style="margin:15px 0;font-weight:600;color:#5D4037;">"<span id="bvResultName">Your Custom Brownie</span>"</p>
           <div class="game-cta">
             <h3>🚀 Coming Soon: Order This IRL!</h3>
-            <p>For just <strong>49 DH</strong>, your dream brownie could be delivered. Join the waitlist!</p>
-            <a href="https://brownieverse.github.io/Order-Now/">🔔 Notify Me</a>
+            <p>For just <strong>49 DH</strong>, your dream brownie could be delivered!</p>
+            <a href="https://brownieverse.github.io/Order-Now/">🔔 Return to Site</a>
           </div>
           <button class="game-btn secondary" onclick="bvGame.reset()" style="margin-top:15px;">🔄 Build Another</button>
         </div>
