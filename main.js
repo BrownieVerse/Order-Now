@@ -1096,8 +1096,7 @@ function closeBrownieGame() {
 
 // Generate Game HTML with BETTER button styling
 function getGameHTML() {
-  return `
-    <style>
+  return `<style>
       .game-option-btn {
         display: block;
         padding: 15px;
