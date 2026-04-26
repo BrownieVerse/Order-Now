@@ -254,6 +254,13 @@
       .brownie-preview { width: 160px; height: 160px; }
       .header h1 { font-size: 1.5rem; }
     }
+    
+    /* Shake animation for error - ADDED HERE */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
   </style>
 </head>
 <body>
@@ -451,7 +458,7 @@
         <div class="cta">
           <h3>🚀 Coming Soon: Order This IRL!</h3>
           <p>For just <strong>49 DH</strong>, your dream brownie could be delivered to your door. Join the waitlist to be first in line!</p>
-          <a href="https://brownieverse.github.io/Order-Now/" class="waitlist-btn">🔔 Notify Me When It Launches</a>
+          <a href="https://forms.gle/TLhwU5BkqbCXJSba8" class="waitlist-btn">🔔 Notify Me When It Launches</a>
         </div>
         
         <button class="nav-btn next" onclick="resetGame()" style="background:#eee;color:var(--text);margin-top:15px;">
@@ -464,19 +471,24 @@
 
   <script>
     // 🔐 Access Control (Demo - Replace with real auth in production)
-    const VALID_CREDS = [
+    var VALID_CREDS = [
       { email: 'abdohaoudi2004@gmail.com', code: 'PIRATE03' },
       { email: 'halelg2001@gmail.com', code: 'Captain' }
-    
       // Add more Founding Pirate credentials here
     ];
 
     function checkAccess() {
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const code = document.getElementById('code').value.trim().toUpperCase();
-      const error = document.getElementById('error');
+      var email = document.getElementById('email').value.trim().toLowerCase();
+      var code = document.getElementById('code').value.trim().toUpperCase();
+      var error = document.getElementById('error');
       
-      const valid = VALID_CREDS.some(c => c.email === email && c.code === code);
+      var valid = false;
+      for (var i = 0; i < VALID_CREDS.length; i++) {
+        if (VALID_CREDS[i].email === email && VALID_CREDS[i].code === code) {
+          valid = true;
+          break;
+        }
+      }
       
       if (valid) {
         document.getElementById('gate').style.display = 'none';
@@ -485,21 +497,21 @@
       } else {
         error.style.display = 'block';
         // Shake animation for error
-        const gate = document.getElementById('gate');
+        var gate = document.getElementById('gate');
         gate.style.animation = 'none';
-        setTimeout(() => { gate.style.animation = 'shake 0.5s'; }, 10);
+        setTimeout(function() { gate.style.animation = 'shake 0.5s'; }, 10);
       }
     }
 
     // 🎮 Game State
-    const selections = {
+    var selections = {
       base: null,
       fillings: [],
       toppings: [],
       sauce: null
     };
 
-    const optionLabels = {
+    var optionLabels = {
       'classic-fudge': 'Classic Fudge',
       'kaab-ghezal': 'Kaab Ghezal',
       'oreo': 'Oreo Crunch',
@@ -533,7 +545,10 @@
     // Selection Logic
     function selectOption(category, el) {
       // Deselect siblings
-      el.parentElement.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      var siblings = el.parentElement.querySelectorAll('.option');
+      for (var i = 0; i < siblings.length; i++) {
+        siblings[i].classList.remove('selected');
+      }
       // Select clicked
       el.classList.add('selected');
       // Store value
@@ -541,17 +556,23 @@
     }
 
     function toggleOption(category, el) {
-      const arr = selections[category + 's'] || selections[category];
-      const value = el.dataset.value;
-      const max = category === 'filling' ? 2 : 3;
+      var arr = selections[category + 's'] || selections[category];
+      var value = el.dataset.value;
+      var max = category === 'filling' ? 2 : 3;
       
       if (el.classList.contains('selected')) {
         el.classList.remove('selected');
-        selections[category + 's'] = arr.filter(v => v !== value);
+        var newArr = [];
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i] !== value) newArr.push(arr[i]);
+        }
+        selections[category + 's'] = newArr;
       } else {
         if (arr.length >= max) return; // Limit selections
         el.classList.add('selected');
-        selections[category + 's'] = [...arr, value];
+        var newArr = arr.slice();
+        newArr.push(value);
+        selections[category + 's'] = newArr;
       }
     }
 
@@ -563,83 +584,128 @@
       if (step === 3 && selections.toppings.length === 0) { alert('Add at least 1 topping! ✨'); return; }
       
       // Update UI
-      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
-      document.getElementById(`step-${step}`).classList.add('active');
+      var cards = document.querySelectorAll('.selection-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('active');
+      }
+      document.getElementById('step-' + step).classList.add('active');
+      
       // Update dots
-      document.querySelectorAll('.step-dot').forEach((dot, i) => {
-        dot.classList.toggle('active', i <= step);
-      });
+      var dots = document.querySelectorAll('.step-dot');
+      for (var i = 0; i < dots.length; i++) {
+        if (i <= step) {
+          dots[i].classList.add('active');
+        } else {
+          dots[i].classList.remove('active');
+        }
+      }
     }
 
     function prevStep(step) {
-      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
-      document.getElementById(`step-${step}`).classList.add('active');
-      document.querySelectorAll('.step-dot').forEach((dot, i) => {
-        dot.classList.toggle('active', i <= step);
-      });
+      var cards = document.querySelectorAll('.selection-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('active');
+      }
+      document.getElementById('step-' + step).classList.add('active');
+      
+      var dots = document.querySelectorAll('.step-dot');
+      for (var i = 0; i < dots.length; i++) {
+        if (i <= step) {
+          dots[i].classList.add('active');
+        } else {
+          dots[i].classList.remove('active');
+        }
+      }
     }
 
     function showPreview() {
       if (!selections.sauce) { alert('Pick a sauce (or "Keep It Pure")! 🌊'); return; }
       
       // Update preview text
-      const parts = [
-        optionLabels[selections.base],
-        ...(selections.fillings.map(f => optionLabels[f])),
-        ...(selections.toppings.map(t => optionLabels[t])),
-        selections.sauce !== 'no-sauce' ? optionLabels[selections.sauce] : null
-      ].filter(Boolean);
+      var parts = [optionLabels[selections.base]];
+      for (var i = 0; i < selections.fillings.length; i++) {
+        parts.push(optionLabels[selections.fillings[i]]);
+      }
+      for (var i = 0; i < selections.toppings.length; i++) {
+        parts.push(optionLabels[selections.toppings[i]]);
+      }
+      if (selections.sauce !== 'no-sauce') {
+        parts.push(optionLabels[selections.sauce]);
+      }
+      // Filter out nulls
+      var cleanParts = [];
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i]) cleanParts.push(parts[i]);
+      }
       
-      document.getElementById('previewText').textContent = parts.join(' + ');
-      document.getElementById('selectedSummary').textContent = `Base: ${optionLabels[selections.base]} | Fillings: ${selections.fillings.map(f=>optionLabels[f]).join(', ') || 'None'} | Toppings: ${selections.toppings.map(t=>optionLabels[t]).join(', ')} | Sauce: ${selections.sauce !== 'no-sauce' ? optionLabels[selections.sauce] : 'None'}`;
+      document.getElementById('previewText').textContent = cleanParts.join(' + ');
+      
+      var fillingText = selections.fillings.length > 0 ? selections.fillings.map(function(f) { return optionLabels[f]; }).join(', ') : 'None';
+      var toppingText = selections.toppings.map(function(t) { return optionLabels[t]; }).join(', ');
+      var sauceText = selections.sauce !== 'no-sauce' ? optionLabels[selections.sauce] : 'None';
+      
+      document.getElementById('selectedSummary').textContent = 'Base: ' + optionLabels[selections.base] + ' | Fillings: ' + fillingText + ' | Toppings: ' + toppingText + ' | Sauce: ' + sauceText;
       
       // Show preview section
-      document.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
+      var cards = document.querySelectorAll('.selection-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('active');
+      }
       document.getElementById('preview').classList.add('active');
     }
 
     // 🎨 AI Image Generation (Mock for Demo)
-    async function generateImage() {
-      const btn = document.getElementById('generateBtn');
-      const loading = document.getElementById('loading');
-      const result = document.getElementById('result');
-      const resultImg = document.getElementById('resultImg');
+    function generateImage() {
+      var btn = document.getElementById('generateBtn');
+      var loading = document.getElementById('loading');
+      var result = document.getElementById('result');
+      var resultImg = document.getElementById('resultImg');
       
       btn.disabled = true;
       loading.classList.add('active');
       result.classList.remove('active');
       
       // Build prompt for AI (in real version, send to API)
-      const prompt = `A mouthwatering artisan brownie, ${selections.base} base, filled with ${selections.fillings.join(' and ')}, topped with ${selections.toppings.join(' and ')}, drizzled with ${selections.sauce === 'no-sauce' ? 'nothing' : selections.sauce}, professional food photography, warm lighting, chocolate aesthetic, Moroccan dessert style`;
+      var fillingStr = selections.fillings.join(' and ');
+      var toppingStr = selections.toppings.join(' and ');
+      var sauceStr = selections.sauce === 'no-sauce' ? 'nothing' : selections.sauce;
+      var prompt = 'A mouthwatering artisan brownie, ' + selections.base + ' base, filled with ' + fillingStr + ', topped with ' + toppingStr + ', drizzled with ' + sauceStr + ', professional food photography, warm lighting, chocolate aesthetic, Moroccan dessert style';
       
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      // Generate mock image URL (using placeholder service)
-      // In production: replace with real AI API call (Replicate, Hugging Face, etc.)
-      const colors = {
-        'classic-fudge': '3E2723',
-        'kaab-ghezal': '8D6E63',
-        'oreo': '212121',
-        'choco-dubai': '4CAF50',
-        'midnight-espresso': '1B1B1B',
-        'red-velvet': 'C62828'
-      };
-      const bgColor = colors[selections.base] || '5D4037';
-      const emoji = selections.toppings.includes('gold-flakes') ? '✨' : selections.toppings.includes('bacon') ? '🥓' : '🍫';
-      
-      // Create a fun mock image using placeholder service
-      const mockUrl = `https://placehold.co/600x400/${bgColor}/white?text=${encodeURIComponent(emoji + ' ' + optionLabels[selections.base].split(' ')[0] + ' Brownie')}&font=montserrat`;
-      
-      resultImg.src = mockUrl;
-      document.getElementById('resultName').textContent = `The ${optionLabels[selections.base]} ${selections.toppings.includes('gold-flakes') ? 'Gold Rush' : selections.fillings.includes('chili-dark') ? 'Fire Ship' : 'Dream'}`;
-      
-      loading.classList.remove('active');
-      result.classList.add('active');
-      btn.disabled = false;
-      
-      // Scroll to result
-      result.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(function() {
+        // Generate mock image URL (using placeholder service)
+        var colors = {
+          'classic-fudge': '3E2723',
+          'kaab-ghezal': '8D6E63',
+          'oreo': '212121',
+          'choco-dubai': '4CAF50',
+          'midnight-espresso': '1B1B1B',
+          'red-velvet': 'C62828'
+        };
+        var bgColor = colors[selections.base] || '5D4037';
+        var emoji = '🍫';
+        if (selections.toppings.indexOf('gold-flakes') !== -1) emoji = '✨';
+        else if (selections.toppings.indexOf('bacon') !== -1) emoji = '🥓';
+        
+        var baseName = optionLabels[selections.base].split(' ')[0];
+        var encodedText = encodeURIComponent(emoji + ' ' + baseName + ' Brownie');
+        var mockUrl = 'https://placehold.co/600x400/' + bgColor + '/white?text=' + encodedText + '&font=montserrat';
+        
+        resultImg.src = mockUrl;
+        
+        var specialName = 'Dream';
+        if (selections.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
+        else if (selections.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
+        
+        document.getElementById('resultName').textContent = 'The ' + optionLabels[selections.base] + ' ' + specialName;
+        
+        loading.classList.remove('active');
+        result.classList.add('active');
+        btn.disabled = false;
+        
+        // Scroll to result
+        result.scrollIntoView({ behavior: 'smooth' });
+      }, 2500);
     }
 
     function resetGame() {
@@ -650,25 +716,27 @@
       selections.sauce = null;
       
       // Reset UI
-      document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-      document.querySelectorAll('.selection-card, .preview, .loading, .result').forEach(el => el.classList.remove('active'));
+      var opts = document.querySelectorAll('.option');
+      for (var i = 0; i < opts.length; i++) {
+        opts[i].classList.remove('selected');
+      }
+      
+      var els = document.querySelectorAll('.selection-card, .preview, .loading, .result');
+      for (var i = 0; i < els.length; i++) {
+        els[i].classList.remove('active');
+      }
       document.getElementById('step-0').classList.add('active');
-      document.querySelectorAll('.step-dot').forEach((dot, i) => dot.classList.toggle('active', i === 0));
+      
+      var dots = document.querySelectorAll('.step-dot');
+      for (var i = 0; i < dots.length; i++) {
+        if (i === 0) dots[i].classList.add('active');
+        else dots[i].classList.remove('active');
+      }
       
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    // Add CSS animation for error shake
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-        20%, 40%, 60%, 80% { transform: translateX(5px); }
-      }
-    `;
-    document.head.appendChild(style);
+    // ✅ CSS animation for shake is now in <style> section - no JS injection needed!
   </script>
 </body>
 </html>
