@@ -637,5 +637,234 @@
   <script>
   (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="pjvFPAtE9C6OsusdhIopp";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
   </script>
+  <!-- Brownie Customization Game Section -->
+<section id="brownieGame" class="section game-section">
+  <div class="container">
+    <div class="game-header reveal">
+      <span class="eyebrow">🎨 For Founding Pirates</span>
+      <h2 class="section-title">Create Your Dream Brownie</h2>
+      <p class="section-sub">Khrej l'ibda3 w l'imagination dyalk w creer l brownie li katcheha! 🤤🫠</p>
+    </div>
+
+    <!-- Access Gate -->
+    <div id="bvGate" class="game-card reveal reveal-delay-1">
+      <div class="pirate-badge">🏴‍☠️ Founding Pirates Only</div>
+      <h3>Private Deck Access</h3>
+      <p>Dekhel l'email dyalk w l code to unlock the Brownie Customization Game</p>
+      <div class="game-form-group">
+        <input type="email" id="bvEmail" placeholder="Your waitlist email" class="game-input" />
+        <input type="text" id="bvCode" placeholder="Private access code" class="game-input" />
+      </div>
+      <button onclick="checkGameAccess()" class="btn btn-gold btn-lg">Set Sail! ⚓</button>
+      <p id="bvError" class="game-error">❌ Invalid credentials</p>
+      <p class="game-hint">Not a member? <a href="https://forms.gle/XsuFgEPq72zxBBLbA" target="_blank">Join the waitlist</a></p>
+    </div>
+
+    <!-- Game UI -->
+    <div id="bvGameUI" class="game-ui" style="display:none;">
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot0"></div>
+        <div class="step-dot" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+
+      <!-- Step 1: Base -->
+      <div class="game-step active" id="step0">
+        <h3>🍫 Choose Your Base</h3>
+        <div class="game-options-grid">
+          <div class="game-option-btn" onclick="selectBase('classic-fudge',this)">
+            <div class="option-emoji">🍫</div>
+            <div class="option-label">Classic Fudge</div>
+          </div>
+          <div class="game-option-btn" onclick="selectBase('kaab-ghezal',this)">
+            <div class="option-emoji">🌙</div>
+            <div class="option-label">Kaab Ghezal</div>
+          </div>
+          <div class="game-option-btn" onclick="selectBase('oreo',this)">
+            <div class="option-emoji">🍪</div>
+            <div class="option-label">Oreo Crunch</div>
+          </div>
+          <div class="game-option-btn" onclick="selectBase('choco-dubai',this)">
+            <div class="option-emoji">🌿</div>
+            <div class="option-label">Choco-Dubai</div>
+          </div>
+          <div class="game-option-btn" onclick="selectBase('midnight-espresso',this)">
+            <div class="option-emoji">☕</div>
+            <div class="option-label">Midnight Espresso</div>
+          </div>
+          <div class="game-option-btn" onclick="selectBase('red-velvet',this)">
+            <div class="option-emoji">❤️</div>
+            <div class="option-label">Red Velvet</div>
+          </div>
+        </div>
+        <div class="game-nav">
+          <button onclick="nextStep(1)" class="btn btn-gold">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Fillings -->
+      <div class="game-step" id="step1">
+        <h3>🌀 Add Fillings (Pick 1-2)</h3>
+        <div class="game-options-grid">
+          <div class="game-option-btn" onclick="toggleFilling('salted-caramel',this)">
+            <div class="option-emoji">🧂</div>
+            <div class="option-label">Salted Caramel</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('pistachio-cream',this)">
+            <div class="option-emoji">💚</div>
+            <div class="option-label">Pistachio Cream</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('white-chocolate',this)">
+            <div class="option-emoji">⚪</div>
+            <div class="option-label">White Choco</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('peanut-butter',this)">
+            <div class="option-emoji">🥜</div>
+            <div class="option-label">Peanut Butter</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('raspberry-swirl',this)">
+            <div class="option-emoji">🍓</div>
+            <div class="option-label">Raspberry</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('speculoos',this)">
+            <div class="option-emoji">🍪</div>
+            <div class="option-label">Speculoos</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('chili-dark',this)">
+            <div class="option-emoji">🌶️</div>
+            <div class="option-label">Chili Dark 🔥</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleFilling('matcha',this)">
+            <div class="option-emoji">🍵</div>
+            <div class="option-label">Matcha</div>
+          </div>
+        </div>
+        <div class="game-nav">
+          <button onclick="prevStep(0)" class="btn btn-outline">← Back</button>
+          <button onclick="nextStep(2)" class="btn btn-gold">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Toppings -->
+      <div class="game-step" id="step2">
+        <h3>✨ Pile On Toppings (Pick 1-3)</h3>
+        <div class="game-options-grid">
+          <div class="game-option-btn" onclick="toggleTopping('gold-flakes',this)">
+            <div class="option-emoji">✨</div>
+            <div class="option-label">Gold Flakes</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('marshmallow',this)">
+            <div class="option-emoji">☁️</div>
+            <div class="option-label">Marshmallows</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('oreo-crumbles',this)">
+            <div class="option-emoji">🍪</div>
+            <div class="option-label">Oreo Crumbles</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('pistachio-dust',this)">
+            <div class="option-emoji">💚</div>
+            <div class="option-label">Pistachio Dust</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('sea-salt',this)">
+            <div class="option-emoji">🧂</div>
+            <div class="option-label">Sea Salt</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('brownie-bits',this)">
+            <div class="option-emoji">🍫</div>
+            <div class="option-label">Brownie Bits</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('cotton-candy',this)">
+            <div class="option-emoji">🍭</div>
+            <div class="option-label">Cotton Candy</div>
+          </div>
+          <div class="game-option-btn" onclick="toggleTopping('bacon',this)">
+            <div class="option-emoji">🥓</div>
+            <div class="option-label">Crispy Bacon</div>
+          </div>
+        </div>
+        <div class="game-nav">
+          <button onclick="prevStep(1)" class="btn btn-outline">← Back</button>
+          <button onclick="nextStep(3)" class="btn btn-gold">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Sauce -->
+      <div class="game-step" id="step3">
+        <h3>🌊 Drizzle Your Sauce</h3>
+        <div class="game-options-grid">
+          <div class="game-option-btn" onclick="selectSauce('dark-chocolate',this)">
+            <div class="option-emoji">🍫</div>
+            <div class="option-label">Dark Choco</div>
+          </div>
+          <div class="game-option-btn" onclick="selectSauce('caramel',this)">
+            <div class="option-emoji">🍯</div>
+            <div class="option-label">Sea Salt Caramel</div>
+          </div>
+          <div class="game-option-btn" onclick="selectSauce('white-choc',this)">
+            <div class="option-emoji">⚪</div>
+            <div class="option-label">White Choco</div>
+          </div>
+          <div class="game-option-btn" onclick="selectSauce('pistachio',this)">
+            <div class="option-emoji">💚</div>
+            <div class="option-label">Pistachio Cream</div>
+          </div>
+          <div class="game-option-btn" onclick="selectSauce('berry-reduction',this)">
+            <div class="option-emoji">🍓</div>
+            <div class="option-label">Berry Reduction</div>
+          </div>
+          <div class="game-option-btn" onclick="selectSauce('no-sauce',this)">
+            <div class="option-emoji">❌</div>
+            <div class="option-label">Keep It Pure</div>
+          </div>
+        </div>
+        <div class="game-nav">
+          <button onclick="prevStep(2)" class="btn btn-outline">← Back</button>
+          <button onclick="showPreview()" class="btn btn-gold">Bake! 🎨</button>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="game-step" id="stepPreview">
+        <h3>👀 Your Creation</h3>
+        <div class="brownie-preview">
+          <span id="bvPreviewText">Your brownie...</span>
+        </div>
+        <p id="bvSummary" class="game-summary"></p>
+        <div class="game-nav">
+          <button onclick="generateAIImage()" class="btn btn-gold btn-lg">✨ Generate AI Image ✨</button>
+        </div>
+        <div class="game-disclaimer">
+          ⚠️ <strong>Pirate Disclaimer:</strong> We support your creativity… but if you mix chili, marshmallow, and tuna—you're on your own, captain. 🏴‍️
+        </div>
+        <div class="game-nav">
+          <button onclick="resetGame()" class="btn btn-outline">← 3aw dmn lwl</button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="game-step" id="stepLoading">
+        <div class="loading-spinner"></div>
+        <p>🎨 Your creation is baking <br><small>(Demo - real feature coming soon!)</small></p>
+      </div>
+
+      <!-- Result -->
+      <div class="game-step" id="stepResult">
+        <h3>🏆 Behold Your Creation!</h3>
+        <img id="bvResultImg" src="" alt="Your custom brownie" class="result-image" />
+        <p class="result-name">"<span id="bvResultName">Lresultas brownie Likatkhyil </span>"</p>
+        <div class="game-cta-box">
+          <h4>🚀 Coming Soon: Order This IRL!</h4>
+          <p>For just <strong>49 DH</strong>, your dream brownie could be delivered!</p>
+          <a href="#order" class="btn btn-gold">🔔 Order Now</a>
+        </div>
+        <div class="game-nav">
+          <button onclick="resetGame()" class="btn btn-outline">🔄 Build Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 </body>
 </html>
