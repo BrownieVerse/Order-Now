@@ -1062,6 +1062,337 @@ function updatePirateCount() {
 }
 
 // =============================================
+// 🏴‍️ BROWNIE CUSTOMIZATION GAME (NATIVE SECTION)
+// =============================================
+
+// Game State
+var gameData = {
+  base: null,
+  fillings: [],
+  toppings: [],
+  sauce: null,
+  currentStep: 0
+};
+
+// Check Access - works directly in section
+function checkGameAccess() {
+  var email = document.getElementById('bvEmail').value.trim().toLowerCase();
+  var code = document.getElementById('bvCode').value.trim().toUpperCase();
+  var error = document.getElementById('bvError');
+  
+  var validCreds = [
+    { email: 'abdohaoudi2004@gmail.com', code: 'PIRATE03' },
+    { email: 'brownieverse.o@gmail.com', code: 'CAPTAIN' }
+  ];
+  
+  var valid = validCreds.some(function(cred) {
+    return cred.email === email && cred.code === code;
+  });
+  
+  if (valid) {
+    document.getElementById('bvGate').style.display = 'none';
+    document.getElementById('bvGameUI').style.display = 'block';
+    error.style.display = 'none';
+    console.log('✅ Access granted!');
+    
+    // Smooth scroll to game UI
+    document.getElementById('brownieGame').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    error.style.display = 'block';
+    error.textContent = '❌ Invalid credentials. Try again!';
+    console.log('❌ Access denied');
+  }
+}
+
+// Selection Functions
+function selectBase(value, el) {
+  var allOpts = el.parentElement.querySelectorAll('.game-option-btn');
+  for (var i = 0; i < allOpts.length; i++) {
+    allOpts[i].classList.remove('selected');
+  }
+  el.classList.add('selected');
+  gameData.base = value;
+  console.log('Base selected:', value);
+}
+
+function toggleFilling(value, el) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    var idx = gameData.fillings.indexOf(value);
+    if (idx > -1) gameData.fillings.splice(idx, 1);
+  } else {
+    if (gameData.fillings.length >= 2) {
+      alert('You can only select up to 2 fillings!');
+      return;
+    }
+    el.classList.add('selected');
+    gameData.fillings.push(value);
+  }
+  console.log('Fillings:', gameData.fillings);
+}
+
+function toggleTopping(value, el) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    var idx = gameData.toppings.indexOf(value);
+    if (idx > -1) gameData.toppings.splice(idx, 1);
+  } else {
+    if (gameData.toppings.length >= 3) {
+      alert('You can only select up to 3 toppings!');
+      return;
+    }
+    el.classList.add('selected');
+    gameData.toppings.push(value);
+  }
+  console.log('Toppings:', gameData.toppings);
+}
+
+function selectSauce(value, el) {
+  var allOpts = el.parentElement.querySelectorAll('.game-option-btn');
+  for (var i = 0; i < allOpts.length; i++) {
+    allOpts[i].classList.remove('selected');
+  }
+  el.classList.add('selected');
+  gameData.sauce = value;
+  console.log('Sauce selected:', value);
+}
+
+// Navigation - works in native section
+function nextStep(stepNum) {
+  if (stepNum === 1 && !gameData.base) {
+    alert('Please select a base first! 🍫');
+    return;
+  }
+  if (stepNum === 2 && gameData.fillings.length === 0) {
+    alert('Please select at least 1 filling! 🌀');
+    return;
+  }
+  if (stepNum === 3 && gameData.toppings.length === 0) {
+    alert('Please select at least 1 topping! ✨');
+    return;
+  }
+  
+  var steps = document.querySelectorAll('.game-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  
+  var nextStepEl = document.getElementById('step' + stepNum);
+  if (nextStepEl) {
+    nextStepEl.classList.add('active');
+  }
+  
+  updateStepDots(stepNum);
+  gameData.currentStep = stepNum;
+  
+  // Smooth scroll to game section
+  document.getElementById('brownieGame').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function prevStep(stepNum) {
+  var steps = document.querySelectorAll('.game-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  
+  var prevStepEl = document.getElementById('step' + stepNum);
+  if (prevStepEl) {
+    prevStepEl.classList.add('active');
+  }
+  
+  updateStepDots(stepNum);
+  gameData.currentStep = stepNum;
+  
+  // Smooth scroll to game section
+  document.getElementById('brownieGame').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateStepDots(activeStep) {
+  for (var i = 0; i < 4; i++) {
+    var dot = document.getElementById('dot' + i);
+    if (dot) {
+      dot.classList.toggle('active', i <= activeStep);
+    }
+  }
+}
+
+function showPreview() {
+  if (!gameData.sauce) {
+    alert('Please select a sauce! 🌊');
+    return;
+  }
+  
+  var labels = {
+    'classic-fudge': 'Classic Fudge',
+    'kaab-ghezal': 'Kaab Ghezal',
+    'oreo': 'Oreo Crunch',
+    'choco-dubai': 'Choco-Dubai',
+    'midnight-espresso': 'Midnight Espresso',
+    'red-velvet': 'Red Velvet',
+    'salted-caramel': 'Salted Caramel',
+    'pistachio-cream': 'Pistachio Cream',
+    'white-chocolate': 'White Choco',
+    'peanut-butter': 'Peanut Butter',
+    'raspberry-swirl': 'Raspberry',
+    'speculoos': 'Speculoos',
+    'chili-dark': 'Chili Dark',
+    'matcha': 'Matcha',
+    'gold-flakes': 'Gold Flakes',
+    'marshmallow': 'Marshmallows',
+    'oreo-crumbles': 'Oreo Crumbles',
+    'pistachio-dust': 'Pistachio Dust',
+    'sea-salt': 'Sea Salt',
+    'brownie-bits': 'Brownie Bits',
+    'cotton-candy': 'Cotton Candy',
+    'bacon': 'Crispy Bacon',
+    'dark-chocolate': 'Dark Choco',
+    'caramel': 'Sea Salt Caramel',
+    'white-choc': 'White Choco',
+    'pistachio': 'Pistachio Cream',
+    'berry-reduction': 'Berry Reduction',
+    'no-sauce': 'No Sauce'
+  };
+  
+  var parts = [labels[gameData.base]];
+  if (gameData.fillings.length > 0) {
+    parts = parts.concat(gameData.fillings.map(function(f) { return labels[f]; }));
+  }
+  if (gameData.toppings.length > 0) {
+    parts = parts.concat(gameData.toppings.map(function(t) { return labels[t]; }));
+  }
+  if (gameData.sauce !== 'no-sauce') {
+    parts.push(labels[gameData.sauce]);
+  }
+  
+  document.getElementById('bvPreviewText').textContent = parts.join(' + ');
+  document.getElementById('bvSummary').textContent = 
+    'Base: ' + labels[gameData.base] + 
+    ' | Fillings: ' + (gameData.fillings.length > 0 ? gameData.fillings.map(function(f){return labels[f];}).join(', ') : 'None') +
+    ' | Toppings: ' + gameData.toppings.map(function(t){return labels[t];}).join(', ') +
+    ' | Sauce: ' + (gameData.sauce !== 'no-sauce' ? labels[gameData.sauce] : 'None');
+  
+  var steps = document.querySelectorAll('.game-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  document.getElementById('stepPreview').classList.add('active');
+  updateStepDots(3);
+  
+  // Scroll to preview
+  document.getElementById('stepPreview').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function generateAIImage() {
+  var steps = document.querySelectorAll('.game-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  document.getElementById('stepLoading').classList.add('active');
+  
+  var labels = {
+    'classic-fudge': 'Classic Fudge',
+    'kaab-ghezal': 'Kaab Ghezal',
+    'oreo': 'Oreo Crunch',
+    'choco-dubai': 'Choco-Dubai',
+    'midnight-espresso': 'Midnight Espresso',
+    'red-velvet': 'Red Velvet',
+    'salted-caramel': 'Salted Caramel',
+    'pistachio-cream': 'Pistachio Cream',
+    'white-chocolate': 'White Choco Lava',
+    'peanut-butter': 'Peanut Butter',
+    'raspberry-swirl': 'Raspberry Swirl',
+    'speculoos': 'Speculoos',
+    'chili-dark': 'Chili Dark',
+    'matcha': 'Matcha',
+    'gold-flakes': 'Gold Flakes',
+    'marshmallow': 'Marshmallows',
+    'oreo-crumbles': 'Oreo Crumbles',
+    'pistachio-dust': 'Pistachio Dust',
+    'sea-salt': 'Sea Salt',
+    'brownie-bits': 'Brownie Bits',
+    'cotton-candy': 'Cotton Candy',
+    'bacon': 'Crispy Bacon',
+    'dark-chocolate': 'Dark Chocolate Ganache',
+    'caramel': 'Sea Salt Caramel',
+    'white-choc': 'White Chocolate Drizzle',
+    'pistachio': 'Pistachio Cream',
+    'berry-reduction': 'Berry Reduction',
+    'no-sauce': 'No Sauce'
+  };
+  
+  var fillTxt = gameData.fillings.length > 0 ? 'filled with ' + gameData.fillings.map(function(f){return labels[f];}).join(' and ') : '';
+  var topTxt = gameData.toppings.length > 0 ? 'topped with ' + gameData.toppings.map(function(t){return labels[t];}).join(', ') : '';
+  var sauceTxt = gameData.sauce !== 'no-sauce' ? 'drizzled with ' + labels[gameData.sauce] : '';
+  
+  var prompt = 'Professional food photography of a luxurious artisan brownie, ' + 
+    labels[gameData.base] + ' brownie base, ' + fillTxt + ', ' + topTxt + ', ' + sauceTxt + 
+    ', gourmet dessert, Moroccan pastry, warm lighting, studio quality, mouthwatering, chocolate dripping, high detail, 4k, appetizing';
+  
+  var encoded = encodeURIComponent(prompt);
+  var seed = Math.floor(Math.random() * 10000);
+  var imageUrl = 'https://image.pollinations.ai/prompt/' + encoded + 
+    '?width=600&height=600&nologo=true&seed=' + seed + '&model=flux';
+  
+  var img = new Image();
+  img.onload = function() {
+    document.getElementById('bvResultImg').src = imageUrl;
+    
+    var specialName = 'Dream';
+    if (gameData.toppings.indexOf('gold-flakes') !== -1) specialName = 'Gold Rush';
+    else if (gameData.fillings.indexOf('chili-dark') !== -1) specialName = 'Fire Ship';
+    else if (gameData.toppings.indexOf('bacon') !== -1) specialName = 'Salty Pirate';
+    
+    document.getElementById('bvResultName').textContent = 'The ' + labels[gameData.base].split(' ')[0] + ' ' + specialName;
+    
+    document.getElementById('stepLoading').classList.remove('active');
+    document.getElementById('stepResult').classList.add('active');
+    
+    // Scroll to result
+    document.getElementById('stepResult').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  
+  img.onerror = function() {
+    alert('Oops! AI is busy. Please try again!');
+    document.getElementById('stepLoading').classList.remove('active');
+    document.getElementById('stepPreview').classList.add('active');
+  };
+  
+  img.src = imageUrl;
+}
+
+function resetGame() {
+  gameData = {
+    base: null,
+    fillings: [],
+    toppings: [],
+    sauce: null,
+    currentStep: 0
+  };
+  
+  var allOpts = document.querySelectorAll('.game-option-btn');
+  for (var i = 0; i < allOpts.length; i++) {
+    allOpts[i].classList.remove('selected');
+  }
+  
+  document.getElementById('bvGate').style.display = 'block';
+  document.getElementById('bvGameUI').style.display = 'none';
+  
+  var steps = document.querySelectorAll('.game-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  document.getElementById('step0').classList.add('active');
+  updateStepDots(0);
+  
+  // Clear form
+  document.getElementById('bvEmail').value = '';
+  document.getElementById('bvCode').value = '';
+  
+  // Scroll to top of game
+  document.getElementById('brownieGame').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// =============================================
 // INIT
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1114,3 +1445,14 @@ window.changeOrderQty = changeOrderQty;
 window.preSelectPack = preSelectPack;
 window.addPackToCart = addPackToCart;
 window.closeSuccess = closeSuccess;
+// Game functions (native section)
+window.checkGameAccess = checkGameAccess;
+window.selectBase = selectBase;
+window.toggleFilling = toggleFilling;
+window.toggleTopping = toggleTopping;
+window.selectSauce = selectSauce;
+window.nextStep = nextStep;
+window.prevStep = prevStep;
+window.showPreview = showPreview;
+window.generateAIImage = generateAIImage;
+window.resetGame = resetGame;
