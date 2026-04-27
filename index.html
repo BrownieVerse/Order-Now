@@ -388,37 +388,37 @@
         <div class="order-form-card reveal reveal-delay-2">
           <h3>commandi hna</h3>
           <p>#mmer les info dyalk, wghantwasslou m3ak f2a9rab wa9t</p>
-          <form id="orderForm" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="orderName">Full Name *</label>
-                <input class="form-input" type="text" id="orderName" name="full_name" placeholder="Your full name" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="orderPhone">Phone Number *</label>
-                <input class="form-input" type="tel" id="orderPhone" name="phone" placeholder="+212 6XX XXX XXX" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="orderAddress">Delivery Address *</label>
-              <input class="form-input" type="text" id="orderAddress" name="address" placeholder="Street, neighborhood, city" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">khtar l pack linasbek *</label>
-              <div class="product-selector" id="orderProductSelector"></div>
-            </div>
-            <div class="order-summary-box" id="orderSummary">
-              <div class="os-row"><span>mzl ma khtarity ta pack</span><span></span></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="orderNotes">Special Instructions</label>
-              <textarea class="form-textarea" id="orderNotes" name="notes" placeholder="Allergies, special requests, gift message..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-gold form-submit" id="orderSubmitBtn">
-              <i class="fas fa-paper-plane"></i>
-              Send Order
-            </button>
-          </form>
+      <form id="orderForm" novalidate>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label" for="orderName">Full Name *</label>
+      <input class="form-input" type="text" id="orderName" name="full_name" placeholder="Your full name" required autocomplete="name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="orderPhone">Phone Number *</label>
+      <input class="form-input" type="tel" id="orderPhone" name="phone" placeholder="+212 6XX XXX XXX" required autocomplete="tel" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="orderAddress">Delivery Address *</label>
+    <input class="form-input" type="text" id="orderAddress" name="address" placeholder="Street, neighborhood, city" required autocomplete="street-address" />
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="orderProductSelector">khtar l pack linasbek *</label>
+    <div class="product-selector" id="orderProductSelector" role="group" aria-labelledby="orderProductSelector"></div>
+  </div>
+  <div class="order-summary-box" id="orderSummary">
+    <div class="os-row"><span>mzl ma khtarity ta pack</span><span></span></div>
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="orderNotes">Special Instructions</label>
+    <textarea class="form-textarea" id="orderNotes" name="notes" placeholder="Allergies, special requests, gift message..." autocomplete="off"></textarea>
+  </div>
+  <button type="submit" class="btn btn-gold form-submit" id="orderSubmitBtn">
+    <i class="fas fa-paper-plane"></i>
+    Send Order
+  </button>
+</form>
         </div>
       </div>
     </div>
