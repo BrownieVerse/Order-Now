@@ -1352,7 +1352,7 @@ function generateAIImage() {
   };
   
   img.onerror = function() {
-    alert('Oops! AI is busy. Please try again!');
+    alert('Oops! Please try again!');
     document.getElementById('stepLoading').classList.remove('active');
     document.getElementById('stepPreview').classList.add('active');
   };
