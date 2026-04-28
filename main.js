@@ -897,6 +897,28 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ✅ Smooth scroll for Brownie Game section + close mobile nav
+document.querySelectorAll('a[href="#brownieGame"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Close mobile nav if open
+    if (mobileNav?.classList.contains('open')) {
+      mobileNav.classList.remove('open');
+      hamburger?.classList.remove('open');
+      hamburger?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    
+    // Smooth scroll to game section
+    const target = document.getElementById('brownieGame');
+    if (target) {
+      const offsetTop = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    }
+  });
+});
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     const targetId = this.getAttribute('href').slice(1);
